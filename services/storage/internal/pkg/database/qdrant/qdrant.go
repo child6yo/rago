@@ -28,6 +28,6 @@ func NewQdrantConnection(url *url.URL, embedder embeddings.Embedder, collectionN
 	if err != nil {
 		return nil, err
 	}
-
+	
 	return &Qdrant{Store: store}, nil
 }

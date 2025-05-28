@@ -1,5 +1,12 @@
 package main
 
+import (
+	"sync"
+
+	"github.com/child6yo/rago/services/storage/internal/app"
+	"github.com/child6yo/rago/services/storage/internal/config"
+)
+
 func main() {
 	// llm, err := ollama.New(ollama.WithModel("qwen3:0.6b"))
 
@@ -32,4 +39,12 @@ func main() {
 	// log.Println(a)
 	// a, _ = conn.Store.SimilaritySearch(ctx, "что такое TLS-рукопожатие", 2)
 	// log.Println(a)
+
+	cfg := config.InitConfig()
+	app := app.CreateApplication(*cfg)
+	app.StartApplication()
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	wg.Wait()
 }

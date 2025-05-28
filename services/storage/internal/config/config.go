@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/child6yo/rago/services/retriever/internal/pkg/database"
-	"github.com/child6yo/rago/services/retriever/internal/pkg/database/qdrant"
+	"github.com/child6yo/rago/services/storage/internal/pkg/database"
+	"github.com/child6yo/rago/services/storage/internal/pkg/database/qdrant"
 	"github.com/tmc/langchaingo/embeddings"
 	"github.com/tmc/langchaingo/llms/ollama"
 )
@@ -24,7 +24,7 @@ type Config struct {
 func InitConfig() *Config {
 	db := switchDatabase()
 	kafkaAddr := []string{getEnv("KAFKA_ADDR", "localhost:9092")}
-	workers := getIntEnv("NUM_WORKERS", 10)
+	workers := getIntEnv("KAFKA_CONSUMER_WORKERS", 10)
 
 	return &Config{Db: db, KafkaAddr: kafkaAddr, NumWorkers: workers}
 }
@@ -50,7 +50,7 @@ func switchDatabase() database.VectorDB {
 }
 
 func connectToLLM() embeddings.Embedder {
-	ollmaURL := getEnv("OLLAMA_URL", "localhost:11434")
+	ollmaURL := getEnv("OLLAMA_URL", "http://localhost:11434")
 	model := getEnv("OLLAMA_EMB_MODEL", "qwen3:0.6b")
 	llm, err := ollama.New(ollama.WithModel(model), ollama.WithServerURL(ollmaURL))
 	if err != nil {
