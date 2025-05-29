@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.30.2
-// source: proto/parser.proto
+// source: proto/splitter.proto
 
 package proto
 
@@ -30,7 +30,7 @@ type Metadata struct {
 
 func (x *Metadata) Reset() {
 	*x = Metadata{}
-	mi := &file_proto_parser_proto_msgTypes[0]
+	mi := &file_proto_splitter_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -42,7 +42,7 @@ func (x *Metadata) String() string {
 func (*Metadata) ProtoMessage() {}
 
 func (x *Metadata) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_parser_proto_msgTypes[0]
+	mi := &file_proto_splitter_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +55,7 @@ func (x *Metadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Metadata.ProtoReflect.Descriptor instead.
 func (*Metadata) Descriptor() ([]byte, []int) {
-	return file_proto_parser_proto_rawDescGZIP(), []int{0}
+	return file_proto_splitter_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Metadata) GetUrl() string {
@@ -75,7 +75,7 @@ type Document struct {
 
 func (x *Document) Reset() {
 	*x = Document{}
-	mi := &file_proto_parser_proto_msgTypes[1]
+	mi := &file_proto_splitter_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -87,7 +87,7 @@ func (x *Document) String() string {
 func (*Document) ProtoMessage() {}
 
 func (x *Document) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_parser_proto_msgTypes[1]
+	mi := &file_proto_splitter_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -100,7 +100,7 @@ func (x *Document) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Document.ProtoReflect.Descriptor instead.
 func (*Document) Descriptor() ([]byte, []int) {
-	return file_proto_parser_proto_rawDescGZIP(), []int{1}
+	return file_proto_splitter_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Document) GetContent() string {
@@ -117,28 +117,27 @@ func (x *Document) GetMetadata() *Metadata {
 	return nil
 }
 
-type Error struct {
+type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Error         string                 `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Error) Reset() {
-	*x = Error{}
-	mi := &file_proto_parser_proto_msgTypes[2]
+func (x *Empty) Reset() {
+	*x = Empty{}
+	mi := &file_proto_splitter_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Error) String() string {
+func (x *Empty) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Error) ProtoMessage() {}
+func (*Empty) ProtoMessage() {}
 
-func (x *Error) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_parser_proto_msgTypes[2]
+func (x *Empty) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_splitter_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -149,55 +148,47 @@ func (x *Error) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Error.ProtoReflect.Descriptor instead.
-func (*Error) Descriptor() ([]byte, []int) {
-	return file_proto_parser_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use Empty.ProtoReflect.Descriptor instead.
+func (*Empty) Descriptor() ([]byte, []int) {
+	return file_proto_splitter_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Error) GetError() string {
-	if x != nil {
-		return x.Error
-	}
-	return ""
-}
+var File_proto_splitter_proto protoreflect.FileDescriptor
 
-var File_proto_parser_proto protoreflect.FileDescriptor
-
-const file_proto_parser_proto_rawDesc = "" +
+const file_proto_splitter_proto_rawDesc = "" +
 	"\n" +
-	"\x12proto/parser.proto\x12\x06parser\"\x1c\n" +
+	"\x14proto/splitter.proto\x12\x06parser\"\x1c\n" +
 	"\bMetadata\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\"R\n" +
 	"\bDocument\x12\x18\n" +
 	"\acontent\x18\x01 \x01(\tR\acontent\x12,\n" +
-	"\bmetadata\x18\x02 \x01(\v2\x10.parser.MetadataR\bmetadata\"\x1d\n" +
-	"\x05Error\x12\x14\n" +
-	"\x05error\x18\x01 \x01(\tR\x05error2C\n" +
-	"\rParserService\x122\n" +
-	"\x0fHandleDocuments\x12\x10.parser.Document\x1a\r.parser.ErrorB0Z.github.com/child6yo/rago/services/parser/protob\x06proto3"
+	"\bmetadata\x18\x02 \x01(\v2\x10.parser.MetadataR\bmetadata\"\a\n" +
+	"\x05Empty2E\n" +
+	"\x0fSplitterService\x122\n" +
+	"\x0fHandleDocuments\x12\x10.parser.Document\x1a\r.parser.EmptyB0Z.github.com/child6yo/rago/services/parser/protob\x06proto3"
 
 var (
-	file_proto_parser_proto_rawDescOnce sync.Once
-	file_proto_parser_proto_rawDescData []byte
+	file_proto_splitter_proto_rawDescOnce sync.Once
+	file_proto_splitter_proto_rawDescData []byte
 )
 
-func file_proto_parser_proto_rawDescGZIP() []byte {
-	file_proto_parser_proto_rawDescOnce.Do(func() {
-		file_proto_parser_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_parser_proto_rawDesc), len(file_proto_parser_proto_rawDesc)))
+func file_proto_splitter_proto_rawDescGZIP() []byte {
+	file_proto_splitter_proto_rawDescOnce.Do(func() {
+		file_proto_splitter_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_splitter_proto_rawDesc), len(file_proto_splitter_proto_rawDesc)))
 	})
-	return file_proto_parser_proto_rawDescData
+	return file_proto_splitter_proto_rawDescData
 }
 
-var file_proto_parser_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_proto_parser_proto_goTypes = []any{
+var file_proto_splitter_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_proto_splitter_proto_goTypes = []any{
 	(*Metadata)(nil), // 0: parser.Metadata
 	(*Document)(nil), // 1: parser.Document
-	(*Error)(nil),    // 2: parser.Error
+	(*Empty)(nil),    // 2: parser.Empty
 }
-var file_proto_parser_proto_depIdxs = []int32{
+var file_proto_splitter_proto_depIdxs = []int32{
 	0, // 0: parser.Document.metadata:type_name -> parser.Metadata
-	1, // 1: parser.ParserService.HandleDocuments:input_type -> parser.Document
-	2, // 2: parser.ParserService.HandleDocuments:output_type -> parser.Error
+	1, // 1: parser.SplitterService.HandleDocuments:input_type -> parser.Document
+	2, // 2: parser.SplitterService.HandleDocuments:output_type -> parser.Empty
 	2, // [2:3] is the sub-list for method output_type
 	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -205,26 +196,26 @@ var file_proto_parser_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_proto_parser_proto_init() }
-func file_proto_parser_proto_init() {
-	if File_proto_parser_proto != nil {
+func init() { file_proto_splitter_proto_init() }
+func file_proto_splitter_proto_init() {
+	if File_proto_splitter_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_parser_proto_rawDesc), len(file_proto_parser_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_splitter_proto_rawDesc), len(file_proto_splitter_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_parser_proto_goTypes,
-		DependencyIndexes: file_proto_parser_proto_depIdxs,
-		MessageInfos:      file_proto_parser_proto_msgTypes,
+		GoTypes:           file_proto_splitter_proto_goTypes,
+		DependencyIndexes: file_proto_splitter_proto_depIdxs,
+		MessageInfos:      file_proto_splitter_proto_msgTypes,
 	}.Build()
-	File_proto_parser_proto = out.File
-	file_proto_parser_proto_goTypes = nil
-	file_proto_parser_proto_depIdxs = nil
+	File_proto_splitter_proto = out.File
+	file_proto_splitter_proto_goTypes = nil
+	file_proto_splitter_proto_depIdxs = nil
 }

@@ -1,4 +1,4 @@
-module github.com/child6yo/rago/services/parser
+module github.com/child6yo/rago/services/splitter
 
 go 1.23.0
 
