@@ -1,0 +1,20 @@
+syntax = "proto3"; 
+package parser; 
+option go_package = "github.com/child6yo/rago/services/parser/proto";
+
+message Metadata {
+    string url = 1;
+}
+
+message Document {
+    string content = 1;
+    Metadata metadata = 2;
+}
+
+message Error {
+    string error = 1;
+}
+
+service ParserService {
+    rpc HandleDocuments (Document) returns (Error);
+}
