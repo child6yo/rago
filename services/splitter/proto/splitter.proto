@@ -11,10 +11,13 @@ message Document {
     Metadata metadata = 2;
 }
 
-message Empty {
+message DocumentArray {
+    repeated Document doc = 1;
+}
 
+message Empty {
 }
 
 service SplitterService {
-    rpc HandleDocuments (Document) returns (Empty);
+    rpc HandleDocuments (DocumentArray) returns (Empty);
 }

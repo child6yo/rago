@@ -117,6 +117,50 @@ func (x *Document) GetMetadata() *Metadata {
 	return nil
 }
 
+type DocumentArray struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Doc           []*Document            `protobuf:"bytes,1,rep,name=doc,proto3" json:"doc,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DocumentArray) Reset() {
+	*x = DocumentArray{}
+	mi := &file_proto_splitter_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocumentArray) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocumentArray) ProtoMessage() {}
+
+func (x *DocumentArray) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_splitter_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocumentArray.ProtoReflect.Descriptor instead.
+func (*DocumentArray) Descriptor() ([]byte, []int) {
+	return file_proto_splitter_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DocumentArray) GetDoc() []*Document {
+	if x != nil {
+		return x.Doc
+	}
+	return nil
+}
+
 type Empty struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -125,7 +169,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_proto_splitter_proto_msgTypes[2]
+	mi := &file_proto_splitter_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -137,7 +181,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_splitter_proto_msgTypes[2]
+	mi := &file_proto_splitter_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -150,7 +194,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_proto_splitter_proto_rawDescGZIP(), []int{2}
+	return file_proto_splitter_proto_rawDescGZIP(), []int{3}
 }
 
 var File_proto_splitter_proto protoreflect.FileDescriptor
@@ -162,10 +206,12 @@ const file_proto_splitter_proto_rawDesc = "" +
 	"\x03url\x18\x01 \x01(\tR\x03url\"R\n" +
 	"\bDocument\x12\x18\n" +
 	"\acontent\x18\x01 \x01(\tR\acontent\x12,\n" +
-	"\bmetadata\x18\x02 \x01(\v2\x10.parser.MetadataR\bmetadata\"\a\n" +
-	"\x05Empty2E\n" +
-	"\x0fSplitterService\x122\n" +
-	"\x0fHandleDocuments\x12\x10.parser.Document\x1a\r.parser.EmptyB0Z.github.com/child6yo/rago/services/parser/protob\x06proto3"
+	"\bmetadata\x18\x02 \x01(\v2\x10.parser.MetadataR\bmetadata\"3\n" +
+	"\rDocumentArray\x12\"\n" +
+	"\x03doc\x18\x01 \x03(\v2\x10.parser.DocumentR\x03doc\"\a\n" +
+	"\x05Empty2J\n" +
+	"\x0fSplitterService\x127\n" +
+	"\x0fHandleDocuments\x12\x15.parser.DocumentArray\x1a\r.parser.EmptyB0Z.github.com/child6yo/rago/services/parser/protob\x06proto3"
 
 var (
 	file_proto_splitter_proto_rawDescOnce sync.Once
@@ -179,21 +225,23 @@ func file_proto_splitter_proto_rawDescGZIP() []byte {
 	return file_proto_splitter_proto_rawDescData
 }
 
-var file_proto_splitter_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_proto_splitter_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_splitter_proto_goTypes = []any{
-	(*Metadata)(nil), // 0: parser.Metadata
-	(*Document)(nil), // 1: parser.Document
-	(*Empty)(nil),    // 2: parser.Empty
+	(*Metadata)(nil),      // 0: parser.Metadata
+	(*Document)(nil),      // 1: parser.Document
+	(*DocumentArray)(nil), // 2: parser.DocumentArray
+	(*Empty)(nil),         // 3: parser.Empty
 }
 var file_proto_splitter_proto_depIdxs = []int32{
 	0, // 0: parser.Document.metadata:type_name -> parser.Metadata
-	1, // 1: parser.SplitterService.HandleDocuments:input_type -> parser.Document
-	2, // 2: parser.SplitterService.HandleDocuments:output_type -> parser.Empty
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1, // 1: parser.DocumentArray.doc:type_name -> parser.Document
+	2, // 2: parser.SplitterService.HandleDocuments:input_type -> parser.DocumentArray
+	3, // 3: parser.SplitterService.HandleDocuments:output_type -> parser.Empty
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_splitter_proto_init() }
@@ -207,7 +255,7 @@ func file_proto_splitter_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_splitter_proto_rawDesc), len(file_proto_splitter_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
