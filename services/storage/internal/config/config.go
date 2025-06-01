@@ -14,30 +14,38 @@ import (
 
 // Config - структура, определяющая конфигурацию приложения.
 type Config struct {
-	Db         database.VectorDB
-	KafkaAddr  []string
-	NumWorkers int
+	Db database.VectorDB
+
+	KafkaBrokers    []string
+	KafkaGroupID    string
+	KafkaDocTopic   []string
+	KafkaPartitions int
 }
 
 // InitConfig инициализирует конфигурацию приложения,
 // переданную через переменные окружения.
 func InitConfig() *Config {
-	db := switchDatabase()
-	kafkaAddr := []string{getEnv("KAFKA_ADDR", "localhost:9092")}
-	workers := getIntEnv("KAFKA_CONSUMER_WORKERS", 10)
+	cfg := &Config{}
 
-	return &Config{Db: db, KafkaAddr: kafkaAddr, NumWorkers: workers}
+	cfg.Db = switchDatabase()
+
+	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
+	cfg.KafkaGroupID = getEnv("KAFKA_GROUP_ID", "group.storage")
+	cfg.KafkaDocTopic = []string{getEnv("KAFKA_DOC_TOPIC", "document-topic")}
+	cfg.KafkaPartitions = getIntEnv("KAFKA_PARTITIONS", 5)
+	return cfg
 }
 
 func switchDatabase() database.VectorDB {
-	dbURL, err := url.Parse(getEnv("DB_URL", "localhost:6333"))
+	dbURL, err := url.Parse(getEnv("DB_URL", "http://localhost:6333"))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	embedder := connectToLLM()
 	collection := getEnv("DB_COLLECTION", "dev_coll")
-	switch getEnv("DATABASE", "qdrant") {
+
+	switch getEnv("DB", "qdrant") {
 	case "qdrant":
 		db, err := qdrant.NewQdrantConnection(dbURL, embedder, collection)
 		if err != nil {
