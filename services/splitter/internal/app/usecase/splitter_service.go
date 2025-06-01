@@ -11,7 +11,6 @@ import (
 
 // SplitService имплементирует интерфейс Splitter.
 type SplitService struct {
-	mu         sync.Mutex
 	wg         sync.WaitGroup
 	numWorkers int // количество воркеров на втором этапе пайплайна
 	producer   kafka.Producer
@@ -57,10 +56,8 @@ func (s *SplitService) split(docs []*pb.Document) <-chan internal.Document {
 }
 
 func (s *SplitService) handleSplited(in <-chan internal.Document) {
-	// мьютекс гарантирует безопастность чтения несколькими горутинами одного канала (?)
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	val := <-in
-	log.Print(val)
-	s.producer.SendMessage(val)
+	for val := range in {
+		log.Print(val)
+		s.producer.SendMessage(val)
+	}
 }
