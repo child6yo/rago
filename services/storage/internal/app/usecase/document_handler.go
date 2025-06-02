@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"encoding/json"
-	"log"
+	"errors"
 
 	"github.com/child6yo/rago/services/storage/internal"
 	"github.com/child6yo/rago/services/storage/internal/pkg/database"
@@ -22,7 +22,7 @@ func NewDocHandlerService(db database.VectorDB) *DocHandlerService {
 
 // HandleDocMessage обрабатывает закодированные json-документы,
 // декодирует их в структуры и передает далее в векторную базу данных.
-func (d *DocHandlerService) HandleDocMessage(message []byte) error {
+func (dh *DocHandlerService) HandleDocMessage(message []byte) error {
 	rawDoc, err := unmarshalDocs(message)
 	if err != nil {
 		return err
@@ -33,20 +33,26 @@ func (d *DocHandlerService) HandleDocMessage(message []byte) error {
 			"URL": rawDoc.Metadata.URL,
 		}}
 
-	ctx := context.Background()
-
-	if err := d.db.Put(ctx, []schema.Document{doc}); err != nil {
-		log.Print(err)
+	if err := dh.db.Put(context.Background(), []schema.Document{doc}); err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func unmarshalDocs(message []byte) (*internal.Document, error) {
+	if len(message) == 0 {
+		return nil, errors.New("empty message")
+	}
+
 	var document internal.Document
 	if err := json.Unmarshal(message, &document); err != nil {
-		log.Printf("Failed to unmarshal: %v. Message: %s", err, string(message))
 		return nil, err
 	}
+	
+	if len(document.Content) == 0 {
+		return nil, errors.New("empty content")
+	}
+
 	return &document, nil
 }
