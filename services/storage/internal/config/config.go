@@ -24,8 +24,8 @@ type Config struct {
 
 // InitConfig инициализирует конфигурацию приложения,
 // переданную через переменные окружения.
-func InitConfig() *Config {
-	cfg := &Config{}
+func InitConfig() Config {
+	cfg := Config{}
 
 	cfg.Db = switchDatabase()
 
