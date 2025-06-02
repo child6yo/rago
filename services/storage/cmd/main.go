@@ -19,10 +19,11 @@ func main() {
 	// запуск приложения 
 	app.StartApplication()
 
-	// получение сигнала на остановку приложения (напр. Ctrl+C)
+	// получение сигнала на остановку приложения
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
+	// остановка приложения
 	app.StopApplication()
 }
