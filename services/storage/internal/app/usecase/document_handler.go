@@ -49,7 +49,7 @@ func unmarshalDocs(message []byte) (*internal.Document, error) {
 	if err := json.Unmarshal(message, &document); err != nil {
 		return nil, err
 	}
-	
+
 	if len(document.Content) == 0 {
 		return nil, errors.New("empty content")
 	}

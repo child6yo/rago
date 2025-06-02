@@ -11,8 +11,8 @@ import (
 	"github.com/child6yo/rago/services/storage/internal/app/usecase"
 )
 
-// KafkaConn - структура, определяющая соединение с Kafka-брокером.
-type KafkaConn struct {
+// Connection - структура, определяющая соединение с Kafka-брокером.
+type Connection struct {
 	brokers, topics []string           // список адресов брокеров, список обрабатываемых топиков
 	groupID         string             // айди группы консьюмеров
 	docHandler      usecase.DocHandler // обработчик документов
@@ -24,7 +24,7 @@ type KafkaConn struct {
 	wg sync.WaitGroup
 }
 
-// NewKafkaConn создает новый экземлпяр KafkaConn.
+// NewConnection создает новый экземлпяр Connection.
 //
 // Параметры:
 //   - brokers - список адресов брокеров
@@ -32,8 +32,8 @@ type KafkaConn struct {
 //   - groupID - айди группы консьюмеров
 //   - docHandler - обработчик документов
 //   - numPart - количество партиций в топике
-func NewKafkaConn(brokers, topics []string, groupID string, numPart int, docHandler usecase.DocHandler) *KafkaConn {
-	return &KafkaConn{
+func NewConnection(brokers, topics []string, groupID string, numPart int, docHandler usecase.DocHandler) *Connection {
+	return &Connection{
 		brokers:       brokers,
 		topics:        topics,
 		groupID:       groupID,
@@ -42,25 +42,25 @@ func NewKafkaConn(brokers, topics []string, groupID string, numPart int, docHand
 	}
 }
 
-// RunConsumer запускает консьюмеры в количестве, соответсвующем количеству партиций.
-func (k *KafkaConn) RunConsumers() error {
+// RunConsumers запускает консьюмеры в количестве, соответсвующем количеству партиций.
+func (c *Connection) RunConsumers() error {
 	config := configSarama()
 
-	consumerGroup, err := sarama.NewConsumerGroup(k.brokers, k.groupID, config)
+	consumerGroup, err := sarama.NewConsumerGroup(c.brokers, c.groupID, config)
 	if err != nil {
 		return fmt.Errorf("failed to start consumer group: %w", err)
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	k.ctx = &ctx
-	k.cancel = &cancel
+	c.ctx = &ctx
+	c.cancel = &cancel
 
-	for i := 0; i < k.numPartitions; i++ {
-		k.wg.Add(1)
+	for i := 0; i < c.numPartitions; i++ {
+		c.wg.Add(1)
 		go func() {
-			defer k.wg.Done()
+			defer c.wg.Done()
 			for {
-				if err := consumerGroup.Consume(*k.ctx, k.topics, ConsumerGroupHandler{k.docHandler}); err != nil {
+				if err := consumerGroup.Consume(*c.ctx, c.topics, ConsumerGroupHandler{c.docHandler}); err != nil {
 					log.Printf("error from consumer: %v", err)
 				}
 				if ctx.Err() != nil {
@@ -75,11 +75,11 @@ func (k *KafkaConn) RunConsumers() error {
 	return nil
 }
 
-// StopConsumer останавливает группу консьюмеров отменой контекста.
+// StopConsumers останавливает группу консьюмеров отменой контекста.
 // Дожидается завершения всех горутин.
-func (k *KafkaConn) StopConsumer() {
-	cnl := *k.cancel
+func (c *Connection) StopConsumers() {
+	cnl := *c.cancel
 	cnl()
 
-	k.wg.Wait()
+	c.wg.Wait()
 }

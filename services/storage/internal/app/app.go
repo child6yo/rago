@@ -13,7 +13,7 @@ import (
 type Application struct {
 	config.Config // конфигурация
 
-	broker *kafka.KafkaConn
+	broker *kafka.Connection
 }
 
 // CreateApplication создает новый экземпляр приложения.
@@ -21,7 +21,7 @@ func CreateApplication(config config.Config) *Application {
 	return &Application{Config: config}
 }
 
-// StartApplication запускает приложение. Работает идемпотентно. 
+// StartApplication запускает приложение. Работает идемпотентно.
 func (a *Application) StartApplication() error {
 	// обеспечивает идемпотентность
 	if a.broker != nil {
@@ -30,7 +30,7 @@ func (a *Application) StartApplication() error {
 
 	DocHandler := usecase.NewDocHandlerService(a.Db)
 
-	kConn := kafka.NewKafkaConn(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, DocHandler)
+	kConn := kafka.NewConnection(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, DocHandler)
 	a.broker = kConn
 	go func() {
 		if err := kConn.RunConsumers(); err != nil {
@@ -43,5 +43,5 @@ func (a *Application) StartApplication() error {
 
 // StopApplication завершает работу приложения.
 func (a *Application) StopApplication() {
-	a.broker.StopConsumer()
+	a.broker.StopConsumers()
 }

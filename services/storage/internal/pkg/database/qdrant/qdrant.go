@@ -16,9 +16,9 @@ type Qdrant struct {
 // NewQdrantConnection открывает соединение с qdrant.
 //
 // Параметры:
-// 	- url - адрес базы данных
-// 	- embedder - эмбеддинговая модель
-// 	- collectionName - имя коллекции в базе данных
+//   - url - адрес базы данных
+//   - embedder - эмбеддинговая модель
+//   - collectionName - имя коллекции в базе данных
 func NewQdrantConnection(url *url.URL, embedder embeddings.Embedder, collectionName string) (*Qdrant, error) {
 	store, err := qdrant.New(
 		qdrant.WithURL(*url),
@@ -28,6 +28,6 @@ func NewQdrantConnection(url *url.URL, embedder embeddings.Embedder, collectionN
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &Qdrant{Store: store}, nil
 }

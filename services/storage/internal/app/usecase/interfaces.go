@@ -6,5 +6,3 @@ type DocHandler interface {
 	// декодирует их в структуры и передает далее в векторную базу данных.
 	HandleDocMessage(message []byte) error
 }
-
-

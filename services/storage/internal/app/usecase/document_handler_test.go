@@ -15,13 +15,13 @@ func TestHandleDocMessage(t *testing.T) {
 		name     string
 		input    string
 		expError bool
-		mockFunk func(*mock.MockVectorDB)
+		mockFunk func(*mock.VectorDB)
 	}{
 		{
 			name:     "OK",
 			input:    `{"content":"test content","metadata":{"url":"test.com"}}`,
 			expError: false,
-			mockFunk: func(mvd *mock.MockVectorDB) {
+			mockFunk: func(mvd *mock.VectorDB) {
 				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
 					return nil
 				}
@@ -31,7 +31,7 @@ func TestHandleDocMessage(t *testing.T) {
 			name:     "empty message",
 			input:    `{}`,
 			expError: true,
-			mockFunk: func(mvd *mock.MockVectorDB) {
+			mockFunk: func(mvd *mock.VectorDB) {
 				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
 					return nil
 				}
@@ -41,7 +41,7 @@ func TestHandleDocMessage(t *testing.T) {
 			name:     "invalid data",
 			input:    `{"c":"123","mt":"123.com"}`,
 			expError: true,
-			mockFunk: func(mvd *mock.MockVectorDB) {
+			mockFunk: func(mvd *mock.VectorDB) {
 				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
 					return nil
 				}
@@ -51,7 +51,7 @@ func TestHandleDocMessage(t *testing.T) {
 			name:     "database error",
 			input:    `{"content":"test content","metadata":{"url":"test.com"}}`,
 			expError: true,
-			mockFunk: func(mvd *mock.MockVectorDB) {
+			mockFunk: func(mvd *mock.VectorDB) {
 				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
 					return errors.New("error")
 				}
@@ -61,7 +61,7 @@ func TestHandleDocMessage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockDB := &mock.MockVectorDB{}
+			mockDB := &mock.VectorDB{}
 			tt.mockFunk(mockDB)
 			handler := NewDocHandlerService(mockDB)
 
