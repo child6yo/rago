@@ -1,7 +1,7 @@
 package app
 
 import (
-	"context"
+	"errors"
 	"log"
 
 	"github.com/child6yo/rago/services/storage/internal/app/kafka"
@@ -13,27 +13,35 @@ import (
 type Application struct {
 	config.Config // конфигурация
 
-	context context.Context
-	cancel  context.CancelFunc
+	broker *kafka.KafkaConn
 }
 
 // CreateApplication создает новый экземпляр приложения.
 func CreateApplication(config config.Config) *Application {
-	ctx, cancel := context.WithCancel(context.Background())
-	return &Application{Config: config, context: ctx, cancel: cancel}
+	return &Application{Config: config}
 }
 
-// StartApplication запускает приложение.
-func (a *Application) StartApplication() {
+// StartApplication запускает приложение. Работает идемпотентно. 
+func (a *Application) StartApplication() error {
+	// обеспечивает идемпотентность
+	if a.broker != nil {
+		return errors.New("application already started")
+	}
+
 	DocHandler := usecase.NewDocHandlerService(a.Db)
 
 	kConn := kafka.NewKafkaConn(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, DocHandler)
-	if err := kConn.RunConsumers(); err != nil {
-		log.Print(err)
-	}
+	a.broker = kConn
+	go func() {
+		if err := kConn.RunConsumers(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	return nil
 }
 
-// TODO
-// func (a *Application) StopApplication() {
-// 	stopConsumer()
-// }
+// StopApplication завершает работу приложения.
+func (a *Application) StopApplication() {
+	a.broker.StopConsumer()
+}
