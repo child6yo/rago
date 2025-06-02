@@ -21,7 +21,7 @@ func NewDocHandlerService(db database.VectorDB) *DocHandlerService {
 }
 
 // HandleDocMessage обрабатывает закодированные json-документы,
-// unmarshall их в структуры и передает далее в векторную базу данных.
+// декодирует их в структуры и передает далее в векторную базу данных.
 func (d *DocHandlerService) HandleDocMessage(message []byte) error {
 	rawDoc, err := unmarshalDocs(message)
 	if err != nil {
