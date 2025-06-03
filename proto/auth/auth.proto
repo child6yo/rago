@@ -2,3 +2,57 @@ syntax = "proto3";
 package pb; 
 option go_package = "github.com/child6yo/rago/services/pkg/pb";
 
+message User {
+    string login = 1;
+    string password = 2;
+}
+
+message Token {
+    string token = 1;
+}
+
+message Empty {}
+
+message DefaultError {
+    enum Code {
+        INTERNAL_ERROR = 0;
+        INVALID_DATA = 1;
+    }
+    Code code = 1;
+}
+
+message RegisterResponse {
+    oneof status {
+        Empty success = 1;
+        DefaultError error = 2;
+    }
+}
+
+message LoginResponse {
+    oneof status {
+        Token token = 1;
+        DefaultError error = 2;
+    }
+}
+
+message AuthError {
+    enum Code {
+        UNKNOWN = 0;
+        TOKEN_EXPIRED = 1;
+        INVALID_TOKEN = 2;
+    }
+    Code code = 1;
+}
+
+message AuthResponse {
+    oneof status {
+        Empty success = 1;
+        AuthError error = 2;
+    }
+}
+
+service AuthService {
+    rpc Register (User) returns (Empty);
+    rpc Login (User) returns (Token);
+    rpc Auth (Token) returns (Empty);
+}
