@@ -1,6 +1,6 @@
 syntax = "proto3"; 
-package parser; 
-option go_package = "github.com/child6yo/rago/services/parser/proto";
+package pb; 
+option go_package = "github.com/child6yo/rago/services/pkg/pb";
 
 message Metadata {
     string url = 1;

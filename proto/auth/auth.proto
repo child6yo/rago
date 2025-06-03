@@ -1,0 +1,4 @@
+syntax = "proto3"; 
+package pb; 
+option go_package = "github.com/child6yo/rago/services/pkg/pb";
+
