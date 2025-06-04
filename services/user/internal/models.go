@@ -2,6 +2,9 @@ package internal
 
 // User определяет структуру пользователя.
 type User struct {
-	Login string
-	Password string
+	Id         int
+	Login      string
+	Password   string
+	Active     bool
+	Collection string
 }

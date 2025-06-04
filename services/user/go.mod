@@ -3,6 +3,9 @@ module github.com/child6yo/rago/services/auth
 go 1.23.0
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/jmoiron/sqlx v1.4.0
+	github.com/lib/pq v1.10.9
 	google.golang.org/grpc v1.72.2
 	google.golang.org/protobuf v1.36.6
 )

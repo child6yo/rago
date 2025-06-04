@@ -16,5 +16,5 @@ type Authorization interface {
 
 	// Auth валидирует авторизационный токен пользователя.
 	// Возвращает ошибку в случае неудачи.
-	Auth(token string) error
+	Auth(accessToken string) error
 }
