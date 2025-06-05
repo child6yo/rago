@@ -28,6 +28,10 @@ type AuthorizationService struct {
 	repo repository.Authorization
 }
 
+func NewAuthorizationService(repo repository.Authorization) *AuthorizationService {
+	return &AuthorizationService{repo: repo}
+}
+
 func (as *AuthorizationService) Register(user internal.User) error {
 	user.Password = generatePasswordHash(user.Password)
 	err := as.repo.CreateUser(user)

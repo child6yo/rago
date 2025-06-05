@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/child6yo/rago/services/auth/internal/app/usecase"
 	"github.com/child6yo/rago/services/auth/pkg/pb"
 	"google.golang.org/grpc"
 )
@@ -11,15 +12,17 @@ import (
 // GRPCServer - структура gRPC-сервера приложения.
 type GRPCServer struct {
 	server   *grpc.Server
+	auth usecase.Authorization
 	
 	host string
 	port string
 }
 
 // NewGRPCServer создает новый экземпляр GRPCServer.
-func NewGRPCServer(host string, port string) *GRPCServer {
+func NewGRPCServer(auth usecase.Authorization, host string, port string) *GRPCServer {
 	return &GRPCServer{
 		server: grpc.NewServer(),
+		auth: auth,
 		host: host,
 		port: port,
 	}
@@ -34,7 +37,7 @@ func (g *GRPCServer) StartGRPCServer() error {
 		return err
 	}
 
-	pb.RegisterAuthServiceServer(g.server, nil)
+	pb.RegisterAuthServiceServer(g.server, &AuthService{service: g.auth})
 
 	if err := g.server.Serve(lis); err != nil {
 		return err

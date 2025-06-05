@@ -12,7 +12,7 @@ type Authorization interface {
 
 	// Login проверяет наличие пользователя и корректность введенных данных.
 	// Возвращает авторизационный токен при успехе и ошибку в случае неудачи.
-	Login(user internal.User) (string, error)
+	Login(login, password string) (string, error)
 
 	// Auth валидирует авторизационный токен пользователя.
 	// Возвращает ошибку в случае неудачи.

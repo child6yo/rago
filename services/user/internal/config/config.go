@@ -13,6 +13,9 @@ type Config struct {
 	PgDBName   string
 	PgPassword string
 	PgSSLMode  string
+
+	GRPCHost string
+	GRPCPort string
 }
 
 // InitConfig инициализирует конфигурацию приложения,
@@ -26,6 +29,9 @@ func InitConfig() Config {
 	cfg.PgDBName = getEnv("PG_DATABSE", "postgres")
 	cfg.PgPassword = getEnv("PG_PASSWORD", "Qwerty")
 	cfg.PgSSLMode = getEnv("PG_SSLMODE", "disable")
+
+	cfg.GRPCHost = getEnv("GRPC_HOST", "localhost")
+	cfg.GRPCPort = getEnv("GRPC_PORT", "5001")
 
 	return cfg
 }
