@@ -58,8 +58,11 @@ func (uc *User) Login(input internal.User) (string, error) {
 		Login:    input.Login,
 		Password: input.Password,
 	})
+	if err != nil {
+		return "", err
+	}
 
-	return token.Token, err
+	return token.Token, nil
 }
 
 // Register вызывает удалённый метод авторизации пользователя через gRPC.

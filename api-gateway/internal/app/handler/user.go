@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"log"
-
 	"github.com/child6yo/rago/api-gateway/internal"
 	"github.com/gin-gonic/gin"
 )
@@ -12,13 +10,13 @@ func (h *Handler) signUp(c *gin.Context) {
 
 	if err := c.BindJSON(&input); err != nil {
 		// TODO
-		log.Print(err)
+		c.JSON(500, err)
 		return
 	}
 
 	if err := h.grpclient.User.Register(input); err != nil {
 		// TODO
-		log.Print(err)
+		c.JSON(500, err)
 		return
 	}
 
@@ -30,18 +28,18 @@ func (h *Handler) signIn(c *gin.Context) {
 
 	if err := c.BindJSON(&input); err != nil {
 		// TODO
-		log.Print(err)
+		c.JSON(500, err)
 		return
 	}
 
 	token, err := h.grpclient.Login(input)
 	if err != nil {
 		// TODO
-		log.Print(err)
+		c.JSON(500, err)
 		return
 	}
 
-	Data := struct{
+	Data := struct {
 		Token string `json:"token"`
 	}{
 		Token: token,
