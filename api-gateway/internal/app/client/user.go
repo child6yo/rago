@@ -51,3 +51,22 @@ func (uc *User) Register(input internal.User) error {
 
 	return err
 }
+
+// Register вызывает удалённый метод логина пользователя через gRPC.
+func (uc *User) Login(input internal.User) (string, error) {
+	token, err := uc.usrClient.Login(context.Background(), &pb.User{
+		Login:    input.Login,
+		Password: input.Password,
+	})
+
+	return token.Token, err
+}
+
+// Register вызывает удалённый метод авторизации пользователя через gRPC.
+func (uc *User) Auth(token string) error {
+	_, err := uc.usrClient.Auth(context.Background(), &pb.Token{
+		Token: token,
+	})
+
+	return err
+}
