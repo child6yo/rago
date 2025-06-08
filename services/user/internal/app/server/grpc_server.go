@@ -12,17 +12,17 @@ import (
 // GRPCServer - структура gRPC-сервера приложения.
 type GRPCServer struct {
 	server   *grpc.Server
-	auth usecase.Authorization
+	usecase *usecase.Usecase
 	
 	host string
 	port string
 }
 
 // NewGRPCServer создает новый экземпляр GRPCServer.
-func NewGRPCServer(auth usecase.Authorization, host string, port string) *GRPCServer {
+func NewGRPCServer(usecase *usecase.Usecase, host string, port string) *GRPCServer {
 	return &GRPCServer{
 		server: grpc.NewServer(),
-		auth: auth,
+		usecase: usecase,
 		host: host,
 		port: port,
 	}
@@ -37,7 +37,8 @@ func (g *GRPCServer) StartGRPCServer() error {
 		return err
 	}
 
-	pb.RegisterAuthServiceServer(g.server, &AuthService{service: g.auth})
+	pb.RegisterAuthServiceServer(g.server, &AuthService{service: g.usecase.Authorization})
+	pb.RegisterApiKeyServiceServer(g.server, &APIKeyService{service: g.usecase.ApiKey})
 
 	if err := g.server.Serve(lis); err != nil {
 		return err

@@ -35,9 +35,9 @@ func (a *Application) StartApplication() {
 	a.db = db
 
 	repo := repository.NewRepository(db)
-	auth := usecase.NewUsecase(repo)
+	usecase := usecase.NewUsecase(repo)
 
-	server := server.NewGRPCServer(auth, a.GRPCHost, a.GRPCPort)
+	server := server.NewGRPCServer(usecase, a.GRPCHost, a.GRPCPort)
 	err = server.StartGRPCServer()
 	if err != nil {
 		log.Print(err)
