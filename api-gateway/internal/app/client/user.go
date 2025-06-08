@@ -13,35 +13,35 @@ import (
 
 // User определяет клиент пользовательского сервиса, доступного по gRPC.
 type User struct {
-	auth    pb.AuthServiceClient
-	apiKey  pb.ApiKeyServiceClient
-	usrConn *grpc.ClientConn
+	auth   pb.AuthServiceClient
+	apiKey pb.APIKeyServiceClient
+	conn   *grpc.ClientConn
 
-	usrHost string
-	usrPort string
+	host string
+	port string
 }
 
 func newUserClient(host string, port string) *User {
-	return &User{usrHost: host, usrPort: port}
+	return &User{host: host, port: port}
 }
 
 func (uc *User) startUserClient() {
-	addr := fmt.Sprintf("%s:%s", uc.usrHost, uc.usrPort)
+	addr := fmt.Sprintf("%s:%s", uc.host, uc.port)
 	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Print("failed to connect user grpc server")
 	}
 
 	uc.auth = pb.NewAuthServiceClient(conn)
-	uc.apiKey = pb.NewApiKeyServiceClient(conn)
-	uc.usrConn = conn
+	uc.apiKey = pb.NewAPIKeyServiceClient(conn)
+	uc.conn = conn
 }
 
 func (uc *User) stopUserClient() {
-	if uc.usrConn == nil {
+	if uc.conn == nil {
 		return
 	}
-	uc.usrConn.Close()
+	uc.conn.Close()
 }
 
 // Register вызывает удалённый метод регистрации пользователя через gRPC.
@@ -109,4 +109,10 @@ func (uc *User) GetAPIKeys(userID int) ([]internal.ApiKey, error) {
 	}
 
 	return internalKeys, nil
+}
+
+func (uc *User) CheckAPIKey(key string) error {
+	_, err := uc.apiKey.CheckAPIKey(context.Background(), &pb.APIKey{Key: key})
+
+	return err
 }
