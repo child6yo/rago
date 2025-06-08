@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 
-	"github.com/child6yo/rago/services/auth/internal"
+	"github.com/child6yo/rago/services/user/internal"
 	"github.com/jmoiron/sqlx"
 )
 

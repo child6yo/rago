@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/child6yo/rago/services/auth/internal"
-	"github.com/child6yo/rago/services/auth/internal/app/usecase"
-	"github.com/child6yo/rago/services/auth/pkg/pb"
+	"github.com/child6yo/rago/services/user/internal"
+	"github.com/child6yo/rago/services/user/internal/app/usecase"
+	"github.com/child6yo/rago/services/user/pkg/pb"
 )
 
 // AuthServiceServer определяет интерфейс gRPC сервера сервиса авторизации.
@@ -22,7 +22,7 @@ type AuthServiceServer interface {
 
 	// Auth принимает на вход токен, при успехе возвращает соответсвующий статус.
 	// В обратном случае возвращает ошибку.
-	Auth(ctx context.Context, token *pb.Token) (*pb.Empty, error)
+	Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error)
 
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -56,7 +56,7 @@ func (a *AuthService) Login(ctx context.Context, user *pb.User) (*pb.Token, erro
 
 // Auth принимает на вход токен, при успехе возвращает соответсвующий статус.
 // В обратном случае возвращает ошибку.
-func (a *AuthService) Auth(ctx context.Context, token *pb.Token) (*pb.Empty, error) {
+func (a *AuthService) Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error) {
 	err := a.service.Auth(token.Token)
 
 	return nil, err

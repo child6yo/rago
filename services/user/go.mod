@@ -1,4 +1,4 @@
-module github.com/child6yo/rago/services/auth
+module github.com/child6yo/rago/services/user
 
 go 1.23.0
 

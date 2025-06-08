@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"github.com/child6yo/rago/services/auth/internal"
-	"github.com/child6yo/rago/services/auth/internal/app/repository"
+	"github.com/child6yo/rago/services/user/internal"
+	"github.com/child6yo/rago/services/user/internal/app/repository"
 )
 
 type ApiKeyService struct {

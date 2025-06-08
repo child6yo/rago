@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/child6yo/rago/services/auth/internal/app/usecase"
-	"github.com/child6yo/rago/services/auth/pkg/pb"
+	"github.com/child6yo/rago/services/user/internal/app/usecase"
+	"github.com/child6yo/rago/services/user/pkg/pb"
 	"google.golang.org/grpc"
 )
 

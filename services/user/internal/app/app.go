@@ -3,10 +3,10 @@ package app
 import (
 	"log"
 
-	"github.com/child6yo/rago/services/auth/internal/app/repository"
-	"github.com/child6yo/rago/services/auth/internal/app/server"
-	"github.com/child6yo/rago/services/auth/internal/app/usecase"
-	"github.com/child6yo/rago/services/auth/internal/config"
+	"github.com/child6yo/rago/services/user/internal/app/repository"
+	"github.com/child6yo/rago/services/user/internal/app/server"
+	"github.com/child6yo/rago/services/user/internal/app/usecase"
+	"github.com/child6yo/rago/services/user/internal/config"
 	"github.com/jmoiron/sqlx"
 )
 

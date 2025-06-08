@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/child6yo/rago/services/auth/internal"
+	"github.com/child6yo/rago/services/user/internal"
 )
 
 // Authorization определяет интерфейс сервиса авторизации.

@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/child6yo/rago/services/auth/internal/app/repository"
+import "github.com/child6yo/rago/services/user/internal/app/repository"
 
 type Usecase struct {
 	Authorization

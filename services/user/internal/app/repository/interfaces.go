@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/child6yo/rago/services/auth/internal"
+import "github.com/child6yo/rago/services/user/internal"
 
 // Authorization определяет интерфейс репозитория авторизации.
 // Отвечает за логику добавления и поиска пользователей в базе данных.
