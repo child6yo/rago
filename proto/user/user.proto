@@ -1,0 +1,43 @@
+syntax = "proto3"; 
+package pb; 
+option go_package = "github.com/child6yo/rago/services/user/pkg/pb";
+
+message User {
+    string login = 1;
+    string password = 2;
+}
+
+message UserID {
+    string id = 1;
+}
+
+message Token {
+    string token = 1;
+}
+
+message Empty {}
+
+service AuthService {
+    rpc Register (User) returns (Empty);
+    rpc Login (User) returns (Token);
+    rpc Auth (Token) returns (UserID);
+}
+
+message APIKey {
+    string key = 1;
+}
+
+message DeleteAPIKeyRequest {
+    int32 api_key_id = 1;
+    UserID user_id = 2;
+}
+
+message APIKeyArray {
+    repeated APIKey keys = 1;
+}
+
+service ApiKeyService {
+    rpc CreateAPIKey (UserID) returns (APIKey);
+    rpc DeleteAPIKey (DeleteAPIKeyRequest) returns (Empty);
+    rpc GetAPIKeys (UserID) returns (APIKeyArray);
+}
