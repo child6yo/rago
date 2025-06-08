@@ -25,6 +25,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				auth.POST("/sign-up", h.signUp)
 				auth.POST("/sign-in", h.signIn)
 			}
+
+			apiKeys := user.Group("/api-keys", h.userIdentity)
+			{
+				apiKeys.POST("/", h.createAPIKey)
+				apiKeys.GET("/", h.getAPIKeys)
+				apiKeys.DELETE("/", h.deleteAPIKey)
+			}
 		}
 	}
 

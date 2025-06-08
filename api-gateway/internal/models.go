@@ -7,3 +7,9 @@ type User struct {
 	Active     bool
 	Collection string
 }
+
+// ApiKey определяет модель ключа API.
+type ApiKey struct {
+	ID  int
+	Key string
+}

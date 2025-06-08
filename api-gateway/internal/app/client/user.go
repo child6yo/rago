@@ -13,8 +13,9 @@ import (
 
 // User определяет клиент пользовательского сервиса, доступного по gRPC.
 type User struct {
-	usrClient pb.AuthServiceClient
-	usrConn   *grpc.ClientConn
+	auth    pb.AuthServiceClient
+	apiKey  pb.ApiKeyServiceClient
+	usrConn *grpc.ClientConn
 
 	usrHost string
 	usrPort string
@@ -31,7 +32,8 @@ func (uc *User) startUserClient() {
 		log.Print("failed to connect user grpc server")
 	}
 
-	uc.usrClient = pb.NewAuthServiceClient(conn)
+	uc.auth = pb.NewAuthServiceClient(conn)
+	uc.apiKey = pb.NewApiKeyServiceClient(conn)
 	uc.usrConn = conn
 }
 
@@ -44,7 +46,7 @@ func (uc *User) stopUserClient() {
 
 // Register вызывает удалённый метод регистрации пользователя через gRPC.
 func (uc *User) Register(input internal.User) error {
-	_, err := uc.usrClient.Register(context.Background(), &pb.User{
+	_, err := uc.auth.Register(context.Background(), &pb.User{
 		Login:    input.Login,
 		Password: input.Password,
 	})
@@ -54,7 +56,7 @@ func (uc *User) Register(input internal.User) error {
 
 // Register вызывает удалённый метод логина пользователя через gRPC.
 func (uc *User) Login(input internal.User) (string, error) {
-	token, err := uc.usrClient.Login(context.Background(), &pb.User{
+	token, err := uc.auth.Login(context.Background(), &pb.User{
 		Login:    input.Login,
 		Password: input.Password,
 	})
@@ -66,10 +68,45 @@ func (uc *User) Login(input internal.User) (string, error) {
 }
 
 // Register вызывает удалённый метод авторизации пользователя через gRPC.
-func (uc *User) Auth(token string) error {
-	_, err := uc.usrClient.Auth(context.Background(), &pb.Token{
+// Возвращает айди пользователя и ошибку.
+func (uc *User) Auth(token string) (int, error) {
+	id, err := uc.auth.Auth(context.Background(), &pb.Token{
 		Token: token,
 	})
 
+	return int(id.Id), err
+}
+
+func (uc *User) CreateAPIKey(userID int) (string, error) {
+	key, err := uc.apiKey.CreateAPIKey(context.Background(), &pb.UserID{Id: int32(userID)})
+	if err != nil {
+		return "", err
+	}
+
+	return key.Key, nil
+}
+
+func (uc *User) DeleteAPIKey(keyID, userID int) error {
+	_, err := uc.apiKey.DeleteAPIKey(context.Background(), &pb.DeleteAPIKeyRequest{
+		ApiKeyId: int32(keyID),
+		UserId:   &pb.UserID{Id: int32(userID)},
+	})
+
 	return err
+}
+
+func (uc *User) GetAPIKeys(userID int) ([]internal.ApiKey, error) {
+	keys, err := uc.apiKey.GetAPIKeys(context.Background(), &pb.UserID{Id: int32(userID)})
+	if err != nil {
+		return []internal.ApiKey{}, err
+	}
+
+	internalKeys := make([]internal.ApiKey, len(keys.Keys))
+	for i, k := range keys.Keys {
+		internalKeys[i] = internal.ApiKey{
+			Key: k.Key,
+		}
+	}
+
+	return internalKeys, nil
 }
