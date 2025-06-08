@@ -14,7 +14,7 @@ import (
 type Application struct {
 	config.Config // конфигурация
 
-	db *sqlx.DB
+	db *sqlx.DB // соденинение с базой данных
 }
 
 // CreateApplication создает новый экземпляр приложения.
@@ -34,8 +34,8 @@ func (a *Application) StartApplication() {
 	}
 	a.db = db
 
-	repo := repository.NewAuthorizationRepository(db)
-	auth := usecase.NewAuthorizationService(repo)
+	repo := repository.NewRepository(db)
+	auth := usecase.NewUsecase(repo)
 
 	server := server.NewGRPCServer(auth, a.GRPCHost, a.GRPCPort)
 	err = server.StartGRPCServer()
