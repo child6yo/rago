@@ -12,6 +12,9 @@ type Config struct {
 
 	UserGRPCHost string
 	UserGRPCPort string
+
+	SplitterGRPCHost string
+	SplitterGRPCPort string
 }
 
 func InitConfig() Config {
@@ -22,6 +25,9 @@ func InitConfig() Config {
 
 	cfg.UserGRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.UserGRPCPort = getEnv("GRPC_PORT", "5001")
+
+	cfg.SplitterGRPCHost = getEnv("GRPC_HOST", "localhost")
+	cfg.SplitterGRPCPort = getEnv("GRPC_PORT", "5000")
 
 	return cfg
 }

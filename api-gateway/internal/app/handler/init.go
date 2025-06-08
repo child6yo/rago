@@ -33,6 +33,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				apiKeys.DELETE("/", h.deleteAPIKey)
 			}
 		}
+
+		storage := api.Group("/storage", h.checkAPIKey)
+		{
+			storage.POST("/", h.loadDocuments)
+		}
 	}
 
 	return router
