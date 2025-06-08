@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/jmoiron/sqlx"
@@ -40,8 +41,10 @@ func (akr *ApiKeyRepository) DeleteApiKey(keyID int, userID int) error {
 func (akr *ApiKeyRepository) GetApiKeys(userID int) ([]internal.ApiKey, error) {
 	var keys []internal.ApiKey
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", apiKeyTable)
+	query := fmt.Sprintf("SELECT id, key FROM %s WHERE user_id=$1", apiKeyTable)
 	err := akr.db.Select(&keys, query, userID)
+
+	log.Print("repo:", err)
 
 	return keys, err
 }

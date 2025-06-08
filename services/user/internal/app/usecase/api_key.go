@@ -3,6 +3,7 @@ package usecase
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"log"
 	"strings"
 
 	"github.com/child6yo/rago/services/user/internal"
@@ -24,11 +25,13 @@ func NewApiKeyService(repo repository.ApiKey) *ApiKeyService {
 func (acs *ApiKeyService) CreateApiKey(userID int) (string, error) {
 	key, err := generateAPIKey()
 	if err != nil {
+		log.Print("usecase:", err)
 		return "", err
 	}
 
 	err = acs.repo.CreateApiKey(userID, key)
 	if err != nil {
+		log.Print("usecase:", err)
 		return "", err
 	}
 
