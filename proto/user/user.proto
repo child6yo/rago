@@ -36,8 +36,9 @@ message APIKeyArray {
     repeated APIKey keys = 1;
 }
 
-service ApiKeyService {
+service APIKeyService {
     rpc CreateAPIKey (UserID) returns (APIKey);
     rpc DeleteAPIKey (DeleteAPIKeyRequest) returns (Empty);
     rpc GetAPIKeys (UserID) returns (APIKeyArray);
+    rpc CheckAPIKey (APIKey) returns (Empty);
 }
