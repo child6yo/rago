@@ -15,8 +15,8 @@ type Authorization interface {
 	Login(login, password string) (string, error)
 
 	// Auth валидирует авторизационный токен пользователя.
-	// Возвращает ошибку в случае неудачи.
-	Auth(accessToken string) error
+	// Возвращает айди пользователя и ошибку.
+	Auth(accessToken string) (int, error)
 }
 
 // ApiKey определяет интерфейс сервиса ключей API. 

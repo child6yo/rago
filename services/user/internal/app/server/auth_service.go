@@ -34,8 +34,7 @@ type AuthService struct {
 }
 
 // Register принимает на вход схему пользователя,
-// при успехе возвращает соответствующий статус.
-// В обратном случае возвращает ошибку.
+// Возвращает ошибку, если возникла.
 func (a *AuthService) Register(ctx context.Context, user *pb.User) (*pb.Empty, error) {
 	err := a.service.Register(internal.User{
 		Login:    user.Login,
@@ -54,10 +53,10 @@ func (a *AuthService) Login(ctx context.Context, user *pb.User) (*pb.Token, erro
 	return &pb.Token{Token: token}, err
 }
 
-// Auth принимает на вход токен, при успехе возвращает соответсвующий статус.
+// Auth принимает на вход токен, при успехе возвращает айди пользователя.
 // В обратном случае возвращает ошибку.
 func (a *AuthService) Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error) {
-	err := a.service.Auth(token.Token)
+	userID, err := a.service.Auth(token.Token)
 
-	return nil, err
+	return &pb.UserID{Id: int32(userID)}, err
 }

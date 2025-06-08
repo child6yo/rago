@@ -18,7 +18,7 @@ var (
 )
 
 type tokenClaims struct {
-	UserId int  `json:"user_id"`
+	UserID int  `json:"user_id"`
 	Active bool `json:"active"`
 	jwt.RegisteredClaims
 }
@@ -61,7 +61,7 @@ func (as *AuthorizationService) Login(login, password string) (string, error) {
 	return token.SignedString([]byte(signingKey))
 }
 
-func (as *AuthorizationService) Auth(accessToken string) error {
+func (as *AuthorizationService) Auth(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -70,15 +70,15 @@ func (as *AuthorizationService) Auth(accessToken string) error {
 		return []byte(signingKey), nil
 	})
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	_, ok := token.Claims.(*tokenClaims)
+	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return errors.New("token claims are not of type *tokenClaims")
+		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
 
-	return nil
+	return claims.UserID, nil
 }
 
 func generatePasswordHash(password string) string {
