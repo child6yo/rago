@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -47,4 +48,20 @@ func (akr *ApiKeyRepository) GetApiKeys(userID int) ([]internal.ApiKey, error) {
 	log.Print("repo:", err)
 
 	return keys, err
+}
+
+func (akr *ApiKeyRepository) CheckAPIKey(key string) error {
+	var id int
+
+	query := fmt.Sprintf("SELECT id FROM %s WHERE key=$1", apiKeyTable)
+	err := akr.db.Get(&id, query, key)
+	if err != nil {
+		return err
+	}
+
+	if id == 0 {
+		return errors.New("api key doesn't exists")
+	}
+
+	return nil
 }

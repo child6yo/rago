@@ -364,15 +364,17 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\bRegister\x12\b.pb.User\x1a\t.pb.Empty\x12\x1c\n" +
 	"\x05Login\x12\b.pb.User\x1a\t.pb.Token\x12\x1d\n" +
 	"\x04Auth\x12\t.pb.Token\x1a\n" +
-	".pb.UserID2\x96\x01\n" +
-	"\rApiKeyService\x12&\n" +
+	".pb.UserID2\xbc\x01\n" +
+	"\rAPIKeyService\x12&\n" +
 	"\fCreateAPIKey\x12\n" +
 	".pb.UserID\x1a\n" +
 	".pb.APIKey\x122\n" +
 	"\fDeleteAPIKey\x12\x17.pb.DeleteAPIKeyRequest\x1a\t.pb.Empty\x12)\n" +
 	"\n" +
 	"GetAPIKeys\x12\n" +
-	".pb.UserID\x1a\x0f.pb.APIKeyArrayB/Z-github.com/child6yo/rago/services/user/pkg/pbb\x06proto3"
+	".pb.UserID\x1a\x0f.pb.APIKeyArray\x12$\n" +
+	"\vCheckAPIKey\x12\n" +
+	".pb.APIKey\x1a\t.pb.EmptyB/Z-github.com/child6yo/rago/services/user/pkg/pbb\x06proto3"
 
 var (
 	file_proto_user_user_proto_rawDescOnce sync.Once
@@ -402,17 +404,19 @@ var file_proto_user_user_proto_depIdxs = []int32{
 	0, // 2: pb.AuthService.Register:input_type -> pb.User
 	0, // 3: pb.AuthService.Login:input_type -> pb.User
 	2, // 4: pb.AuthService.Auth:input_type -> pb.Token
-	1, // 5: pb.ApiKeyService.CreateAPIKey:input_type -> pb.UserID
-	5, // 6: pb.ApiKeyService.DeleteAPIKey:input_type -> pb.DeleteAPIKeyRequest
-	1, // 7: pb.ApiKeyService.GetAPIKeys:input_type -> pb.UserID
-	3, // 8: pb.AuthService.Register:output_type -> pb.Empty
-	2, // 9: pb.AuthService.Login:output_type -> pb.Token
-	1, // 10: pb.AuthService.Auth:output_type -> pb.UserID
-	4, // 11: pb.ApiKeyService.CreateAPIKey:output_type -> pb.APIKey
-	3, // 12: pb.ApiKeyService.DeleteAPIKey:output_type -> pb.Empty
-	6, // 13: pb.ApiKeyService.GetAPIKeys:output_type -> pb.APIKeyArray
-	8, // [8:14] is the sub-list for method output_type
-	2, // [2:8] is the sub-list for method input_type
+	1, // 5: pb.APIKeyService.CreateAPIKey:input_type -> pb.UserID
+	5, // 6: pb.APIKeyService.DeleteAPIKey:input_type -> pb.DeleteAPIKeyRequest
+	1, // 7: pb.APIKeyService.GetAPIKeys:input_type -> pb.UserID
+	4, // 8: pb.APIKeyService.CheckAPIKey:input_type -> pb.APIKey
+	3, // 9: pb.AuthService.Register:output_type -> pb.Empty
+	2, // 10: pb.AuthService.Login:output_type -> pb.Token
+	1, // 11: pb.AuthService.Auth:output_type -> pb.UserID
+	4, // 12: pb.APIKeyService.CreateAPIKey:output_type -> pb.APIKey
+	3, // 13: pb.APIKeyService.DeleteAPIKey:output_type -> pb.Empty
+	6, // 14: pb.APIKeyService.GetAPIKeys:output_type -> pb.APIKeyArray
+	3, // 15: pb.APIKeyService.CheckAPIKey:output_type -> pb.Empty
+	9, // [9:16] is the sub-list for method output_type
+	2, // [2:9] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name

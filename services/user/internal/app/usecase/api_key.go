@@ -47,6 +47,7 @@ func (acs *ApiKeyService) GetApiKeys(userID int) ([]internal.ApiKey, error) {
 }
 
 // generateAPIKey генерирует API-ключ формата Base64.
+// TODO - сменить формат (этот не парсится с юрла)
 func generateAPIKey() (string, error) {
 	key := make([]byte, keyLenght)
 
@@ -57,4 +58,8 @@ func generateAPIKey() (string, error) {
 	apiKey := base64.StdEncoding.EncodeToString(key)
 	apiKey = strings.TrimRight(apiKey, "=")
 	return apiKey, nil
+}
+
+func (acs *ApiKeyService) CheckAPIKey(key string) error {
+	return acs.repo.CheckAPIKey(key)
 }

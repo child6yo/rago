@@ -7,16 +7,17 @@ import (
 	"github.com/child6yo/rago/services/user/pkg/pb"
 )
 
-type ApiKeyServiceServer interface {
+type APIKeyServiceServer interface {
 	CreateAPIKey(ctx context.Context, userID *pb.UserID) (*pb.APIKey, error)
 	DeleteAPIKey(ctx context.Context, request *pb.DeleteAPIKeyRequest) (*pb.Empty, error)
 	GetAPIKeys(ctx context.Context, userID *pb.UserID) (*pb.APIKeyArray, error)
+	CheckAPIKey(ctx context.Context, key *pb.APIKey) (*pb.Empty, error)
 	mustEmbedUnimplementedApiKeyServiceServer()
 }
 
 // APIKeyService имплементирует интерфейс ApiKeyServiceServer.
 type APIKeyService struct {
-	pb.ApiKeyServiceServer
+	pb.APIKeyServiceServer
 	service usecase.ApiKey
 }
 
@@ -50,4 +51,10 @@ func (aks *APIKeyService) GetAPIKeys(ctx context.Context, userID *pb.UserID) (*p
 	}
 
 	return &pb.APIKeyArray{Keys: keys}, nil
+}
+
+func (aks *APIKeyService) CheckAPIKey(ctx context.Context, key *pb.APIKey) (*pb.Empty, error) {
+	err := aks.service.CheckAPIKey(key.Key)
+
+	return nil, err
 }

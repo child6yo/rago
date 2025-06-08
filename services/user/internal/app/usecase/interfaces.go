@@ -24,4 +24,5 @@ type ApiKey interface {
 	CreateApiKey(userID int) (string, error)
 	DeleteApiKey(keyID int, userID int) error
 	GetApiKeys(userID int) ([]internal.ApiKey, error)
+	CheckAPIKey(key string) error
 }

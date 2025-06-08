@@ -28,4 +28,8 @@ type ApiKey interface {
 	// GetApiKeys возвращает из базы данных все апи ключи пользователя.
 	// На вход принимает айди пользователя.
 	GetApiKeys(userID int) ([]internal.ApiKey, error)
+
+	// CheckAPIKey проверяет существование ключа апи в базе данных.
+	// На вход принимает ключ. Возвращает ошибку, если его не существует.
+	CheckAPIKey(key string) error
 }
