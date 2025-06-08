@@ -22,11 +22,8 @@ func NewAuthorizationRepository(db *sqlx.DB) *AuthorizationRepository {
 func (ar *AuthorizationRepository) CreateUser(user internal.User) error {
 	query := fmt.Sprintf("INSERT INTO %s (login, password_hash) values ($1, $2)", userTable)
 	_, err := ar.db.Exec(query, user.Login, user.Password)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 // GetUser проверяет наличие пользователя с указанными атрибутами в базе данных.
@@ -35,11 +32,7 @@ func (ar *AuthorizationRepository) GetUser(login, password string) (internal.Use
 	var user internal.User
 
 	query := fmt.Sprintf("SELECT id, login, password_hash AS password FROM %s WHERE login=$1 AND password_hash=$2", userTable)
-
 	err := ar.db.Get(&user, query, login, password)
-	if err != nil {
-		return internal.User{}, err
-	}
 
-	return user, nil
+	return user, err
 }

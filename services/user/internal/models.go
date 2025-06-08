@@ -1,10 +1,16 @@
 package internal
 
-// User определяет структуру пользователя.
+// User определяет модель пользователя.
 type User struct {
-	Id         int
+	ID         int
 	Login      string
 	Password   string
 	Active     bool
 	Collection string
+}
+
+// ApiKey определяет модель ключа API.
+type ApiKey struct {
+	ID  int
+	Key string
 }

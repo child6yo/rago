@@ -9,7 +9,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const userTable = "users"
+const (
+	userTable = "users"
+	apiKeyTable = "api_keys"
+)
 
 // NewPostgresDB создает новое подключение к базе данных postgres.
 func NewPostgresDB(host, port, username, dbName, password, sslMode string) (*sqlx.DB, error) {

@@ -49,7 +49,7 @@ func (as *AuthorizationService) Login(login, password string) (string, error) {
 	}
 
 	claims := tokenClaims{
-		user.Id,
+		user.ID,
 		user.Active,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenTTL)),

@@ -18,3 +18,10 @@ type Authorization interface {
 	// Возвращает ошибку в случае неудачи.
 	Auth(accessToken string) error
 }
+
+// ApiKey определяет интерфейс сервиса ключей API. 
+type ApiKey interface {
+	CreateApiKey(userID int, key string) error
+	DeleteApiKey(keyID int, userID int) error
+	GetApiKeys(userID int) ([]internal.ApiKey, error)
+}
