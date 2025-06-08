@@ -7,7 +7,7 @@ CREATE TABLE users (
     id            serial primary key,
     login         varchar(255) not null unique,
     password_hash varchar(255) not null,
-    active        boolean default false not null,
+    active        boolean default true not null,
     collection_id int references collections(id) on delete cascade
 );
 
