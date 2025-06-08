@@ -21,7 +21,7 @@ type Authorization interface {
 
 // ApiKey определяет интерфейс сервиса ключей API. 
 type ApiKey interface {
-	CreateApiKey(userID int, key string) error
+	CreateApiKey(userID int) (string, error)
 	DeleteApiKey(keyID int, userID int) error
 	GetApiKeys(userID int) ([]internal.ApiKey, error)
 }

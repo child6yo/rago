@@ -1,8 +1,16 @@
 package usecase
 
 import (
+	"crypto/rand"
+	"encoding/base64"
+	"strings"
+
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/child6yo/rago/services/user/internal/app/repository"
+)
+
+const (
+	keyLenght = 128
 )
 
 type ApiKeyService struct {
@@ -13,8 +21,18 @@ func NewApiKeyService(repo repository.ApiKey) *ApiKeyService {
 	return &ApiKeyService{repo: repo}
 }
 
-func (acs *ApiKeyService) CreateApiKey(userID int, key string) error {
-	return acs.repo.CreateApiKey(userID, key)
+func (acs *ApiKeyService) CreateApiKey(userID int) (string, error) {
+	key, err := generateAPIKey()
+	if err != nil {
+		return "", err
+	}
+
+	err = acs.repo.CreateApiKey(userID, key)
+	if err != nil {
+		return "", err
+	}
+
+	return key, nil
 }
 
 func (acs *ApiKeyService) DeleteApiKey(keyID int, userID int) error {
@@ -23,4 +41,17 @@ func (acs *ApiKeyService) DeleteApiKey(keyID int, userID int) error {
 
 func (acs *ApiKeyService) GetApiKeys(userID int) ([]internal.ApiKey, error) {
 	return acs.repo.GetApiKeys(userID)
+}
+
+// generateAPIKey генерирует API-ключ формата Base64.
+func generateAPIKey() (string, error) {
+	key := make([]byte, keyLenght)
+
+	if _, err := rand.Read(key); err != nil {
+		return "", err
+	}
+
+	apiKey := base64.StdEncoding.EncodeToString(key)
+	apiKey = strings.TrimRight(apiKey, "=")
+	return apiKey, nil
 }
