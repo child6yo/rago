@@ -16,3 +16,5 @@ CREATE TABLE api_keys (
     user_id   int not null references users(id) on delete cascade,
     key       text not null unique
 );
+
+CREATE UNIQUE INDEX idx_api_keys_key ON api_keys(key);
