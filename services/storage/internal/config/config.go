@@ -65,7 +65,7 @@ func switchDatabase() database.VectorDB {
 
 func connectToLLM() embeddings.Embedder {
 	ollmaURL := getEnv("OLLAMA_URL", "http://localhost:11434")
-	model := getEnv("OLLAMA_EMB_MODEL", "qwen3:0.6b")
+	model := getEnv("OLLAMA_EMB_MODEL", "nomic-embed-text:v1.5")
 	llm, err := ollama.New(ollama.WithModel(model), ollama.WithServerURL(ollmaURL))
 	if err != nil {
 		log.Fatal(err)
