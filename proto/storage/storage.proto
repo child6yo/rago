@@ -1,0 +1,26 @@
+syntax = "proto3"; 
+package generator; 
+option go_package = "github.com/child6yo/rago/services/storage/pkg/pb";
+
+message QueryRequest {
+    string query = 1;
+    int32 limit = 2;
+}
+
+message Metadata {
+    string url = 1;
+}
+
+message Document {
+    string content = 1;
+    Metadata metadata = 2;
+    float score = 3;
+}
+
+message QueryResponse {
+    repeated Document document = 1;
+}
+
+service StorageService {
+    rpc Search (QueryRequest) returns (QueryResponse);
+}

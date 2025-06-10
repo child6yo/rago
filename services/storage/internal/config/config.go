@@ -14,6 +14,9 @@ import (
 
 // Config - структура, определяющая конфигурацию приложения.
 type Config struct {
+	GRPCHost string
+	GRPCPort string
+
 	Db database.VectorDB
 
 	KafkaBrokers    []string
@@ -26,6 +29,9 @@ type Config struct {
 // переданную через переменные окружения.
 func InitConfig() Config {
 	cfg := Config{}
+
+	cfg.GRPCHost = getEnv("GRPC_HOST", "localhost")
+	cfg.GRPCPort = getEnv("GRPC_PORT", "5002")
 
 	cfg.Db = switchDatabase()
 
