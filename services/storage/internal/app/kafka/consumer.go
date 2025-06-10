@@ -29,7 +29,6 @@ func (c ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, 
 	for msg := range claim.Messages() {
 		if err := c.handler.HandleDocMessage(msg.Value); err != nil {
 			log.Printf("failed to handle message: %v", err)
-			continue
 		}
 
 		session.MarkMessage(msg, "")
