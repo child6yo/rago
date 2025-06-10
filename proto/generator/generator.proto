@@ -1,0 +1,15 @@
+syntax = "proto3"; 
+package generator; 
+option go_package = "github.com/child6yo/rago/services/generator/pkg/pb";
+
+message Query {
+    string query = 1;
+}
+
+message ResponseChunk {
+    string chunk = 1;
+}
+
+service GeneratorService {
+    rpc Generate(Query) returns (stream ResponseChunk);
+}
