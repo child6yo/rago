@@ -38,6 +38,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			storage.POST("/", h.loadDocuments)
 		}
+
+		api.GET("/generation", h.generateAnswer)
 	}
 
 	return router
