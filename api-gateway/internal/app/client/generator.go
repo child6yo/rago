@@ -41,15 +41,13 @@ func (g *Generator) stopGeneratoClient() {
 }
 
 func (g *Generator) Generate(ctx context.Context, query string) (<-chan string, error) {
-	stream, err := g.generator.Generate(ctx, &pb.Query{Query: query})
-	if err != nil {
-		return nil, err
-	}
-
-	log.Print(query)
-
 	out := make(chan string)
 	go func() {
+		stream, err := g.generator.Generate(ctx, &pb.Query{Query: query})
+		if err != nil {
+			log.Print(err)
+		}
+
 		defer close(out)
 		for {
 			msg, err := stream.Recv()

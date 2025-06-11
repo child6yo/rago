@@ -39,7 +39,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			storage.POST("/", h.loadDocuments)
 		}
 
-		api.GET("/generation", h.generateAnswer)
+		api.GET("/generation", h.ssEventMiddleware(), h.generateAnswer)
 	}
 
 	return router
