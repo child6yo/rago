@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RAG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="chat-container" role="main" aria-label="Чат">
+    <header class="chat-header">
+      <h1>AI Assistant</h1>
+    </header>
+
+    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+
+    <form class="chat-input-form" id="chatForm" aria-label="Форма ввода сообщения">
+      <input type="text" id="userInput" placeholder="Напишите ваше сообщение..." autocomplete="off" required />
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+
+  <script src="chatbot.js" defer></script>
+</body>
+</html>
