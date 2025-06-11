@@ -27,7 +27,7 @@ paths:
               items:
                 type: object
                 properties:
-                  chunk:
+                  content:
                     type: string
                     example: "The Cocoanuts is a 1929 pre-Code musical comedy film starring the Marx Brothers"
                   metadata:
@@ -35,11 +35,11 @@ paths:
                     example: "url:https://en.wikipedia.org/wiki/The_Cocoanuts"
               example:
                 - {
-                    chunk: "The Cocoanuts is a 1929 pre-Code musical comedy film starring the Marx Brothers",
+                    content: "The Cocoanuts is a 1929 pre-Code musical comedy film starring the Marx Brothers",
                     metadata:
                       { url: "https://en.wikipedia.org/wiki/The_Cocoanuts" },
                   }
-                - { chunk: "bla bla", metadata: { url: "value" } }
+                - { content: "bla bla", metadata: { url: "value" } }
       responses:
         "202":
           description: Accepted
