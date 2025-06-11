@@ -1,0 +1,27 @@
+services:
+  ollama:  # New service for running the Dockerfile in /ollama
+    image: ollama/ollama:latest
+    pull_policy: always
+    container_name: ollama
+    ports: ["11434:11434"] # will be accessible in http://localhost:11435
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+      - ./scripts:/scripts
+    tty: true
+    entrypoint: ["/bin/sh", "/scripts/run_ollama.sh"]
+    networks:
+      - ollama-docker
+  
+  generator:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    networks:
+      - ollama-docker
+
+networks:
+  ollama-docker:
+    external: false
+  
