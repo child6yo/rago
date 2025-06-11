@@ -4,7 +4,7 @@
 // - protoc             v6.30.2
 // source: proto/splitter.proto
 
-package splitter
+package pb
 
 import (
 	context "context"
