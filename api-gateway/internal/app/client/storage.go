@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/api-gateway/internal"
-	pb "github.com/child6yo/rago/api-gateway/pkg/pb/splitter"
+	"github.com/child6yo/rago/api-gateway/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -54,7 +54,6 @@ func (sc *Storage) LoadDocuments(docs []internal.Document) error {
 	pbDocArray := &pb.DocumentArray{
 		Doc: pbDocs,
 	}
-
 
 	_, err := sc.splitter.HandleDocuments(context.Background(), pbDocArray)
 	log.Print(err)

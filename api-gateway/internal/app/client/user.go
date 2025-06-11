@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/api-gateway/internal"
-	pb "github.com/child6yo/rago/api-gateway/pkg/pb/user"
+	"github.com/child6yo/rago/api-gateway/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
