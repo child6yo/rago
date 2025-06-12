@@ -1,26 +1,578 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RAG</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Потоковый AI-чат с сохранением пробелов</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --dark-1: #0f172a;
+      --dark-2: #1e293b;
+      --dark-3: #334155;
+      --light-1: #f1f5f9;
+      --light-2: #e2e8f0;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --error: #ef4444;
+      --user-bg: #4338ca;
+      --bot-bg: #1e293b;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, var(--dark-1), var(--dark-2));
+      color: var(--light-1);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 800px;
+      height: 90vh;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 1.5rem;
+      background: rgba(30, 41, 59, 0.7);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    .header-content h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .header-content p {
+      font-size: 0.875rem;
+      color: var(--light-2);
+      opacity: 0.7;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--dark-3) transparent;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: var(--dark-3);
+      border-radius: 4px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 1rem 1.25rem;
+      border-radius: 1rem;
+      line-height: 1.6;
+      position: relative;
+      animation: messageAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--user-bg);
+      border-bottom-right-radius: 0.25rem;
+      box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2);
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: var(--bot-bg);
+      border-bottom-left-radius: 0.25rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      /* Ключевое свойство для сохранения пробелов */
+      white-space: pre-wrap; 
+      word-break: break-word;
+    }
+
+    .message-avatar {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: -14px;
+    }
+
+    .user .message-avatar {
+      background: var(--user-bg);
+      right: -8px;
+    }
+
+    .bot .message-avatar {
+      background: var(--bot-bg);
+      left: -8px;
+    }
+
+    .message-content {
+      word-wrap: break-word;
+    }
+
+    .bot-message-content {
+      display: block;
+      /* Ключевое свойство для сохранения пробелов */
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.2em;
+      background: var(--light-1);
+      vertical-align: middle;
+      margin-left: 2px;
+      border-radius: 1px;
+      opacity: 1;
+      animation: blink 1s infinite;
+    }
+
+    .chat-input-container {
+      padding: 1.5rem;
+      background: rgba(30, 41, 59, 0.7);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.9rem 1.25rem;
+      border: none;
+      border-radius: 0.75rem;
+      background: rgba(51, 65, 85, 0.5);
+      color: var(--light-1);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .chat-input:focus {
+      background: rgba(51, 65, 85, 0.8);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .chat-input::placeholder {
+      color: rgba(226, 232, 240, 0.5);
+    }
+
+    .send-button {
+      padding: 0.9rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .send-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .send-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status-indicator {
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem;
+      font-size: 0.875rem;
+      color: rgba(226, 232, 240, 0.6);
+    }
+
+    @keyframes messageAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--light-1);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: typingAnimation 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    @media (max-width: 640px) {
+      .chat-container {
+        height: 95vh;
+        border-radius: 1rem;
+      }
+      
+      .chat-header {
+        padding: 1rem;
+      }
+      
+      .message {
+        max-width: 90%;
+      }
+      
+      .chat-input-container {
+        padding: 1rem;
+      }
+      
+      .chat-form {
+        gap: 0.5rem;
+      }
+      
+      .chat-input, .send-button {
+        padding: 0.75rem 1rem;
+      }
+      
+      .send-button span {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="chat-container" role="main" aria-label="Чат">
-    <header class="chat-header">
-      <h1>AI Assistant</h1>
-    </header>
-
-    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
-
-    <form class="chat-input-form" id="chatForm" aria-label="Форма ввода сообщения">
-      <input type="text" id="userInput" placeholder="Напишите ваше сообщение..." autocomplete="off" required />
-      <button type="submit">Отправить</button>
-    </form>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h-2v-6h2v6zm3 0h-2v-6h2v6zm3 0h-2v-6h2v6z"/>
+        </svg>
+      </div>
+      <div class="header-content">
+        <h1>Потоковый AI-ассистент</h1>
+        <p>Задавайте вопросы и получайте ответы в реальном времени</p>
+      </div>
+    </div>
+    
+    <div id="chatMessages" class="chat-messages">
+      <div class="message bot">
+        <div class="message-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13.5v7l6-3.5z"/>
+          </svg>
+        </div>
+        <div class="message-content">
+          Привет! Я ваш AI-ассистент. Задавайте любые вопросы, и я постараюсь помочь вам с ответами.
+        </div>
+      </div>
+    </div>
+    
+    <div class="status-indicator" id="statusIndicator"></div>
+    
+    <div class="chat-input-container">
+      <form id="chatForm" class="chat-form">
+        <input 
+          type="text" 
+          id="userInput" 
+          class="chat-input" 
+          placeholder="Напишите ваше сообщение..." 
+          autocomplete="off"
+          required
+        >
+        <button type="submit" class="send-button" id="sendButton">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+          </svg>
+          <span>Отправить</span>
+        </button>
+      </form>
+    </div>
   </div>
 
-  <script src="chatbot.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // DOM элементы
+      const form = document.getElementById('chatForm');
+      const input = document.getElementById('userInput');
+      const messages = document.getElementById('chatMessages');
+      const sendButton = document.getElementById('sendButton');
+      const statusIndicator = document.getElementById('statusIndicator');
+      
+      // Текущее состояние
+      let isGenerating = false;
+      let eventSource = null;
+      let botMessage = null;
+      let accumulatedText = '';
+      
+      // Отправка сообщения
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const query = input.value.trim();
+        if (!query || isGenerating) return;
+        
+        // Добавляем сообщение пользователя
+        addMessage(query, 'user');
+        input.value = '';
+        sendButton.disabled = true;
+        
+        // Создаем контейнер для сообщения бота
+        botMessage = createBotMessage();
+        messages.appendChild(botMessage);
+        messages.scrollTop = messages.scrollHeight;
+        
+        // Статус подключения
+        updateStatus('Подключаемся к серверу...');
+        isGenerating = true;
+        accumulatedText = '';
+        
+        try {
+          // Создаем EventSource для SSE соединения
+          eventSource = new EventSource(`http://localhost:8000/api/v1/generation?query=${encodeURIComponent(query)}`);
+          
+          // Обработка входящих сообщений
+          eventSource.addEventListener('message', (event) => {
+            updateStatus('Получаем ответ...');
+            
+            // Добавляем новый чанк к накопленному тексту
+            accumulatedText += event.data;
+            
+            // Обновляем содержимое сообщения
+            const contentElement = botMessage.querySelector('.bot-message-content');
+            contentElement.innerHTML = accumulatedText;
+            
+            // Прокрутка вниз
+            messages.scrollTop = messages.scrollHeight;
+          });
+          
+          // Обработка события завершения
+          eventSource.addEventListener('end', (event) => {
+            updateStatus('Готово');
+            if (event.data === '[DONE]') {
+              completeGeneration();
+            }
+          });
+          
+          // Обработка ошибок
+          eventSource.addEventListener('error', (event) => {
+            console.error('SSE error:', event);
+            updateStatus('Ошибка соединения');
+            addErrorIndicator();
+          });
+          
+          eventSource.onerror = () => {
+            updateStatus('Соединение прервано');
+            addErrorIndicator();
+            completeGeneration();
+          };
+          
+        } catch (error) {
+          console.error('Connection error:', error);
+          updateStatus('Ошибка подключения');
+          addErrorIndicator();
+          completeGeneration();
+        }
+      });
+      
+      // Создание сообщения бота
+      function createBotMessage() {
+        const message = document.createElement('div');
+        message.className = 'message bot';
+        
+        // Аватар
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13.5v7l6-3.5z"/>
+          </svg>
+        `;
+        
+        // Контент
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        
+        const botContent = document.createElement('div');
+        botContent.className = 'bot-message-content';
+        botContent.textContent = ''; // Начальный пустой текст
+        
+        // Добавляем индикатор набора текста
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'typing-indicator';
+        typingIndicator.innerHTML = `
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        `;
+        
+        botContent.appendChild(typingIndicator);
+        content.appendChild(botContent);
+        
+        message.appendChild(avatar);
+        message.appendChild(content);
+        
+        return message;
+      }
+      
+      // Завершение генерации
+      function completeGeneration() {
+        isGenerating = false;
+        sendButton.disabled = false;
+        
+        if (eventSource) {
+          eventSource.close();
+          eventSource = null;
+        }
+        
+        // Удаляем индикатор набора текста
+        const typingIndicator = botMessage.querySelector('.typing-indicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+        
+        botMessage = null;
+      }
+      
+      // Добавление индикатора ошибки
+      function addErrorIndicator() {
+        if (!botMessage) return;
+        
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-indicator';
+        errorElement.textContent = ' (соединение прервано)';
+        errorElement.style.color = 'var(--error)';
+        errorElement.style.display = 'inline';
+        errorElement.style.fontSize = '0.9em';
+        errorElement.style.marginLeft = '0.5em';
+        
+        const content = botMessage.querySelector('.bot-message-content');
+        if (content) {
+          content.appendChild(errorElement);
+        }
+      }
+      
+      // Обновление статуса
+      function updateStatus(text) {
+        statusIndicator.textContent = text;
+      }
+      
+      // Добавление сообщения
+      function addMessage(text, sender = 'user') {
+        const message = document.createElement('div');
+        message.className = `message ${sender}`;
+        
+        // Аватар
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        if (sender === 'user') {
+          avatar.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          `;
+        } else {
+          avatar.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13.5v7l6-3.5z"/>
+            </svg>
+          `;
+        }
+        
+        // Контент
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.textContent = text;
+        
+        message.appendChild(avatar);
+        message.appendChild(content);
+        messages.appendChild(message);
+        
+        // Прокрутка вниз
+        messages.scrollTop = messages.scrollHeight;
+        
+        return message;
+      }
+      
+      // Фокус на поле ввода при загрузке
+      input.focus();
+    });
+  </script>
 </body>
 </html>
