@@ -7,6 +7,7 @@ import (
 
 	"github.com/child6yo/rago/services/storage/internal"
 	"github.com/child6yo/rago/services/storage/internal/app/repository/mock"
+	eMock "github.com/child6yo/rago/services/storage/internal/pkg/embedding/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -63,11 +64,17 @@ func TestHandleDocMessage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockDB := &mock.VectorDB{}
 			tt.mockFunk(mockDB)
-			loader := NewLoader(mockDB)
+
+			mockEmbs := &eMock.Embedder{}
+			mockEmbs.GenerateEmbeddingsFunc = func(ctx context.Context, input string) ([]float32, error) {
+				return []float32{}, nil
+			}
+
+			loader := NewLoader(mockDB, mockEmbs)
 
 			msg := []byte(tt.input)
 
-			err := loader.LoadDocument(msg)
+			err := loader.LoadDocument(context.Background(), msg)
 			if tt.expError {
 				require.Error(t, err)
 			} else {
