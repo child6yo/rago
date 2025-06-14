@@ -27,5 +27,5 @@ type VectorDB interface {
 	GetAllDocuments(ctx context.Context, collection string) ([]internal.Document, error)
 
 	// Query выполняет векторный поиск по хранилищу.
-	Query(ctx context.Context, query string, numDocs int) ([]internal.Document, error)
+	Query(ctx context.Context, collection string, vector []float32, numDocs int) ([]internal.Document, error)
 }
