@@ -2,14 +2,8 @@ package config
 
 import (
 	"log"
-	"net/url"
 	"os"
 	"strconv"
-
-	"github.com/child6yo/rago/services/storage/internal/pkg/database"
-	"github.com/child6yo/rago/services/storage/internal/pkg/database/qdrant"
-	"github.com/tmc/langchaingo/embeddings"
-	"github.com/tmc/langchaingo/llms/ollama"
 )
 
 // Config - структура, определяющая конфигурацию приложения.
@@ -17,7 +11,10 @@ type Config struct {
 	GRPCHost string
 	GRPCPort string
 
-	Db database.VectorDB
+	DbHost string
+	DbPort int
+
+	OllamaURL string
 
 	KafkaBrokers    []string
 	KafkaGroupID    string
@@ -33,7 +30,8 @@ func InitConfig() Config {
 	cfg.GRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.GRPCPort = getEnv("GRPC_PORT", "5002")
 
-	cfg.Db = switchDatabase()
+	cfg.DbHost = getEnv("VECTORDB_HOST", "localhost")
+	cfg.DbPort = getIntEnv("VECTORDB_PORT", 6333)
 
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaGroupID = getEnv("KAFKA_GROUP_ID", "group.storage")
@@ -42,47 +40,10 @@ func InitConfig() Config {
 	return cfg
 }
 
-func switchDatabase() database.VectorDB {
-	dbURL, err := url.Parse(getEnv("DB_URL", "http://localhost:6333"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	embedder := connectToLLM()
-	collection := getEnv("DB_COLLECTION", "dev_coll")
-
-	switch getEnv("DB", "qdrant") {
-	case "qdrant":
-		db, err := qdrant.NewQdrantConnection(dbURL, embedder, collection)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return db
-	}
-
-	return nil
-}
-
-func connectToLLM() embeddings.Embedder {
-	ollmaURL := getEnv("OLLAMA_URL", "http://localhost:11434")
-	model := getEnv("OLLAMA_EMB_MODEL", "nomic-embed-text:v1.5")
-	llm, err := ollama.New(ollama.WithModel(model), ollama.WithServerURL(ollmaURL))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	embedder, err := embeddings.NewEmbedder(llm)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return embedder
-}
-
 func getEnv(key, defaultValue string) string {
 	value, exists := os.LookupEnv(key)
 	if !exists {
-		log.Print("Failed to load env")
+		log.Printf("config: failed to load env, defaul value = %s", defaultValue)
 		return defaultValue
 	}
 	return value
@@ -96,7 +57,7 @@ func getIntEnv(key string, defaultValue int) int {
 
 	value, err := strconv.Atoi(valueStr)
 	if err != nil {
-		log.Print("Failed to load env: ", err)
+		log.Printf("config: failed to load env, defaul value = %d", defaultValue)
 		return defaultValue
 	}
 	return value
