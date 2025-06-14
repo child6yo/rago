@@ -24,8 +24,8 @@ type OllamaEmbedder struct {
 	URL    *url.URL
 }
 
-// NewOllamaBackend создает новый экземпляр OllamaEmbedder.
-func NewOllamaBackend(model, ollamaAddress string, timeout time.Duration) (*OllamaEmbedder, error) {
+// NewOllamaEmbedder создает новый экземпляр OllamaEmbedder.
+func NewOllamaEmbedder(model, ollamaAddress string, timeout time.Duration) (*OllamaEmbedder, error) {
 	parsedURL, err := url.Parse(fmt.Sprintf("%s%s", ollamaAddress, embeddingsURL))
 	if err != nil {
 		return nil, fmt.Errorf("embedding: failed to parse URL, %w", err)
@@ -61,7 +61,7 @@ func (o *OllamaEmbedder) GenerateEmbeddings(ctx context.Context, input string) (
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("embedding: failed to generate embeddings, error = %d", resp.StatusCode)
+		return nil, fmt.Errorf("embedding: failed to generate embeddings, error %d", resp.StatusCode)
 	}
 
 	var response OllamaResponse
