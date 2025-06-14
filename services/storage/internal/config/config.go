@@ -14,6 +14,7 @@ type Config struct {
 	DbHost string
 	DbPort int
 
+	OllamaModel string
 	OllamaURL string
 
 	KafkaBrokers    []string
@@ -32,6 +33,9 @@ func InitConfig() Config {
 
 	cfg.DbHost = getEnv("VECTORDB_HOST", "localhost")
 	cfg.DbPort = getIntEnv("VECTORDB_PORT", 6333)
+
+	cfg.OllamaModel = getEnv("OLLAMA_MODEL", "nomic-embed-text:v1.5")
+	cfg.OllamaURL = getEnv("OLLAMA_ADDRES", "localhost:11434")
 
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaGroupID = getEnv("KAFKA_GROUP_ID", "group.storage")

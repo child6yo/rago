@@ -10,7 +10,7 @@ import (
 type DocumentLoader interface {
 	// LoadDocument обрабатывает закодированные json-документы,
 	// декодирует их в структуры и передает далее в векторную базу данных.
-	LoadDocument(message []byte) error
+	LoadDocument(ctx context.Context, message []byte) error 
 }
 
 // StorageService определяет интерфейс взаимодействия с векторным хранилищем.

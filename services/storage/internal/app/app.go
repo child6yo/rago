@@ -3,12 +3,14 @@ package app
 import (
 	"errors"
 	"log"
+	"time"
 
 	"github.com/child6yo/rago/services/storage/internal/app/kafka"
 	qdrantrepo "github.com/child6yo/rago/services/storage/internal/app/repository/qdrant"
 	"github.com/child6yo/rago/services/storage/internal/app/server"
 	"github.com/child6yo/rago/services/storage/internal/app/usecase"
 	"github.com/child6yo/rago/services/storage/internal/config"
+	"github.com/child6yo/rago/services/storage/internal/pkg/embedding"
 )
 
 // Application - структура приложения хранилища.
@@ -35,7 +37,12 @@ func (a *Application) StartApplication() error {
 		log.Fatal(err)
 	}
 
-	loader := usecase.NewLoader(vectorDBClient)
+	ollamaEmbedder, err := embedding.NewOllamaEmbedder(a.OllamaModel, a.OllamaURL, 30*time.Second)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	loader := usecase.NewLoader(vectorDBClient, ollamaEmbedder)
 
 	a.broker = kafka.NewConnection(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, loader)
 	go func() {
