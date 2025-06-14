@@ -33,5 +33,5 @@ type Storage interface {
 	// Search выполняет поиск ближайших векторов.
 	// На вход принимает текст и количество документов, которое нужно вернуть.
 	// Возвращает слайс ближайших (в векторном представлении) к нему документов.
-	Search(ctx context.Context, query string, numDocs int) ([]internal.Document, error)
+	Search(ctx context.Context, collection string, query string, numDocs int) ([]internal.Document, error)
 }
