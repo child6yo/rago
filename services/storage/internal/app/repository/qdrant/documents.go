@@ -7,7 +7,7 @@ import (
 )
 
 // PutDocument загружает единицу данных в коллекцию.
-func (c *Client) PutDocument(ctx context.Context, docs []internal.Document) error {
+func (c *Client) PutDocument(ctx context.Context, docs internal.Document) error {
 	return nil
 }
 

@@ -6,8 +6,8 @@ import (
 	"github.com/child6yo/rago/services/storage/internal"
 )
 
-// VectorDBMock мок интерфейса VectorDB.
-type VectorDBMock struct {
+// VectorDB мок интерфейса VectorDB.
+type VectorDB struct {
     CreateCollectionFunc func(ctx context.Context, name string) error
     DeleteCollectionFunc func(ctx context.Context, collection string) error
     PutDocumentFunc      func(ctx context.Context, docs internal.Document) error
@@ -18,7 +18,7 @@ type VectorDBMock struct {
 }
 
 // CreateCollection mock
-func (m *VectorDBMock) CreateCollection(ctx context.Context, name string) error {
+func (m *VectorDB) CreateCollection(ctx context.Context, name string) error {
     if m.CreateCollectionFunc != nil {
         return m.CreateCollectionFunc(ctx, name)
     }
@@ -26,7 +26,7 @@ func (m *VectorDBMock) CreateCollection(ctx context.Context, name string) error 
 }
 
 // DeleteCollection mock
-func (m *VectorDBMock) DeleteCollection(ctx context.Context, collection string) error {
+func (m *VectorDB) DeleteCollection(ctx context.Context, collection string) error {
     if m.DeleteCollectionFunc != nil {
         return m.DeleteCollectionFunc(ctx, collection)
     }
@@ -34,7 +34,7 @@ func (m *VectorDBMock) DeleteCollection(ctx context.Context, collection string) 
 }
 
 // PutDocument mock
-func (m *VectorDBMock) PutDocument(ctx context.Context, docs internal.Document) error {
+func (m *VectorDB) PutDocument(ctx context.Context, docs internal.Document) error {
     if m.PutDocumentFunc != nil {
         return m.PutDocumentFunc(ctx, docs)
     }
@@ -42,7 +42,7 @@ func (m *VectorDBMock) PutDocument(ctx context.Context, docs internal.Document) 
 }
 
 // DeleteDocument mock
-func (m *VectorDBMock) DeleteDocument(ctx context.Context, id string, collection string) error {
+func (m *VectorDB) DeleteDocument(ctx context.Context, id string, collection string) error {
     if m.DeleteDocumentFunc != nil {
         return m.DeleteDocumentFunc(ctx, id, collection)
     }
@@ -50,7 +50,7 @@ func (m *VectorDBMock) DeleteDocument(ctx context.Context, id string, collection
 }
 
 // GetDocument mock
-func (m *VectorDBMock) GetDocument(ctx context.Context, collection string, id string) (internal.Document, error) {
+func (m *VectorDB) GetDocument(ctx context.Context, collection string, id string) (internal.Document, error) {
     if m.GetDocumentFunc != nil {
         return m.GetDocumentFunc(ctx, collection, id)
     }
@@ -58,7 +58,7 @@ func (m *VectorDBMock) GetDocument(ctx context.Context, collection string, id st
 }
 
 // GetAllDocuments mock
-func (m *VectorDBMock) GetAllDocuments(ctx context.Context, collection string) ([]internal.Document, error) {
+func (m *VectorDB) GetAllDocuments(ctx context.Context, collection string) ([]internal.Document, error) {
     if m.GetAllDocumentsFunc != nil {
         return m.GetAllDocumentsFunc(ctx, collection)
     }
@@ -66,7 +66,7 @@ func (m *VectorDBMock) GetAllDocuments(ctx context.Context, collection string) (
 }
 
 // Query mock
-func (m *VectorDBMock) Query(ctx context.Context, query string, numDocs int) ([]internal.Document, error) {
+func (m *VectorDB) Query(ctx context.Context, query string, numDocs int) ([]internal.Document, error) {
     if m.QueryFunc != nil {
         return m.QueryFunc(ctx, query, numDocs)
     }

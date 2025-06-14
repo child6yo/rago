@@ -9,7 +9,7 @@ import (
 
 // ConsumerGroupHandler имплементирует интерфейс sarama.ConsumerGroupHandler.
 type ConsumerGroupHandler struct {
-	handler usecase.DocHandler
+	handler usecase.DocumentLoader
 }
 
 // Setup выполняется перед началом получения сообщений,
@@ -27,8 +27,8 @@ func (c ConsumerGroupHandler) Cleanup(session sarama.ConsumerGroupSession) error
 // ConsumeClaim занимается получением сообщений и передачей в обработчики.
 func (c ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
-		if err := c.handler.HandleDocMessage(msg.Value); err != nil {
-			log.Printf("failed to handle message: %v", err)
+		if err := c.handler.LoadDocument(msg.Value); err != nil {
+			log.Printf("consumer: failed to handle message: %v", err)
 		}
 
 		session.MarkMessage(msg, "")

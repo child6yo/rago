@@ -15,7 +15,7 @@ type VectorDB interface {
 	DeleteCollection(ctx context.Context, collection string) error
 
 	// PutDocument загружает единицу данных в коллекцию.
-	PutDocument(ctx context.Context, docs []internal.Document) error
+	PutDocument(ctx context.Context, docs internal.Document) error
 
 	// DeleteDocument удаляет документ из коллекции по айди.
 	DeleteDocument(ctx context.Context, id string, collection string) error
