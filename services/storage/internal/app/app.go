@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/services/storage/internal/app/kafka"
+	qdrantrepo "github.com/child6yo/rago/services/storage/internal/app/repository/qdrant"
 	"github.com/child6yo/rago/services/storage/internal/app/server"
 	"github.com/child6yo/rago/services/storage/internal/app/usecase"
 	"github.com/child6yo/rago/services/storage/internal/config"
@@ -29,16 +30,21 @@ func (a *Application) StartApplication() error {
 		return errors.New("application already started")
 	}
 
-	DocHandler := usecase.NewDocHandlerService(a.Db)
+	vectorDBClient, err := qdrantrepo.NewQdrantClient(a.DbHost, a.DbPort)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	a.broker = kafka.NewConnection(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, DocHandler)
+	loader := usecase.NewLoader(vectorDBClient)
+
+	a.broker = kafka.NewConnection(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, loader)
 	go func() {
 		if err := a.broker.RunConsumers(); err != nil {
 			log.Fatal(err)
 		}
 	}()
 
-	usecase := usecase.NewStorageService(a.Db)
+	usecase := usecase.NewStorageService(vectorDBClient)
 
 	a.server = server.NewGRPCServer(usecase, a.GRPCHost, a.GRPCPort)
 	go func() {

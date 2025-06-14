@@ -13,10 +13,10 @@ import (
 
 // Connection - структура, определяющая соединение с Kafka-брокером.
 type Connection struct {
-	brokers, topics []string           // список адресов брокеров, список обрабатываемых топиков
-	groupID         string             // айди группы консьюмеров
-	docHandler      usecase.DocHandler // обработчик документов
-	numPartitions   int                //количество партиций в топике
+	brokers, topics []string               // список адресов брокеров, список обрабатываемых топиков
+	groupID         string                 // айди группы консьюмеров
+	handler         usecase.DocumentLoader // обработчик документов
+	numPartitions   int                    //количество партиций в топике
 
 	ctx    *context.Context
 	cancel *context.CancelFunc
@@ -32,12 +32,12 @@ type Connection struct {
 //   - groupID - айди группы консьюмеров
 //   - docHandler - обработчик документов
 //   - numPart - количество партиций в топике
-func NewConnection(brokers, topics []string, groupID string, numPart int, docHandler usecase.DocHandler) *Connection {
+func NewConnection(brokers, topics []string, groupID string, numPart int, handler usecase.DocumentLoader) *Connection {
 	return &Connection{
 		brokers:       brokers,
 		topics:        topics,
 		groupID:       groupID,
-		docHandler:    docHandler,
+		handler:       handler,
 		numPartitions: numPart,
 	}
 }
@@ -60,7 +60,7 @@ func (c *Connection) RunConsumers() error {
 		go func() {
 			defer c.wg.Done()
 			for {
-				if err := consumerGroup.Consume(*c.ctx, c.topics, ConsumerGroupHandler{c.docHandler}); err != nil {
+				if err := consumerGroup.Consume(*c.ctx, c.topics, ConsumerGroupHandler{c.handler}); err != nil {
 					log.Printf("error from consumer: %v", err)
 				}
 				if ctx.Err() != nil {

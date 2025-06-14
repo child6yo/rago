@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/child6yo/rago/services/storage/internal/pkg/database/mock"
+	"github.com/child6yo/rago/services/storage/internal"
+	"github.com/child6yo/rago/services/storage/internal/app/repository/mock"
 	"github.com/stretchr/testify/require"
-	"github.com/tmc/langchaingo/schema"
 )
 
 func TestHandleDocMessage(t *testing.T) {
@@ -22,7 +22,7 @@ func TestHandleDocMessage(t *testing.T) {
 			input:    `{"content":"test content","metadata":{"url":"test.com"}}`,
 			expError: false,
 			mockFunk: func(mvd *mock.VectorDB) {
-				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
+				mvd.PutDocumentFunc = func(ctx context.Context, docs internal.Document) error {
 					return nil
 				}
 			},
@@ -32,7 +32,7 @@ func TestHandleDocMessage(t *testing.T) {
 			input:    `{}`,
 			expError: true,
 			mockFunk: func(mvd *mock.VectorDB) {
-				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
+				mvd.PutDocumentFunc = func(ctx context.Context, docs internal.Document) error {
 					return nil
 				}
 			},
@@ -42,7 +42,7 @@ func TestHandleDocMessage(t *testing.T) {
 			input:    `{"c":"123","mt":"123.com"}`,
 			expError: true,
 			mockFunk: func(mvd *mock.VectorDB) {
-				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
+				mvd.PutDocumentFunc = func(ctx context.Context, docs internal.Document) error {
 					return nil
 				}
 			},
@@ -52,7 +52,7 @@ func TestHandleDocMessage(t *testing.T) {
 			input:    `{"content":"test content","metadata":{"url":"test.com"}}`,
 			expError: true,
 			mockFunk: func(mvd *mock.VectorDB) {
-				mvd.PutFunc = func(ctx context.Context, docs []schema.Document) error {
+				mvd.PutDocumentFunc = func(ctx context.Context, docs internal.Document) error {
 					return errors.New("error")
 				}
 			},
@@ -63,11 +63,11 @@ func TestHandleDocMessage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockDB := &mock.VectorDB{}
 			tt.mockFunk(mockDB)
-			handler := NewDocHandlerService(mockDB)
+			loader := NewLoader(mockDB)
 
 			msg := []byte(tt.input)
 
-			err := handler.HandleDocMessage(msg)
+			err := loader.LoadDocument(msg)
 			if tt.expError {
 				require.Error(t, err)
 			} else {
