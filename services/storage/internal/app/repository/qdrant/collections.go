@@ -11,7 +11,7 @@ import (
 func (c *Client) CreateCollection(ctx context.Context, name string) (err error) {
 	defer func() {
 		if err != nil {
-			err = fmt.Errorf("repository: %w", err)
+			err = fmt.Errorf("repository; failed to create collection: %w", err)
 		}
 	}()
 	return c.client.CreateCollection(ctx, &qdrant.CreateCollection{
@@ -27,7 +27,7 @@ func (c *Client) CreateCollection(ctx context.Context, name string) (err error) 
 func (c *Client) DeleteCollection(ctx context.Context, collection string) (err error) {
 	defer func() {
 		if err != nil {
-			err = fmt.Errorf("repository: %w", err)
+			err = fmt.Errorf("repository; failed to delete collection: %w", err)
 		}
 	}()
 	return c.client.DeleteCollection(ctx, collection)

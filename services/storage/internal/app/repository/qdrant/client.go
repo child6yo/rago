@@ -19,7 +19,7 @@ func NewQdrantClient(host string, port int) (*Client, error) {
 		Port: port,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("qdrant repo: %w", err)
+		return nil, fmt.Errorf("repository; failed to connect to qdrant: %w", err)
 	}
 
 	return &Client{client: client}, nil

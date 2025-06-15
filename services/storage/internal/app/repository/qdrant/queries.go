@@ -17,7 +17,7 @@ func (c *Client) Query(ctx context.Context, collection string, vector []float32,
 		Limit:          &limit,
 	})
 	if err != nil {
-		return []internal.Document{}, fmt.Errorf("repository: %w", err)
+		return []internal.Document{}, fmt.Errorf("repository; failed to query: %w", err)
 	}
 
 	docs := make([]internal.Document, len(result))
