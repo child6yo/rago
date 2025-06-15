@@ -8,6 +8,7 @@ type Metadata struct {
 // Document структура, определяющая объект, который необходимо
 // содержать в векторной базе данных.
 type Document struct {
+	ID        string    // uuid
 	Content   string    `json:"content"`  // содержание
 	Metadata  Metadata  `json:"metadata"` // метаданные
 	Embedding []float32 // векторное представление
