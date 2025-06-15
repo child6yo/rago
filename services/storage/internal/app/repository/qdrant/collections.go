@@ -15,7 +15,7 @@ func (c *Client) CreateCollection(ctx context.Context, name string) (err error) 
 		}
 	}()
 	return c.client.CreateCollection(ctx, &qdrant.CreateCollection{
-		CollectionName: "name",
+		CollectionName: name,
 		VectorsConfig: qdrant.NewVectorsConfig(&qdrant.VectorParams{
 			Size:     768,
 			Distance: qdrant.Distance_Cosine,

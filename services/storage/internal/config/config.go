@@ -32,7 +32,7 @@ func InitConfig() Config {
 	cfg.GRPCPort = getEnv("GRPC_PORT", "5002")
 
 	cfg.DbHost = getEnv("VECTORDB_HOST", "localhost")
-	cfg.DbPort = getIntEnv("VECTORDB_PORT", 6333)
+	cfg.DbPort = getIntEnv("VECTORDB_GRPC_PORT", 6334)
 
 	cfg.OllamaModel = getEnv("OLLAMA_MODEL", "nomic-embed-text:v1.5")
 	cfg.OllamaURL = getEnv("OLLAMA_ADDRES", "localhost:11434")
@@ -47,7 +47,9 @@ func InitConfig() Config {
 func getEnv(key, defaultValue string) string {
 	value, exists := os.LookupEnv(key)
 	if !exists {
-		log.Printf("config: failed to load env, defaul value = %s", defaultValue)
+		if defaultValue != "" {
+			log.Printf("config: failed to load env key = %s, defaul value = %s", key, defaultValue)
+		}
 		return defaultValue
 	}
 	return value
@@ -56,12 +58,13 @@ func getEnv(key, defaultValue string) string {
 func getIntEnv(key string, defaultValue int) int {
 	valueStr := getEnv(key, "")
 	if valueStr == "" {
+		log.Printf("config: failed to load env key = %s, defaul value = %d", key, defaultValue)
 		return defaultValue
 	}
 
 	value, err := strconv.Atoi(valueStr)
 	if err != nil {
-		log.Printf("config: failed to load env, defaul value = %d", defaultValue)
+		log.Printf("config: failed to load env key = %s, defaul value = %d", key, defaultValue)
 		return defaultValue
 	}
 	return value
