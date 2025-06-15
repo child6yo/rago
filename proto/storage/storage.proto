@@ -2,9 +2,21 @@ syntax = "proto3";
 package generator; 
 option go_package = "github.com/child6yo/rago/services/storage/pkg/pb";
 
+import "google/protobuf/empty.proto"; 
+
+message CollectionRequest {
+    string collectionName = 1;
+}
+
+message DocumentRequest {
+    string collectionName = 1;
+    string id = 2;
+}
+
 message QueryRequest {
     string query = 1;
     int32 limit = 2;
+    string collectionName = 3;
 }
 
 message Metadata {
@@ -12,9 +24,14 @@ message Metadata {
 }
 
 message Document {
-    string content = 1;
-    Metadata metadata = 2;
-    float score = 3;
+    string id = 1;
+    string content = 2;
+    Metadata metadata = 3;
+    float score = 4;
+}
+
+message DocumentArray {
+    repeated Document document = 1;
 }
 
 message QueryResponse {
@@ -22,5 +39,10 @@ message QueryResponse {
 }
 
 service StorageService {
+    rpc CreateCollection (CollectionRequest) returns (google.protobuf.Empty);
+    rpc DeleteCollection (CollectionRequest) returns (google.protobuf.Empty);
+    rpc DeleteDocument (DocumentRequest) returns (google.protobuf.Empty);
+    rpc GetDocument (DocumentRequest) returns (Document);
+    rpc GetAllDocuments (CollectionRequest) returns (DocumentArray);
     rpc Search (QueryRequest) returns (QueryResponse);
 }

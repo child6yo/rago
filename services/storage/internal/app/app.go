@@ -43,6 +43,7 @@ func (a *Application) StartApplication() error {
 	}
 
 	loader := usecase.NewLoader(vectorDBClient, ollamaEmbedder)
+	usecase := usecase.NewStorageService(vectorDBClient, ollamaEmbedder)
 
 	a.broker = kafka.NewConnection(a.KafkaBrokers, a.KafkaDocTopic, a.KafkaGroupID, a.KafkaPartitions, loader)
 	go func() {
@@ -50,8 +51,6 @@ func (a *Application) StartApplication() error {
 			log.Fatal(err)
 		}
 	}()
-
-	usecase := usecase.NewStorageService(vectorDBClient)
 
 	a.server = server.NewGRPCServer(usecase, a.GRPCHost, a.GRPCPort)
 	go func() {

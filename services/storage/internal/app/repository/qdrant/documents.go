@@ -10,7 +10,7 @@ import (
 )
 
 // PutDocument загружает единицу данных в коллекцию.
-func (c *Client) PutDocument(ctx context.Context, docs internal.Document, collection string) (err error) {
+func (c *Client) PutDocument(ctx context.Context, docs internal.Document) (err error) {
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("repository; failed to put document: %w", err)
@@ -21,7 +21,7 @@ func (c *Client) PutDocument(ctx context.Context, docs internal.Document, collec
 	id := uuid.NewString()
 
 	_, err = c.client.Upsert(ctx, &qdrant.UpsertPoints{
-		CollectionName: collection,
+		CollectionName: docs.Collection,
 		Points: []*qdrant.PointStruct{
 			{
 				Id:      qdrant.NewIDUUID(id),

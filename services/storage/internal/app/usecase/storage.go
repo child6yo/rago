@@ -19,6 +19,31 @@ func NewStorageService(db repository.VectorDB, embedder embedding.Embedder) *Sto
 	return &StorageService{db, embedder}
 }
 
+// CreateCollection создает новую коллекцию.
+func (ss *StorageService) CreateCollection(ctx context.Context, name string) error {
+	return ss.db.CreateCollection(ctx, name)
+}
+
+// DeleteCollection удаляет коллекцию вместе с ее содержимым.
+func (ss *StorageService) DeleteCollection(ctx context.Context, collection string) error {
+	return ss.db.DeleteCollection(ctx, collection)
+}
+
+// DeleteDocument удаляет документ из коллекции по айди.
+func (ss *StorageService) DeleteDocument(ctx context.Context, id string, collection string) error {
+	return ss.db.DeleteDocument(ctx, id, collection)
+}
+
+// GetDocument возвращает документ из коллекции по его айди.
+func (ss *StorageService) GetDocument(ctx context.Context, collection string, id string) (internal.Document, error) {
+	return ss.db.GetDocument(ctx, collection, id)
+}
+
+// GetAllDocuments возвращает все документ из коллекции.
+func (ss *StorageService) GetAllDocuments(ctx context.Context, collection string) ([]internal.Document, error) {
+	return ss.db.GetAllDocuments(ctx, collection)
+}
+
 // Search выполняет поиск ближайших векторов.
 // На вход принимает текст и количество документов, которое нужно вернуть.
 // Возвращает слайс ближайших (в векторном представлении) к нему документов.
