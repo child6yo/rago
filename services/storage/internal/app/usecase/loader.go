@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/child6yo/rago/services/storage/internal"
 	"github.com/child6yo/rago/services/storage/internal/app/repository"
@@ -50,7 +51,7 @@ func unmarshalDocs(message []byte) (internal.Document, error) {
 
 	var document internal.Document
 	if err := json.Unmarshal(message, &document); err != nil {
-		return internal.Document{}, err
+		return internal.Document{}, fmt.Errorf("loader: %w", err)
 	}
 
 	if len(document.Content) == 0 {
