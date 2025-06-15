@@ -42,6 +42,8 @@ func (s *StorageService) CreateCollection(ctx context.Context, req *pb.Collectio
 	err := s.service.CreateCollection(ctx, req.CollectionName)
 	if err != nil {
 		log.Printf("storage service error (create collection): %v", err)
+	} else {
+		log.Printf("storage: new collection created: %s", req.CollectionName)
 	}
 
 	return nil, err
@@ -52,6 +54,8 @@ func (s *StorageService) DeleteCollection(ctx context.Context, req *pb.Collectio
 	err := s.service.DeleteCollection(ctx, req.CollectionName)
 	if err != nil {
 		log.Printf("storage service error (delete collection): %v", err)
+	} else {
+		log.Printf("storage: collection deleted: %s", req.CollectionName)
 	}
 
 	return nil, err
