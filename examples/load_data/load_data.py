@@ -10,7 +10,7 @@ url = 'http://localhost:8000/api/v1/storage/?api-key={api_key}'
 url = url.format(api_key=API_KEY)
 
 # your data (or data parser function)
-file_path = 'examples/load_data/data.json'
+file_path = 'data.json'
 
 # send request
 try:
