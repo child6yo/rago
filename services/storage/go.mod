@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	github.com/IBM/sarama v1.45.1
+	github.com/google/uuid v1.6.0
 	github.com/qdrant/go-client v1.14.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/grpc v1.66.0
