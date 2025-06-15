@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,13 +20,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StorageService_Search_FullMethodName = "/generator.StorageService/Search"
+	StorageService_CreateCollection_FullMethodName = "/generator.StorageService/CreateCollection"
+	StorageService_DeleteCollection_FullMethodName = "/generator.StorageService/DeleteCollection"
+	StorageService_DeleteDocument_FullMethodName   = "/generator.StorageService/DeleteDocument"
+	StorageService_GetDocument_FullMethodName      = "/generator.StorageService/GetDocument"
+	StorageService_GetAllDocuments_FullMethodName  = "/generator.StorageService/GetAllDocuments"
+	StorageService_Search_FullMethodName           = "/generator.StorageService/Search"
 )
 
 // StorageServiceClient is the client API for StorageService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageServiceClient interface {
+	CreateCollection(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteCollection(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteDocument(ctx context.Context, in *DocumentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetDocument(ctx context.Context, in *DocumentRequest, opts ...grpc.CallOption) (*Document, error)
+	GetAllDocuments(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*DocumentArray, error)
 	Search(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error)
 }
 
@@ -35,6 +46,56 @@ type storageServiceClient struct {
 
 func NewStorageServiceClient(cc grpc.ClientConnInterface) StorageServiceClient {
 	return &storageServiceClient{cc}
+}
+
+func (c *storageServiceClient) CreateCollection(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageService_CreateCollection_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) DeleteCollection(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageService_DeleteCollection_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) DeleteDocument(ctx context.Context, in *DocumentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageService_DeleteDocument_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) GetDocument(ctx context.Context, in *DocumentRequest, opts ...grpc.CallOption) (*Document, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Document)
+	err := c.cc.Invoke(ctx, StorageService_GetDocument_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServiceClient) GetAllDocuments(ctx context.Context, in *CollectionRequest, opts ...grpc.CallOption) (*DocumentArray, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DocumentArray)
+	err := c.cc.Invoke(ctx, StorageService_GetAllDocuments_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *storageServiceClient) Search(ctx context.Context, in *QueryRequest, opts ...grpc.CallOption) (*QueryResponse, error) {
@@ -51,6 +112,11 @@ func (c *storageServiceClient) Search(ctx context.Context, in *QueryRequest, opt
 // All implementations must embed UnimplementedStorageServiceServer
 // for forward compatibility.
 type StorageServiceServer interface {
+	CreateCollection(context.Context, *CollectionRequest) (*emptypb.Empty, error)
+	DeleteCollection(context.Context, *CollectionRequest) (*emptypb.Empty, error)
+	DeleteDocument(context.Context, *DocumentRequest) (*emptypb.Empty, error)
+	GetDocument(context.Context, *DocumentRequest) (*Document, error)
+	GetAllDocuments(context.Context, *CollectionRequest) (*DocumentArray, error)
 	Search(context.Context, *QueryRequest) (*QueryResponse, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }
@@ -62,6 +128,21 @@ type StorageServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedStorageServiceServer struct{}
 
+func (UnimplementedStorageServiceServer) CreateCollection(context.Context, *CollectionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCollection not implemented")
+}
+func (UnimplementedStorageServiceServer) DeleteCollection(context.Context, *CollectionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCollection not implemented")
+}
+func (UnimplementedStorageServiceServer) DeleteDocument(context.Context, *DocumentRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDocument not implemented")
+}
+func (UnimplementedStorageServiceServer) GetDocument(context.Context, *DocumentRequest) (*Document, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDocument not implemented")
+}
+func (UnimplementedStorageServiceServer) GetAllDocuments(context.Context, *CollectionRequest) (*DocumentArray, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllDocuments not implemented")
+}
 func (UnimplementedStorageServiceServer) Search(context.Context, *QueryRequest) (*QueryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
@@ -84,6 +165,96 @@ func RegisterStorageServiceServer(s grpc.ServiceRegistrar, srv StorageServiceSer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&StorageService_ServiceDesc, srv)
+}
+
+func _StorageService_CreateCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).CreateCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_CreateCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).CreateCollection(ctx, req.(*CollectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_DeleteCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).DeleteCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_DeleteCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).DeleteCollection(ctx, req.(*CollectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_DeleteDocument_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DocumentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).DeleteDocument(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_DeleteDocument_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).DeleteDocument(ctx, req.(*DocumentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_GetDocument_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DocumentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).GetDocument(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_GetDocument_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).GetDocument(ctx, req.(*DocumentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageService_GetAllDocuments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).GetAllDocuments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_GetAllDocuments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).GetAllDocuments(ctx, req.(*CollectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _StorageService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -111,6 +282,26 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "generator.StorageService",
 	HandlerType: (*StorageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateCollection",
+			Handler:    _StorageService_CreateCollection_Handler,
+		},
+		{
+			MethodName: "DeleteCollection",
+			Handler:    _StorageService_DeleteCollection_Handler,
+		},
+		{
+			MethodName: "DeleteDocument",
+			Handler:    _StorageService_DeleteDocument_Handler,
+		},
+		{
+			MethodName: "GetDocument",
+			Handler:    _StorageService_GetDocument_Handler,
+		},
+		{
+			MethodName: "GetAllDocuments",
+			Handler:    _StorageService_GetAllDocuments_Handler,
+		},
 		{
 			MethodName: "Search",
 			Handler:    _StorageService_Search_Handler,

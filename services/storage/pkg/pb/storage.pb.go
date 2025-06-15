@@ -9,6 +9,7 @@ package pb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,17 +22,114 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type CollectionRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CollectionName string                 `protobuf:"bytes,1,opt,name=collectionName,proto3" json:"collectionName,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CollectionRequest) Reset() {
+	*x = CollectionRequest{}
+	mi := &file_storage_storage_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CollectionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CollectionRequest) ProtoMessage() {}
+
+func (x *CollectionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_storage_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CollectionRequest.ProtoReflect.Descriptor instead.
+func (*CollectionRequest) Descriptor() ([]byte, []int) {
+	return file_storage_storage_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CollectionRequest) GetCollectionName() string {
+	if x != nil {
+		return x.CollectionName
+	}
+	return ""
+}
+
+type DocumentRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	CollectionName string                 `protobuf:"bytes,1,opt,name=collectionName,proto3" json:"collectionName,omitempty"`
+	Id             string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *DocumentRequest) Reset() {
+	*x = DocumentRequest{}
+	mi := &file_storage_storage_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocumentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocumentRequest) ProtoMessage() {}
+
+func (x *DocumentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_storage_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocumentRequest.ProtoReflect.Descriptor instead.
+func (*DocumentRequest) Descriptor() ([]byte, []int) {
+	return file_storage_storage_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *DocumentRequest) GetCollectionName() string {
+	if x != nil {
+		return x.CollectionName
+	}
+	return ""
+}
+
+func (x *DocumentRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 type QueryRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Query          string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	Limit          int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	CollectionName string                 `protobuf:"bytes,3,opt,name=collectionName,proto3" json:"collectionName,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *QueryRequest) Reset() {
 	*x = QueryRequest{}
-	mi := &file_storage_storage_proto_msgTypes[0]
+	mi := &file_storage_storage_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +141,7 @@ func (x *QueryRequest) String() string {
 func (*QueryRequest) ProtoMessage() {}
 
 func (x *QueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_storage_proto_msgTypes[0]
+	mi := &file_storage_storage_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +154,7 @@ func (x *QueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryRequest.ProtoReflect.Descriptor instead.
 func (*QueryRequest) Descriptor() ([]byte, []int) {
-	return file_storage_storage_proto_rawDescGZIP(), []int{0}
+	return file_storage_storage_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *QueryRequest) GetQuery() string {
@@ -73,6 +171,13 @@ func (x *QueryRequest) GetLimit() int32 {
 	return 0
 }
 
+func (x *QueryRequest) GetCollectionName() string {
+	if x != nil {
+		return x.CollectionName
+	}
+	return ""
+}
+
 type Metadata struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
@@ -82,7 +187,7 @@ type Metadata struct {
 
 func (x *Metadata) Reset() {
 	*x = Metadata{}
-	mi := &file_storage_storage_proto_msgTypes[1]
+	mi := &file_storage_storage_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -94,7 +199,7 @@ func (x *Metadata) String() string {
 func (*Metadata) ProtoMessage() {}
 
 func (x *Metadata) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_storage_proto_msgTypes[1]
+	mi := &file_storage_storage_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,7 +212,7 @@ func (x *Metadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Metadata.ProtoReflect.Descriptor instead.
 func (*Metadata) Descriptor() ([]byte, []int) {
-	return file_storage_storage_proto_rawDescGZIP(), []int{1}
+	return file_storage_storage_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Metadata) GetUrl() string {
@@ -119,16 +224,17 @@ func (x *Metadata) GetUrl() string {
 
 type Document struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
-	Metadata      *Metadata              `protobuf:"bytes,2,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	Score         float32                `protobuf:"fixed32,3,opt,name=score,proto3" json:"score,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Metadata      *Metadata              `protobuf:"bytes,3,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Score         float32                `protobuf:"fixed32,4,opt,name=score,proto3" json:"score,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Document) Reset() {
 	*x = Document{}
-	mi := &file_storage_storage_proto_msgTypes[2]
+	mi := &file_storage_storage_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -140,7 +246,7 @@ func (x *Document) String() string {
 func (*Document) ProtoMessage() {}
 
 func (x *Document) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_storage_proto_msgTypes[2]
+	mi := &file_storage_storage_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -153,7 +259,14 @@ func (x *Document) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Document.ProtoReflect.Descriptor instead.
 func (*Document) Descriptor() ([]byte, []int) {
-	return file_storage_storage_proto_rawDescGZIP(), []int{2}
+	return file_storage_storage_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Document) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
 }
 
 func (x *Document) GetContent() string {
@@ -177,6 +290,50 @@ func (x *Document) GetScore() float32 {
 	return 0
 }
 
+type DocumentArray struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Document      []*Document            `protobuf:"bytes,1,rep,name=document,proto3" json:"document,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DocumentArray) Reset() {
+	*x = DocumentArray{}
+	mi := &file_storage_storage_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocumentArray) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocumentArray) ProtoMessage() {}
+
+func (x *DocumentArray) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_storage_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocumentArray.ProtoReflect.Descriptor instead.
+func (*DocumentArray) Descriptor() ([]byte, []int) {
+	return file_storage_storage_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *DocumentArray) GetDocument() []*Document {
+	if x != nil {
+		return x.Document
+	}
+	return nil
+}
+
 type QueryResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Document      []*Document            `protobuf:"bytes,1,rep,name=document,proto3" json:"document,omitempty"`
@@ -186,7 +343,7 @@ type QueryResponse struct {
 
 func (x *QueryResponse) Reset() {
 	*x = QueryResponse{}
-	mi := &file_storage_storage_proto_msgTypes[3]
+	mi := &file_storage_storage_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -198,7 +355,7 @@ func (x *QueryResponse) String() string {
 func (*QueryResponse) ProtoMessage() {}
 
 func (x *QueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_storage_proto_msgTypes[3]
+	mi := &file_storage_storage_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -211,7 +368,7 @@ func (x *QueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use QueryResponse.ProtoReflect.Descriptor instead.
 func (*QueryResponse) Descriptor() ([]byte, []int) {
-	return file_storage_storage_proto_rawDescGZIP(), []int{3}
+	return file_storage_storage_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *QueryResponse) GetDocument() []*Document {
@@ -225,19 +382,33 @@ var File_storage_storage_proto protoreflect.FileDescriptor
 
 const file_storage_storage_proto_rawDesc = "" +
 	"\n" +
-	"\x15storage/storage.proto\x12\tgenerator\":\n" +
+	"\x15storage/storage.proto\x12\tgenerator\x1a\x1bgoogle/protobuf/empty.proto\";\n" +
+	"\x11CollectionRequest\x12&\n" +
+	"\x0ecollectionName\x18\x01 \x01(\tR\x0ecollectionName\"I\n" +
+	"\x0fDocumentRequest\x12&\n" +
+	"\x0ecollectionName\x18\x01 \x01(\tR\x0ecollectionName\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"b\n" +
 	"\fQueryRequest\x12\x14\n" +
 	"\x05query\x18\x01 \x01(\tR\x05query\x12\x14\n" +
-	"\x05limit\x18\x02 \x01(\x05R\x05limit\"\x1c\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12&\n" +
+	"\x0ecollectionName\x18\x03 \x01(\tR\x0ecollectionName\"\x1c\n" +
 	"\bMetadata\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\"k\n" +
-	"\bDocument\x12\x18\n" +
-	"\acontent\x18\x01 \x01(\tR\acontent\x12/\n" +
-	"\bmetadata\x18\x02 \x01(\v2\x13.generator.MetadataR\bmetadata\x12\x14\n" +
-	"\x05score\x18\x03 \x01(\x02R\x05score\"@\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\"{\n" +
+	"\bDocument\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12/\n" +
+	"\bmetadata\x18\x03 \x01(\v2\x13.generator.MetadataR\bmetadata\x12\x14\n" +
+	"\x05score\x18\x04 \x01(\x02R\x05score\"@\n" +
+	"\rDocumentArray\x12/\n" +
+	"\bdocument\x18\x01 \x03(\v2\x13.generator.DocumentR\bdocument\"@\n" +
 	"\rQueryResponse\x12/\n" +
-	"\bdocument\x18\x01 \x03(\v2\x13.generator.DocumentR\bdocument2M\n" +
-	"\x0eStorageService\x12;\n" +
+	"\bdocument\x18\x01 \x03(\v2\x13.generator.DocumentR\bdocument2\xb2\x03\n" +
+	"\x0eStorageService\x12H\n" +
+	"\x10CreateCollection\x12\x1c.generator.CollectionRequest\x1a\x16.google.protobuf.Empty\x12H\n" +
+	"\x10DeleteCollection\x12\x1c.generator.CollectionRequest\x1a\x16.google.protobuf.Empty\x12D\n" +
+	"\x0eDeleteDocument\x12\x1a.generator.DocumentRequest\x1a\x16.google.protobuf.Empty\x12>\n" +
+	"\vGetDocument\x12\x1a.generator.DocumentRequest\x1a\x13.generator.Document\x12I\n" +
+	"\x0fGetAllDocuments\x12\x1c.generator.CollectionRequest\x1a\x18.generator.DocumentArray\x12;\n" +
 	"\x06Search\x12\x17.generator.QueryRequest\x1a\x18.generator.QueryResponseB2Z0github.com/child6yo/rago/services/storage/pkg/pbb\x06proto3"
 
 var (
@@ -252,23 +423,38 @@ func file_storage_storage_proto_rawDescGZIP() []byte {
 	return file_storage_storage_proto_rawDescData
 }
 
-var file_storage_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_storage_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_storage_storage_proto_goTypes = []any{
-	(*QueryRequest)(nil),  // 0: generator.QueryRequest
-	(*Metadata)(nil),      // 1: generator.Metadata
-	(*Document)(nil),      // 2: generator.Document
-	(*QueryResponse)(nil), // 3: generator.QueryResponse
+	(*CollectionRequest)(nil), // 0: generator.CollectionRequest
+	(*DocumentRequest)(nil),   // 1: generator.DocumentRequest
+	(*QueryRequest)(nil),      // 2: generator.QueryRequest
+	(*Metadata)(nil),          // 3: generator.Metadata
+	(*Document)(nil),          // 4: generator.Document
+	(*DocumentArray)(nil),     // 5: generator.DocumentArray
+	(*QueryResponse)(nil),     // 6: generator.QueryResponse
+	(*emptypb.Empty)(nil),     // 7: google.protobuf.Empty
 }
 var file_storage_storage_proto_depIdxs = []int32{
-	1, // 0: generator.Document.metadata:type_name -> generator.Metadata
-	2, // 1: generator.QueryResponse.document:type_name -> generator.Document
-	0, // 2: generator.StorageService.Search:input_type -> generator.QueryRequest
-	3, // 3: generator.StorageService.Search:output_type -> generator.QueryResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	3, // 0: generator.Document.metadata:type_name -> generator.Metadata
+	4, // 1: generator.DocumentArray.document:type_name -> generator.Document
+	4, // 2: generator.QueryResponse.document:type_name -> generator.Document
+	0, // 3: generator.StorageService.CreateCollection:input_type -> generator.CollectionRequest
+	0, // 4: generator.StorageService.DeleteCollection:input_type -> generator.CollectionRequest
+	1, // 5: generator.StorageService.DeleteDocument:input_type -> generator.DocumentRequest
+	1, // 6: generator.StorageService.GetDocument:input_type -> generator.DocumentRequest
+	0, // 7: generator.StorageService.GetAllDocuments:input_type -> generator.CollectionRequest
+	2, // 8: generator.StorageService.Search:input_type -> generator.QueryRequest
+	7, // 9: generator.StorageService.CreateCollection:output_type -> google.protobuf.Empty
+	7, // 10: generator.StorageService.DeleteCollection:output_type -> google.protobuf.Empty
+	7, // 11: generator.StorageService.DeleteDocument:output_type -> google.protobuf.Empty
+	4, // 12: generator.StorageService.GetDocument:output_type -> generator.Document
+	5, // 13: generator.StorageService.GetAllDocuments:output_type -> generator.DocumentArray
+	6, // 14: generator.StorageService.Search:output_type -> generator.QueryResponse
+	9, // [9:15] is the sub-list for method output_type
+	3, // [3:9] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_storage_storage_proto_init() }
@@ -282,7 +468,7 @@ func file_storage_storage_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_storage_proto_rawDesc), len(file_storage_storage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
