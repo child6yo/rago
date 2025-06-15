@@ -15,7 +15,7 @@ type Config struct {
 	DbPort int
 
 	OllamaModel string
-	OllamaURL string
+	OllamaURL   string
 
 	KafkaBrokers    []string
 	KafkaGroupID    string
