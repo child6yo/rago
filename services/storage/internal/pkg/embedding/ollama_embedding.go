@@ -14,7 +14,7 @@ const embeddingsURL = "/api/embeddings"
 
 // OllamaResponse определяет ответ ollama.
 type OllamaResponse struct {
-	Embedding []float32 `json:"embedding"`	
+	Embedding []float32 `json:"embedding"`
 }
 
 // OllamaEmbedder имплементирует интерфейс Embedder.
