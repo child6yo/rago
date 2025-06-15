@@ -35,7 +35,7 @@ func InitConfig() Config {
 	cfg.DbPort = getIntEnv("VECTORDB_GRPC_PORT", 6334)
 
 	cfg.OllamaModel = getEnv("OLLAMA_MODEL", "nomic-embed-text:v1.5")
-	cfg.OllamaURL = getEnv("OLLAMA_ADDRES", "localhost:11434")
+	cfg.OllamaURL = getEnv("OLLAMA_ADDRES", "http://localhost:11434")
 
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaGroupID = getEnv("KAFKA_GROUP_ID", "group.storage")

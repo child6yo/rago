@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"time"
 )
 
@@ -21,19 +20,17 @@ type OllamaResponse struct {
 type OllamaEmbedder struct {
 	Model  string
 	Client *http.Client
-	URL    *url.URL
+	URL    string
 }
 
 // NewOllamaEmbedder создает новый экземпляр OllamaEmbedder.
 func NewOllamaEmbedder(model, ollamaAddress string, timeout time.Duration) (*OllamaEmbedder, error) {
-	parsedURL, err := url.Parse(fmt.Sprintf("%s%s", ollamaAddress, embeddingsURL))
-	if err != nil {
-		return nil, fmt.Errorf("embedding: failed to parse URL, %w", err)
-	}
+	url := fmt.Sprintf("%s%s", ollamaAddress, embeddingsURL)
+
 	return &OllamaEmbedder{
 		Model:  model,
 		Client: &http.Client{Timeout: timeout},
-		URL:    parsedURL,
+		URL:    url,
 	}, nil
 }
 
@@ -49,7 +46,7 @@ func (o *OllamaEmbedder) GenerateEmbeddings(ctx context.Context, input string) (
 		return nil, fmt.Errorf("embedding: failed to marshal request, %w", err)
 	}
 
-	request, err := http.NewRequestWithContext(ctx, http.MethodPost, o.URL.Scheme, bytes.NewBuffer(reqBody))
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, o.URL, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return nil, fmt.Errorf("embedding: failed to create request, %w", err)
 	}

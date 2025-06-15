@@ -36,6 +36,10 @@ func (l *Loader) LoadDocument(ctx context.Context, message []byte) error {
 	}
 
 	doc.Embedding = embs
+	
+	// временно //////////////
+	doc.Collection = "dev-coll"
+	//////////////////////////
 
 	if err := l.db.PutDocument(context.Background(), doc); err != nil {
 		return err
