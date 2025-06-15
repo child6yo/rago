@@ -2,6 +2,7 @@ package mock
 
 import "context"
 
+// Embedder mock
 type Embedder struct {
 	GenerateEmbeddingsFunc func(ctx context.Context, input string) ([]float32, error)
 }

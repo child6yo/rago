@@ -10,7 +10,7 @@ import (
 	"github.com/child6yo/rago/services/storage/internal/pkg/embedding"
 )
 
-// DocumentLoader имплементирует интерфейс DocHandler.
+// Loader имплементирует интерфейс DocumentLoader.
 type Loader struct {
 	db       repository.VectorDB
 	embedder embedding.Embedder

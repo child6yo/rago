@@ -17,7 +17,7 @@ type OllamaResponse struct {
 	Embedding []float32 `json:"embedding"`	
 }
 
-// Ollama имплементирует интерфейс Embedder.
+// OllamaEmbedder имплементирует интерфейс Embedder.
 type OllamaEmbedder struct {
 	Model  string
 	Client *http.Client
