@@ -1,8 +1,8 @@
-package kafka
+package producer
 
 import (
-	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/IBM/sarama"
@@ -21,8 +21,6 @@ type KafkaProducer struct {
 	producer sarama.AsyncProducer
 	brokers  []string
 	docTopic string
-	ctx      context.Context
-	cancel   context.CancelFunc
 }
 
 // NewKafkaProducer создает новый экземпляр KafkaProducer.
@@ -38,7 +36,7 @@ func NewKafkaProducer(brokers []string, docTopic string) *KafkaProducer {
 }
 
 // SendMessage отправляет сообщение в определенный топик брокера.
-func (p *KafkaProducer) StartProducer() {
+func (p *KafkaProducer) StartProducer() error {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
@@ -47,50 +45,40 @@ func (p *KafkaProducer) StartProducer() {
 
 	producer, err := sarama.NewAsyncProducer(p.brokers, config)
 	if err != nil {
-		log.Fatalf("Ошибка создания продюсера: %v", err)
+		return fmt.Errorf("failed to start producer: %v")
 	}
 
 	p.producer = producer
 
-	// defer func() {
-	// 	if err := producer.Close(); err != nil {
-	// 		log.Printf("Ошибка при закрытии продюсера: %v", err)
-	// 	}
-	// }()
-
 	// Горутина для обработки успехов
 	go func() {
 		for msg := range producer.Successes() {
-			log.Printf("Сообщение успешно отправлено: partition=%d, offset=%d\n", msg.Partition, msg.Offset)
+			log.Printf("document successfully sended: partition=%d, offset=%d\n", msg.Partition, msg.Offset)
 		}
 	}()
 
 	// Горутина для обработки ошибок
 	go func() {
 		for err := range producer.Errors() {
-			log.Printf("Ошибка при отправке сообщения: %v\n", err.Err)
+			log.Printf("failed to send document: %v\n", err.Err)
 		}
 	}()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	// defer cancel()
+	return nil
+}
 
-	p.ctx = ctx
-	p.cancel = cancel
-
-	// log.Println("Отправка сообщений... Нажмите Ctrl+C для выхода")
-	// c := make(chan os.Signal, 1)
-	// signal.Notify(c, os.Interrupt)
-	// <-c
-	// log.Println("Завершаем работу...")
-	// cancel()
-	// wg.Wait()
+// StopProducer останавливает отправку сообщений продюсером.
+func (p *KafkaProducer) StopProducer() {
+	if err := p.producer.Close(); err != nil {
+		log.Printf("failed to gracefully stop producer: %v", err)
+	}
 }
 
 func (p *KafkaProducer) SendMessage(event internal.Document) {
 	jsonBytes, err := json.Marshal(event)
 	if err != nil {
-		log.Printf("Ошибка сериализации JSON: %v", err)
+		log.Printf("consumer send message: failed do marshal JSON: %v", err)
+		return
 	}
 
 	msg := &sarama.ProducerMessage{
