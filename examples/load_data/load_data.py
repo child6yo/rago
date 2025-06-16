@@ -4,10 +4,11 @@ import urllib.error
 
 # your API key
 API_KEY = "GcKtft9raN8M6jtD3yV6Lgmw24kVdEfCF1y96Pl60Gn3f5mhDY6OsyTATHXf2SRSB1wqy7Wd2wiFyu2dwtlul9FQfaGTnyNfL2dsIxdEWXIOd02wkba/oXMVdhzVcJj/rQcCGgDKRk1wHJi5xXPRFFbbUicpHC6WSzX9ZwaOdkg"
+COLLECTION = "dev_coll"
 
 # API gateway URL
-url = 'http://localhost:8000/api/v1/storage/?api-key={api_key}'
-url = url.format(api_key=API_KEY)
+url = 'http://localhost:8080/api/v1/storage/{collection}?api-key={api_key}'
+url = url.format(collection=COLLECTION, api_key=API_KEY)
 
 # your data (or data parser function)
 file_path = 'data.json'

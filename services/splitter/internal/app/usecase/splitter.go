@@ -35,7 +35,7 @@ func (s *SplitService) SplitDocuments(docs []byte) error {
 	return nil
 }
 
-func (s *SplitService) startPipeline(docs []internal.Document) {
+func (s *SplitService) startPipeline(docs *internal.DocumentArray) {
 	doc := s.split(docs)
 
 	for i := 0; i < s.numWorkers; i++ {
@@ -49,11 +49,12 @@ func (s *SplitService) startPipeline(docs []internal.Document) {
 	s.wg.Wait()
 }
 
-func (s *SplitService) split(docs []internal.Document) <-chan internal.Document {
+func (s *SplitService) split(docs *internal.DocumentArray) <-chan internal.Document {
 	out := make(chan internal.Document)
 	go func() {
 		defer close(out)
-		for _, d := range docs {
+		for _, d := range docs.Documents {
+			d.Collection = docs.Collection
 			s.producer.SendMessage(d)
 		}
 	}()
@@ -67,15 +68,15 @@ func (s *SplitService) handleSplited(in <-chan internal.Document) {
 	}
 }
 
-func unmarshalDocs(message []byte) ([]internal.Document, error) {
+func unmarshalDocs(message []byte) (*internal.DocumentArray, error) {
 	if len(message) == 0 {
 		return nil, errors.New("splitter: empty message")
 	}
 
-	var documents []internal.Document
+	var documents internal.DocumentArray
 	if err := json.Unmarshal(message, &documents); err != nil {
 		return nil, fmt.Errorf("splitter: %w", err)
 	}
 
-	return documents, nil
+	return &documents, nil
 }

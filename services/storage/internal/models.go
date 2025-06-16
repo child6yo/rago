@@ -9,9 +9,9 @@ type Metadata struct {
 // содержать в векторной базе данных.
 type Document struct {
 	ID         string    // uuid
-	Collection string    // коллекция, к которой относится документ
-	Content    string    `json:"content"`  // содержание
-	Metadata   Metadata  `json:"metadata"` // метаданные
+	Collection string    `json:"collection"` // коллекция, к которой относится документ
+	Content    string    `json:"content"`    // содержание
+	Metadata   Metadata  `json:"metadata"`   // метаданные
 	Embedding  []float32 // векторное представление
 	Score      float32   // используется при запросах (queries), показывает схожесть документа с пришедшим в запросе
 }

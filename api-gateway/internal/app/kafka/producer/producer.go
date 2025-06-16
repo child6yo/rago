@@ -6,21 +6,21 @@ import (
 	"log"
 
 	"github.com/IBM/sarama"
-	"github.com/child6yo/rago/services/splitter/internal"
+	"github.com/child6yo/rago/api-gateway/internal"
 )
 
 // Producer описывает интерфейс продюсера, способного отправлять
 // сообщения в брокер.
 type Producer interface {
 	// SendMessage отправляет сообщение в определенный топик брокера.
-	SendMessage(event internal.Document)
+	SendMessage(event internal.DocumentArray) error
 }
 
 // KafkaProducer имплементирует интерфейс Producer.
 type KafkaProducer struct {
 	producer sarama.AsyncProducer
 	brokers  []string
-	docTopic string
+	topic    string
 }
 
 // NewKafkaProducer создает новый экземпляр KafkaProducer.
@@ -28,10 +28,10 @@ type KafkaProducer struct {
 // Параметры:
 //   - brokers - слайс с адресами брокеров
 //   - docTopic - название топика
-func NewKafkaProducer(brokers []string, docTopic string) *KafkaProducer {
+func NewKafkaProducer(brokers []string, topic string) *KafkaProducer {
 	return &KafkaProducer{
-		brokers:  brokers,
-		docTopic: docTopic,
+		brokers: brokers,
+		topic:   topic,
 	}
 }
 
@@ -74,17 +74,19 @@ func (p *KafkaProducer) StopProducer() {
 	}
 }
 
-func (p *KafkaProducer) SendMessage(event internal.Document) {
+// SendMessage отправляет сообщение в брокер.
+func (p *KafkaProducer) SendMessage(event internal.DocumentArray) error {
 	jsonBytes, err := json.Marshal(event)
 	if err != nil {
-		log.Printf("consumer send message: failed do marshal JSON: %v", err)
-		return
+		return fmt.Errorf("consumer send message: failed do marshal JSON: %v", err)
 	}
 
 	msg := &sarama.ProducerMessage{
-		Topic: p.docTopic,
+		Topic: p.topic,
 		Value: sarama.ByteEncoder(jsonBytes),
 	}
 
 	p.producer.Input() <- msg
+
+	return nil
 }

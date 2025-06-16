@@ -10,6 +10,9 @@ type Config struct {
 	SrvHost string
 	SrvPort string
 
+	KafkaBrokers []string
+	KafkaTopic   string
+
 	UserGRPCHost string
 	UserGRPCPort string
 
@@ -24,7 +27,10 @@ func InitConfig() Config {
 	cfg := Config{}
 
 	cfg.SrvHost = getEnv("SERVER_HOST", "localhost")
-	cfg.SrvPort = getEnv("SERVER_PORT", "8000")
+	cfg.SrvPort = getEnv("SERVER_PORT", "8080")
+
+	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
+	cfg.KafkaTopic = getEnv("KAFKA_RAW_DOC_TOPIC", "raw-docs")
 
 	cfg.UserGRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.UserGRPCPort = getEnv("GRPC_PORT", "5001")

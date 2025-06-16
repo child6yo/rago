@@ -12,3 +12,10 @@ type Document struct {
 	Metadata   Metadata `json:"metadata"`
 	Collection string   `json:"collection"`
 }
+
+// DocumentArray определяет массив документов с указанием коллекции,
+// к которой они относятся.
+type DocumentArray struct {
+	Documents  []Document `json:"documents"`
+	Collection string     `json:"collection"` // к какой коллекции относятся документы
+}

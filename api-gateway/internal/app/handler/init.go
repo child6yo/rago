@@ -2,19 +2,24 @@ package handler
 
 import (
 	"github.com/child6yo/rago/api-gateway/internal/app/client"
+	"github.com/child6yo/rago/api-gateway/internal/app/kafka/producer"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	grpclient *client.GRPClient
+	grpclient     *client.GRPClient
+	kafkaProducer producer.Producer
 }
 
-func NewHandler(grpclient *client.GRPClient) *Handler {
-	return &Handler{grpclient: grpclient}
+func NewHandler(grpclient *client.GRPClient, kafkaProducer producer.Producer) *Handler {
+	return &Handler{grpclient: grpclient, kafkaProducer: kafkaProducer}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	// router.Use(prometheusMiddleware(initPrometheus()))
+	// router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	api := router.Group("/api/v1")
 	{
@@ -34,9 +39,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			}
 		}
 
-		storage := api.Group("/storage", h.checkAPIKey)
+		storage := api.Group("/storage")
 		{
-			storage.POST("/", h.loadDocuments)
+			storage.POST("/:collection", h.loadDocuments)
 		}
 
 		api.GET("/generation", h.ssEventMiddleware(), h.generateAnswer)

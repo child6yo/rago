@@ -2,11 +2,7 @@ module github.com/child6yo/rago/services/splitter
 
 go 1.23.0
 
-require (
-	github.com/IBM/sarama v1.45.2
-	google.golang.org/grpc v1.72.2
-	google.golang.org/protobuf v1.36.6
-)
+require github.com/IBM/sarama v1.45.2
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -27,7 +23,4 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250218202821-56aae31c358a // indirect
 )

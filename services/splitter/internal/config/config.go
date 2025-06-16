@@ -29,7 +29,7 @@ func InitConfig() Config {
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaRawDocTopic = []string{getEnv("KAFKA_RAW_DOC_TOPIC", "raw-docs")}
 	cfg.KafkaRawDocPartitions = getIntEnv("KAFKA_RAW_DOC_PARTITIONS", 5)
-	cfg.KafkaDocTopic = getEnv("KAFKA_DOC_TOPIC", "prepared-docs")
+	cfg.KafkaDocTopic = getEnv("KAFKA_DOC_TOPIC", "document-topic")
 
 	cfg.SplitterWorkers = getIntEnv("SPLITTER_WORKERS", 10)
 
