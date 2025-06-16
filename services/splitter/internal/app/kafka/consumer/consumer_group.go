@@ -27,13 +27,14 @@ func (c ConsumerGroupHandler) Cleanup(session sarama.ConsumerGroupSession) error
 // ConsumeClaim занимается получением сообщений и передачей в обработчики.
 func (c ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
+		log.Printf("splitter consumer: message recieved from partition %d, offset %d", msg.Partition, msg.Offset)
 		err := c.handler.SplitDocuments(msg.Value)
 		if err != nil {
-			log.Printf("splitter consumer group error: %v", err)
+			return err
 		}
 
+		log.Printf("splitter consumer: message successfully handled, offset %d", msg.Offset)
 		session.MarkMessage(msg, "")
-		session.Commit()
 	}
 	return nil
 }

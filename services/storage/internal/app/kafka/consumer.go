@@ -27,12 +27,13 @@ func (c ConsumerGroupHandler) Cleanup(session sarama.ConsumerGroupSession) error
 // ConsumeClaim занимается получением сообщений и передачей в обработчики.
 func (c ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
+		log.Printf("storage consumer: message recieved from partition %d, offset %d", msg.Partition, msg.Offset)
 		if err := c.handler.LoadDocument(session.Context(), msg.Value); err != nil {
-			log.Printf("consumer: failed to handle message: %v", err)
+			return err
 		}
 
+		log.Printf("storage consumer: message successfully handled, offset %d", msg.Offset)
 		session.MarkMessage(msg, "")
-		session.Commit()
 	}
 	return nil
 }

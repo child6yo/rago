@@ -5,22 +5,10 @@ import (
 	"fmt"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/IBM/sarama"
 	"github.com/child6yo/rago/services/splitter/internal/app/usecase"
 )
-
-func configSarama() *sarama.Config {
-	config := sarama.NewConfig()
-	config.Version = sarama.V4_0_0_0
-	config.Consumer.Group.Rebalance.Strategy = sarama.NewBalanceStrategyRange()
-	config.Consumer.Offsets.Initial = sarama.OffsetNewest
-	config.Consumer.Return.Errors = true
-	config.Consumer.Offsets.AutoCommit.Enable = false
-
-	return config
-}
 
 // Connection - структура, определяющая соединение с Kafka-брокером.
 type Connection struct {
@@ -59,30 +47,33 @@ func (c *Connection) RunConsumers() error {
 
 	consumerGroup, err := sarama.NewConsumerGroup(c.brokers, c.groupID, config)
 	if err != nil {
-		return fmt.Errorf("failed to start consumer group: %w", err)
+		return fmt.Errorf("splitter run consumers: failed to start consumer group: %w", err)
 	}
+
+	go func() {
+		for err := range consumerGroup.Errors() {
+			log.Printf("splitter consumer error: %v", err)
+		}
+	}()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	c.ctx = &ctx
 	c.cancel = &cancel
 
-	for i := 0; i < c.numPartitions; i++ {
-		c.wg.Add(1)
-		go func() {
-			defer c.wg.Done()
-			for {
-				if err := consumerGroup.Consume(*c.ctx, c.topics, ConsumerGroupHandler{c.handler}); err != nil {
-					log.Printf("error from consumer: %v", err)
-				}
-				if ctx.Err() != nil {
-					return
-				}
-				time.Sleep(1 * time.Second)
+	c.wg.Add(1)
+	go func() {
+		defer c.wg.Done()
+		for {
+			if err := consumerGroup.Consume(ctx, c.topics, ConsumerGroupHandler{c.handler}); err != nil {
+				log.Printf("splitter run consumers: error from consumer: %v", err)
 			}
-		}()
-	}
+			if ctx.Err() != nil {
+				return
+			}
+		}
+	}()
 
-	log.Println("consumer is running...")
+	log.Println("splitter: consumer group is running...")
 	return nil
 }
 
