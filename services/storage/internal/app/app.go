@@ -37,7 +37,7 @@ func (a *Application) StartApplication() error {
 		log.Fatal(err)
 	}
 
-	ollamaEmbedder, err := embedding.NewOllamaEmbedder(a.OllamaModel, a.OllamaURL, 30*time.Second)
+	ollamaEmbedder, err := embedding.NewOllamaEmbedder(a.OllamaModel, a.OllamaURL, 300*time.Second)
 	if err != nil {
 		log.Fatal(err)
 	}
