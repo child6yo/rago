@@ -33,14 +33,14 @@ func InitConfig() Config {
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaTopic = getEnv("KAFKA_RAW_DOC_TOPIC", "raw-docs")
 
-	cfg.UserGRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.UserGRPCPort = getEnv("GRPC_PORT", "5001")
+	cfg.UserGRPCHost = getEnv("US_GRPC_HOST", "localhost")
+	cfg.UserGRPCPort = getEnv("US_GRPC_PORT", "5001")
 
-	cfg.StorageGRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.StorageGRPCPort = getEnv("GRPC_PORT", "5002")
+	cfg.StorageGRPCHost = getEnv("SS_GRPC_HOST", "localhost")
+	cfg.StorageGRPCPort = getEnv("SS_GRPC_PORT", "5002")
 
-	cfg.GeneratorGRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.GeneratorGRPCPort = getEnv("GRPC_PORT", "5003")
+	cfg.GeneratorGRPCHost = getEnv("GS_GRPC_HOST", "localhost")
+	cfg.GeneratorGRPCPort = getEnv("GS_GRPC_PORT", "5003")
 
 	return cfg
 }

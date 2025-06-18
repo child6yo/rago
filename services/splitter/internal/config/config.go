@@ -8,9 +8,6 @@ import (
 
 // Config - структура, определяющая конфигурацию приложения.
 type Config struct {
-	GRPCHost string
-	GRPCPort string
-
 	KafkaBrokers          []string
 	KafkaRawDocTopic      []string
 	KafkaRawDocPartitions int
@@ -23,8 +20,6 @@ type Config struct {
 // переданную через переменные окружения.
 func InitConfig() Config {
 	cfg := Config{}
-	cfg.GRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.GRPCPort = getEnv("GRPC_PORT", "5000")
 
 	cfg.KafkaBrokers = []string{getEnv("KAFKA_BROKER", "localhost:9092")}
 	cfg.KafkaRawDocTopic = []string{getEnv("KAFKA_RAW_DOC_TOPIC", "raw-docs")}
