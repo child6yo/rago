@@ -85,5 +85,7 @@ func (h *Handler) getAllDocuments(c *gin.Context) {
 		errorResponse(c, fmt.Sprintf("failed to get documents from collection %s", collection), 500, err)
 	}
 
+	docs.Collection = collection
+
 	successResponse(c, "documents successfully got", docs)
 }
