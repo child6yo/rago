@@ -1,6 +1,6 @@
 syntax = "proto3"; 
-package generator; 
-option go_package = "github.com/child6yo/rago/services/storage/pkg/pb";
+package storage; 
+option go_package = "github.com/child6yo/rago/proto/storage";
 
 import "google/protobuf/empty.proto"; 
 

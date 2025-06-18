@@ -1,6 +1,6 @@
 syntax = "proto3"; 
 package generator; 
-option go_package = "github.com/child6yo/rago/services/generator/pkg/pb";
+option go_package = "github.com/child6yo/rago/proto/generator";
 
 message Query {
     string query = 1;

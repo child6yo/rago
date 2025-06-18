@@ -1,7 +1,0 @@
-protoc \
-  --go_out=services/generator \
-  --go-grpc_out=services/generator \
-  --go_opt=module=github.com/child6yo/rago/services/generator \
-  --go-grpc_opt=module=github.com/child6yo/rago/services/generator \
-  --proto_path=proto \
-  proto/generator/generator.proto
