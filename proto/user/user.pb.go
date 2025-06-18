@@ -244,7 +244,8 @@ func (*Empty) Descriptor() ([]byte, []int) {
 
 type APIKey struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Key           string                 `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -279,6 +280,13 @@ func (*APIKey) Descriptor() ([]byte, []int) {
 	return file_user_user_proto_rawDescGZIP(), []int{5}
 }
 
+func (x *APIKey) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 func (x *APIKey) GetKey() string {
 	if x != nil {
 		return x.Key
@@ -288,7 +296,7 @@ func (x *APIKey) GetKey() string {
 
 type DeleteAPIKeyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ApiKeyId      int32                  `protobuf:"varint,1,opt,name=api_key_id,json=apiKeyId,proto3" json:"api_key_id,omitempty"`
+	ApiKeyId      string                 `protobuf:"bytes,1,opt,name=api_key_id,json=apiKeyId,proto3" json:"api_key_id,omitempty"`
 	UserId        *UserID                `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -324,11 +332,11 @@ func (*DeleteAPIKeyRequest) Descriptor() ([]byte, []int) {
 	return file_user_user_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *DeleteAPIKeyRequest) GetApiKeyId() int32 {
+func (x *DeleteAPIKeyRequest) GetApiKeyId() string {
 	if x != nil {
 		return x.ApiKeyId
 	}
-	return 0
+	return ""
 }
 
 func (x *DeleteAPIKeyRequest) GetUserId() *UserID {
@@ -399,12 +407,13 @@ const file_user_user_proto_rawDesc = "" +
 	"\n" +
 	"collection\x18\x01 \x01(\tR\n" +
 	"collection\"\a\n" +
-	"\x05Empty\"\x1a\n" +
-	"\x06APIKey\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\"Z\n" +
+	"\x05Empty\"*\n" +
+	"\x06APIKey\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x03key\x18\x02 \x01(\tR\x03key\"Z\n" +
 	"\x13DeleteAPIKeyRequest\x12\x1c\n" +
 	"\n" +
-	"api_key_id\x18\x01 \x01(\x05R\bapiKeyId\x12%\n" +
+	"api_key_id\x18\x01 \x01(\tR\bapiKeyId\x12%\n" +
 	"\auser_id\x18\x02 \x01(\v2\f.user.UserIDR\x06userId\"/\n" +
 	"\vAPIKeyArray\x12 \n" +
 	"\x04keys\x18\x01 \x03(\v2\f.user.APIKeyR\x04keys2|\n" +

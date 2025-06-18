@@ -30,11 +30,12 @@ service AuthService {
 }
 
 message APIKey {
-    string key = 1;
+    string id = 1;
+    string key = 2;
 }
 
 message DeleteAPIKeyRequest {
-    int32 api_key_id = 1;
+    string api_key_id = 1;
     UserID user_id = 2;
 }
 
