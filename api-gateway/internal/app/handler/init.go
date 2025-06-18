@@ -4,6 +4,7 @@ import (
 	"github.com/child6yo/rago/api-gateway/internal/app/client"
 	"github.com/child6yo/rago/api-gateway/internal/app/kafka/producer"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Handler struct {
@@ -18,8 +19,8 @@ func NewHandler(grpclient *client.GRPClient, kafkaProducer producer.Producer) *H
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
-	// router.Use(prometheusMiddleware(initPrometheus()))
-	// router.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	router.Use(prometheusMiddleware(initPrometheus()))
+	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	api := router.Group("/api/v1")
 	{
@@ -39,7 +40,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			}
 		}
 
-		storage := api.Group("/storage")
+		storage := api.Group("/storage", h.checkAPIKey)
 		{
 			storage.POST("/:collection", h.loadDocuments)
 		}
