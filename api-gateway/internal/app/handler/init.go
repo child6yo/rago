@@ -56,7 +56,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			storage.DELETE("/:collection/:id", h.deleteDocument)
 		}
 
-		api.GET("/generation", h.ssEventMiddleware(), h.generateAnswer)
+		api.GET("/generation/:collection", h.ssEventMiddleware(), h.generateAnswer)
 	}
 
 	return router

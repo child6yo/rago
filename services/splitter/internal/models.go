@@ -8,14 +8,14 @@ type Metadata struct {
 // Document структура, определяющая объект, который необходимо
 // содержать в векторной базе данных.
 type Document struct {
-	Content    string   `json:"content"`
-	Metadata   Metadata `json:"metadata"`
-	Collection string   `json:"collection"`
+	Content    string   `json:"content,omitempty"`
+	Metadata   Metadata `json:"metadata,omitempty"`
+	Collection string   `json:"collection,omitempty"`
 }
 
 // DocumentArray определяет массив документов с указанием коллекции,
 // к которой они относятся.
 type DocumentArray struct {
-	Documents  []Document `json:"documents"`
-	Collection string     `json:"collection"` // к какой коллекции относятся документы
+	Documents  []Document `json:"documents,omitempty"`
+	Collection string     `json:"collection,omitempty"` // к какой коллекции относятся документы
 }

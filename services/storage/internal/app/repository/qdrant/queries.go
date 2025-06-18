@@ -15,6 +15,7 @@ func (c *Client) Query(ctx context.Context, collection string, vector []float32,
 		CollectionName: collection,
 		Query:          qdrant.NewQuery(vector...),
 		Limit:          &limit,
+		WithPayload:    qdrant.NewWithPayload(true),
 	})
 	if err != nil {
 		return []internal.Document{}, fmt.Errorf("repository; failed to query: %w", err)
@@ -22,10 +23,11 @@ func (c *Client) Query(ctx context.Context, collection string, vector []float32,
 
 	docs := make([]internal.Document, len(result))
 	for i, res := range result {
+		payload := res.GetPayload()
 		docs[i] = internal.Document{
-			Content: res.GetPayload()["document"].GetStringValue(),
+			Content: payload["document"].GetStringValue(),
 			Metadata: internal.Metadata{
-				URL: res.GetPayload()["url"].GetStringValue(),
+				URL: payload["url"].GetStringValue(),
 			},
 			Score: res.Score,
 		}

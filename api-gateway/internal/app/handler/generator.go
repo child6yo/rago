@@ -12,9 +12,10 @@ func (h *Handler) generateAnswer(c *gin.Context) {
 	c.Writer.Flush()
 
 	query := c.Query("query")
+	collection := c.Param("collection")
 
 	// получение потока токенов
-	stream, err := h.grpclient.Generator.Generate(c, query)
+	stream, err := h.grpclient.Generator.Generate(c, query, collection)
 	if err != nil {
 		log.Printf("Generation error: %v", err)
 		c.SSEvent("error", "Failed to start generation")

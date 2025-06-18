@@ -65,7 +65,7 @@ func (akr *APIKeyRepository) GetAPIKeys(userID int) (_ []internal.APIKey, err er
 // CheckAPIKey проверяет существование ключа апи в базе данных.
 // На вход принимает ключ. Возвращает ошибку, если его не существует.
 func (akr *APIKeyRepository) CheckAPIKey(key string) error {
-	var id int
+	var id string
 
 	query := fmt.Sprintf("SELECT id FROM %s WHERE key=$1", apiKeyTable)
 	err := akr.db.Get(&id, query, key)
@@ -73,7 +73,7 @@ func (akr *APIKeyRepository) CheckAPIKey(key string) error {
 		return fmt.Errorf("repository (CheckAPIKey): %w", err)
 	}
 
-	if id == 0 {
+	if id == "" {
 		return errors.New("repository (CheckAPIKey): api key doesn't exists")
 	}
 

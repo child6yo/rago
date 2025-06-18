@@ -28,7 +28,7 @@ func InitConfig() Config {
 	cfg.StorageGRPCHost = getEnv("STORAGE_GRPC_HOST", "localhost")
 	cfg.StorageGRPCPort = getEnv("STORAGE_GRPC_PORT", "5002")
 
-	cfg.LLM = getEnv("LLM", "qwen3:1.7b")
+	cfg.LLM = getEnv("LLM", "gemma3:latest")
 	cfg.OllamaURL = getEnv("OLLAMA_URL", "http://localhost:11434")
 
 	return cfg

@@ -43,10 +43,13 @@ func (g *Generator) stopGeneratoClient() {
 
 // Generate вызывает удаленный метод генерации ответа по запросу, который открывает поток.
 // Возвращает канал, через который транслирует поток.
-func (g *Generator) Generate(ctx context.Context, query string) (<-chan string, error) {
+func (g *Generator) Generate(ctx context.Context, query, collection string) (<-chan string, error) {
 	out := make(chan string)
 	go func() {
-		stream, err := g.generator.Generate(ctx, &pb.Query{Query: query})
+		stream, err := g.generator.Generate(ctx, &pb.Query{
+			Query:          query,
+			CollectionName: collection,
+		})
 		if err != nil {
 			log.Printf("geteration client stream error: %v", err)
 		}
