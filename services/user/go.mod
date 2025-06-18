@@ -1,8 +1,9 @@
 module github.com/child6yo/rago/services/user
 
-go 1.23.0
+go 1.24.3
 
 require (
+	github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0

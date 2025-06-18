@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/child6yo/rago/services/generator/pkg/pb"
+	pb "github.com/child6yo/rago/proto/generator"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

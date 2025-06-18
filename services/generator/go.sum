@@ -1,5 +1,5 @@
-github.com/child6yo/rago/services/storage v0.0.0-20250618121141-91706b46779b h1:z7vFdjYg6zxbEU3psFdumPk/Ry2sHDsKvuCpqBg7628=
-github.com/child6yo/rago/services/storage v0.0.0-20250618121141-91706b46779b/go.mod h1:qAXKOwdZJxVSTQc7oUOqJHHgNstKnvaxlSge+Y1B3YU=
+github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c h1:dnuCQsdQbrZv5Ln5hSdEYo25i2yak4+eDjIkK0kA8VE=
+github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c/go.mod h1:erQdnNvE7KfaSmUGROvlmX3vb/bmbci6RlrJCWfDjdA=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dlclark/regexp2 v1.10.0 h1:+/GIL799phkJqYW+3YbOd8LCcbHzT0Pbo8zl70MHsq0=

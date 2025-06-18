@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/services/user/internal/app/usecase"
-	"github.com/child6yo/rago/services/user/pkg/pb"
+	pb "github.com/child6yo/rago/proto/user"
 )
 
 // CollectionServiceServer определяет интерфейс gRPC сервера сервиса коллекций.

@@ -1,12 +1,10 @@
 module github.com/child6yo/rago/api-gateway
 
-go 1.23.0
+go 1.24.3
 
 require (
 	github.com/IBM/sarama v1.45.2
-	github.com/child6yo/rago/services/generator v0.0.0-20250618121141-91706b46779b
-	github.com/child6yo/rago/services/storage v0.0.0-20250618121141-91706b46779b
-	github.com/child6yo/rago/services/user v0.0.0-20250618121141-91706b46779b
+	github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c
 	github.com/gin-gonic/gin v1.10.1
 	github.com/prometheus/client_golang v1.22.0
 	google.golang.org/grpc v1.73.0
@@ -41,6 +39,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -52,6 +51,7 @@ require (
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
+	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect

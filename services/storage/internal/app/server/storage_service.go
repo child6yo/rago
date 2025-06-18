@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/services/storage/internal/app/usecase"
-	"github.com/child6yo/rago/services/storage/pkg/pb"
+	pb "github.com/child6yo/rago/proto/storage"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

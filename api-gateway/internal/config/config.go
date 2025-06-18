@@ -48,7 +48,9 @@ func InitConfig() Config {
 func getEnv(key, defaultValue string) string {
 	value, exists := os.LookupEnv(key)
 	if !exists {
-		log.Print("Failed to load env")
+		if defaultValue != "" {
+			log.Printf("config: failed to load env key = %s, defaul value = %s", key, defaultValue)
+		}
 		return defaultValue
 	}
 	return value

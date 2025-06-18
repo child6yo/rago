@@ -6,7 +6,7 @@ import (
 
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/child6yo/rago/services/user/internal/app/usecase"
-	"github.com/child6yo/rago/services/user/pkg/pb"
+	pb "github.com/child6yo/rago/proto/user"
 )
 
 // AuthServiceServer определяет интерфейс gRPC сервера сервиса авторизации.

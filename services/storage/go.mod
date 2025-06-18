@@ -1,9 +1,10 @@
 module github.com/child6yo/rago/services/storage
 
-go 1.23.0
+go 1.24.3
 
 require (
 	github.com/IBM/sarama v1.45.1
+	github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c
 	github.com/google/uuid v1.6.0
 	github.com/qdrant/go-client v1.14.0
 	github.com/stretchr/testify v1.10.0

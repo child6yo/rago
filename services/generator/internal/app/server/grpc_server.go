@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/child6yo/rago/services/generator/internal/app/usecase"
-	"github.com/child6yo/rago/services/generator/pkg/pb"
+	pb "github.com/child6yo/rago/proto/generator"
 	"google.golang.org/grpc"
 )
 
