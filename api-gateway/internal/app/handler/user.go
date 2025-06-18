@@ -47,7 +47,7 @@ func (h *Handler) signIn(c *gin.Context) {
 	data := struct {
 		Token string `json:"token"`
 	}{
-		Token: token,
+		Token: fmt.Sprintf("Bearer %s", token),
 	}
 
 	successResponse(c, "successfull user sign in", data)
