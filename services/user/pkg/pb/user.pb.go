@@ -2,13 +2,14 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.30.2
-// source: proto/user/user.proto
+// source: user/user.proto
 
 package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -31,7 +32,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_proto_user_user_proto_msgTypes[0]
+	mi := &file_user_user_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +44,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[0]
+	mi := &file_user_user_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +57,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{0}
+	return file_user_user_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *User) GetLogin() string {
@@ -82,7 +83,7 @@ type UserID struct {
 
 func (x *UserID) Reset() {
 	*x = UserID{}
-	mi := &file_proto_user_user_proto_msgTypes[1]
+	mi := &file_user_user_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -94,7 +95,7 @@ func (x *UserID) String() string {
 func (*UserID) ProtoMessage() {}
 
 func (x *UserID) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[1]
+	mi := &file_user_user_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,7 +108,7 @@ func (x *UserID) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserID.ProtoReflect.Descriptor instead.
 func (*UserID) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{1}
+	return file_user_user_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *UserID) GetId() int32 {
@@ -126,7 +127,7 @@ type Token struct {
 
 func (x *Token) Reset() {
 	*x = Token{}
-	mi := &file_proto_user_user_proto_msgTypes[2]
+	mi := &file_user_user_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -138,7 +139,7 @@ func (x *Token) String() string {
 func (*Token) ProtoMessage() {}
 
 func (x *Token) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[2]
+	mi := &file_user_user_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -151,12 +152,56 @@ func (x *Token) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Token.ProtoReflect.Descriptor instead.
 func (*Token) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{2}
+	return file_user_user_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Token) GetToken() string {
 	if x != nil {
 		return x.Token
+	}
+	return ""
+}
+
+type Collection struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Collection    string                 `protobuf:"bytes,1,opt,name=collection,proto3" json:"collection,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Collection) Reset() {
+	*x = Collection{}
+	mi := &file_user_user_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Collection) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Collection) ProtoMessage() {}
+
+func (x *Collection) ProtoReflect() protoreflect.Message {
+	mi := &file_user_user_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Collection.ProtoReflect.Descriptor instead.
+func (*Collection) Descriptor() ([]byte, []int) {
+	return file_user_user_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Collection) GetCollection() string {
+	if x != nil {
+		return x.Collection
 	}
 	return ""
 }
@@ -169,7 +214,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_proto_user_user_proto_msgTypes[3]
+	mi := &file_user_user_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -181,7 +226,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[3]
+	mi := &file_user_user_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -194,7 +239,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{3}
+	return file_user_user_proto_rawDescGZIP(), []int{4}
 }
 
 type APIKey struct {
@@ -206,7 +251,7 @@ type APIKey struct {
 
 func (x *APIKey) Reset() {
 	*x = APIKey{}
-	mi := &file_proto_user_user_proto_msgTypes[4]
+	mi := &file_user_user_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -218,7 +263,7 @@ func (x *APIKey) String() string {
 func (*APIKey) ProtoMessage() {}
 
 func (x *APIKey) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[4]
+	mi := &file_user_user_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -231,7 +276,7 @@ func (x *APIKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use APIKey.ProtoReflect.Descriptor instead.
 func (*APIKey) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{4}
+	return file_user_user_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *APIKey) GetKey() string {
@@ -251,7 +296,7 @@ type DeleteAPIKeyRequest struct {
 
 func (x *DeleteAPIKeyRequest) Reset() {
 	*x = DeleteAPIKeyRequest{}
-	mi := &file_proto_user_user_proto_msgTypes[5]
+	mi := &file_user_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -263,7 +308,7 @@ func (x *DeleteAPIKeyRequest) String() string {
 func (*DeleteAPIKeyRequest) ProtoMessage() {}
 
 func (x *DeleteAPIKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[5]
+	mi := &file_user_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,7 +321,7 @@ func (x *DeleteAPIKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAPIKeyRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAPIKeyRequest) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{5}
+	return file_user_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeleteAPIKeyRequest) GetApiKeyId() int32 {
@@ -302,7 +347,7 @@ type APIKeyArray struct {
 
 func (x *APIKeyArray) Reset() {
 	*x = APIKeyArray{}
-	mi := &file_proto_user_user_proto_msgTypes[6]
+	mi := &file_user_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -314,7 +359,7 @@ func (x *APIKeyArray) String() string {
 func (*APIKeyArray) ProtoMessage() {}
 
 func (x *APIKeyArray) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_user_user_proto_msgTypes[6]
+	mi := &file_user_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -327,7 +372,7 @@ func (x *APIKeyArray) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use APIKeyArray.ProtoReflect.Descriptor instead.
 func (*APIKeyArray) Descriptor() ([]byte, []int) {
-	return file_proto_user_user_proto_rawDescGZIP(), []int{6}
+	return file_user_user_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *APIKeyArray) GetKeys() []*APIKey {
@@ -337,18 +382,23 @@ func (x *APIKeyArray) GetKeys() []*APIKey {
 	return nil
 }
 
-var File_proto_user_user_proto protoreflect.FileDescriptor
+var File_user_user_proto protoreflect.FileDescriptor
 
-const file_proto_user_user_proto_rawDesc = "" +
+const file_user_user_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/user/user.proto\x12\x02pb\"8\n" +
+	"\x0fuser/user.proto\x12\x02pb\x1a\x1bgoogle/protobuf/empty.proto\"8\n" +
 	"\x04User\x12\x14\n" +
 	"\x05login\x18\x01 \x01(\tR\x05login\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x18\n" +
 	"\x06UserID\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\"\x1d\n" +
 	"\x05Token\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"\a\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\",\n" +
+	"\n" +
+	"Collection\x12\x1e\n" +
+	"\n" +
+	"collection\x18\x01 \x01(\tR\n" +
+	"collection\"\a\n" +
 	"\x05Empty\"\x1a\n" +
 	"\x06APIKey\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\"X\n" +
@@ -359,89 +409,96 @@ const file_proto_user_user_proto_rawDesc = "" +
 	".pb.UserIDR\x06userId\"-\n" +
 	"\vAPIKeyArray\x12\x1e\n" +
 	"\x04keys\x18\x01 \x03(\v2\n" +
-	".pb.APIKeyR\x04keys2k\n" +
-	"\vAuthService\x12\x1f\n" +
-	"\bRegister\x12\b.pb.User\x1a\t.pb.Empty\x12\x1c\n" +
+	".pb.APIKeyR\x04keys2p\n" +
+	"\vAuthService\x12$\n" +
+	"\bRegister\x12\b.pb.User\x1a\x0e.pb.Collection\x12\x1c\n" +
 	"\x05Login\x12\b.pb.User\x1a\t.pb.Token\x12\x1d\n" +
 	"\x04Auth\x12\t.pb.Token\x1a\n" +
-	".pb.UserID2\xbc\x01\n" +
+	".pb.UserID2\xd6\x01\n" +
 	"\rAPIKeyService\x12&\n" +
 	"\fCreateAPIKey\x12\n" +
 	".pb.UserID\x1a\n" +
-	".pb.APIKey\x122\n" +
-	"\fDeleteAPIKey\x12\x17.pb.DeleteAPIKeyRequest\x1a\t.pb.Empty\x12)\n" +
+	".pb.APIKey\x12?\n" +
+	"\fDeleteAPIKey\x12\x17.pb.DeleteAPIKeyRequest\x1a\x16.google.protobuf.Empty\x12)\n" +
 	"\n" +
 	"GetAPIKeys\x12\n" +
-	".pb.UserID\x1a\x0f.pb.APIKeyArray\x12$\n" +
+	".pb.UserID\x1a\x0f.pb.APIKeyArray\x121\n" +
 	"\vCheckAPIKey\x12\n" +
-	".pb.APIKey\x1a\t.pb.EmptyB/Z-github.com/child6yo/rago/services/user/pkg/pbb\x06proto3"
+	".pb.APIKey\x1a\x16.google.protobuf.Empty2@\n" +
+	"\x11CollectionService\x12+\n" +
+	"\rGetCollection\x12\n" +
+	".pb.UserID\x1a\x0e.pb.CollectionB/Z-github.com/child6yo/rago/services/user/pkg/pbb\x06proto3"
 
 var (
-	file_proto_user_user_proto_rawDescOnce sync.Once
-	file_proto_user_user_proto_rawDescData []byte
+	file_user_user_proto_rawDescOnce sync.Once
+	file_user_user_proto_rawDescData []byte
 )
 
-func file_proto_user_user_proto_rawDescGZIP() []byte {
-	file_proto_user_user_proto_rawDescOnce.Do(func() {
-		file_proto_user_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_user_user_proto_rawDesc), len(file_proto_user_user_proto_rawDesc)))
+func file_user_user_proto_rawDescGZIP() []byte {
+	file_user_user_proto_rawDescOnce.Do(func() {
+		file_user_user_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_user_user_proto_rawDesc), len(file_user_user_proto_rawDesc)))
 	})
-	return file_proto_user_user_proto_rawDescData
+	return file_user_user_proto_rawDescData
 }
 
-var file_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-var file_proto_user_user_proto_goTypes = []any{
+var file_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_user_user_proto_goTypes = []any{
 	(*User)(nil),                // 0: pb.User
 	(*UserID)(nil),              // 1: pb.UserID
 	(*Token)(nil),               // 2: pb.Token
-	(*Empty)(nil),               // 3: pb.Empty
-	(*APIKey)(nil),              // 4: pb.APIKey
-	(*DeleteAPIKeyRequest)(nil), // 5: pb.DeleteAPIKeyRequest
-	(*APIKeyArray)(nil),         // 6: pb.APIKeyArray
+	(*Collection)(nil),          // 3: pb.Collection
+	(*Empty)(nil),               // 4: pb.Empty
+	(*APIKey)(nil),              // 5: pb.APIKey
+	(*DeleteAPIKeyRequest)(nil), // 6: pb.DeleteAPIKeyRequest
+	(*APIKeyArray)(nil),         // 7: pb.APIKeyArray
+	(*emptypb.Empty)(nil),       // 8: google.protobuf.Empty
 }
-var file_proto_user_user_proto_depIdxs = []int32{
-	1, // 0: pb.DeleteAPIKeyRequest.user_id:type_name -> pb.UserID
-	4, // 1: pb.APIKeyArray.keys:type_name -> pb.APIKey
-	0, // 2: pb.AuthService.Register:input_type -> pb.User
-	0, // 3: pb.AuthService.Login:input_type -> pb.User
-	2, // 4: pb.AuthService.Auth:input_type -> pb.Token
-	1, // 5: pb.APIKeyService.CreateAPIKey:input_type -> pb.UserID
-	5, // 6: pb.APIKeyService.DeleteAPIKey:input_type -> pb.DeleteAPIKeyRequest
-	1, // 7: pb.APIKeyService.GetAPIKeys:input_type -> pb.UserID
-	4, // 8: pb.APIKeyService.CheckAPIKey:input_type -> pb.APIKey
-	3, // 9: pb.AuthService.Register:output_type -> pb.Empty
-	2, // 10: pb.AuthService.Login:output_type -> pb.Token
-	1, // 11: pb.AuthService.Auth:output_type -> pb.UserID
-	4, // 12: pb.APIKeyService.CreateAPIKey:output_type -> pb.APIKey
-	3, // 13: pb.APIKeyService.DeleteAPIKey:output_type -> pb.Empty
-	6, // 14: pb.APIKeyService.GetAPIKeys:output_type -> pb.APIKeyArray
-	3, // 15: pb.APIKeyService.CheckAPIKey:output_type -> pb.Empty
-	9, // [9:16] is the sub-list for method output_type
-	2, // [2:9] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+var file_user_user_proto_depIdxs = []int32{
+	1,  // 0: pb.DeleteAPIKeyRequest.user_id:type_name -> pb.UserID
+	5,  // 1: pb.APIKeyArray.keys:type_name -> pb.APIKey
+	0,  // 2: pb.AuthService.Register:input_type -> pb.User
+	0,  // 3: pb.AuthService.Login:input_type -> pb.User
+	2,  // 4: pb.AuthService.Auth:input_type -> pb.Token
+	1,  // 5: pb.APIKeyService.CreateAPIKey:input_type -> pb.UserID
+	6,  // 6: pb.APIKeyService.DeleteAPIKey:input_type -> pb.DeleteAPIKeyRequest
+	1,  // 7: pb.APIKeyService.GetAPIKeys:input_type -> pb.UserID
+	5,  // 8: pb.APIKeyService.CheckAPIKey:input_type -> pb.APIKey
+	1,  // 9: pb.CollectionService.GetCollection:input_type -> pb.UserID
+	3,  // 10: pb.AuthService.Register:output_type -> pb.Collection
+	2,  // 11: pb.AuthService.Login:output_type -> pb.Token
+	1,  // 12: pb.AuthService.Auth:output_type -> pb.UserID
+	5,  // 13: pb.APIKeyService.CreateAPIKey:output_type -> pb.APIKey
+	8,  // 14: pb.APIKeyService.DeleteAPIKey:output_type -> google.protobuf.Empty
+	7,  // 15: pb.APIKeyService.GetAPIKeys:output_type -> pb.APIKeyArray
+	8,  // 16: pb.APIKeyService.CheckAPIKey:output_type -> google.protobuf.Empty
+	3,  // 17: pb.CollectionService.GetCollection:output_type -> pb.Collection
+	10, // [10:18] is the sub-list for method output_type
+	2,  // [2:10] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_proto_user_user_proto_init() }
-func file_proto_user_user_proto_init() {
-	if File_proto_user_user_proto != nil {
+func init() { file_user_user_proto_init() }
+func file_user_user_proto_init() {
+	if File_user_user_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_user_user_proto_rawDesc), len(file_proto_user_user_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_user_proto_rawDesc), len(file_user_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
-		GoTypes:           file_proto_user_user_proto_goTypes,
-		DependencyIndexes: file_proto_user_user_proto_depIdxs,
-		MessageInfos:      file_proto_user_user_proto_msgTypes,
+		GoTypes:           file_user_user_proto_goTypes,
+		DependencyIndexes: file_user_user_proto_depIdxs,
+		MessageInfos:      file_user_user_proto_msgTypes,
 	}.Build()
-	File_proto_user_user_proto = out.File
-	file_proto_user_user_proto_goTypes = nil
-	file_proto_user_user_proto_depIdxs = nil
+	File_user_user_proto = out.File
+	file_user_user_proto_goTypes = nil
+	file_user_user_proto_depIdxs = nil
 }

@@ -3,7 +3,7 @@ package usecase
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"log"
+	"fmt"
 	"strings"
 
 	"github.com/child6yo/rago/services/user/internal"
@@ -11,55 +11,58 @@ import (
 )
 
 const (
-	keyLenght = 128
+	keyLength = 128
 )
 
-type ApiKeyService struct {
-	repo repository.ApiKey
+// APIKeyService имплементирует интерфейс APIKey.
+type APIKeyService struct {
+	repo repository.APIKey
 }
 
-func NewApiKeyService(repo repository.ApiKey) *ApiKeyService {
-	return &ApiKeyService{repo: repo}
+// NewAPIKeyService создает новый экземпляр APIKeyService.
+func NewAPIKeyService(repo repository.APIKey) *APIKeyService {
+	return &APIKeyService{repo: repo}
 }
 
-func (acs *ApiKeyService) CreateApiKey(userID int) (string, error) {
+// CreateAPIKey создает новый API ключ для пользователя.
+func (acs *APIKeyService) CreateAPIKey(userID int) (string, error) {
 	key, err := generateAPIKey()
 	if err != nil {
-		log.Print("usecase:", err)
 		return "", err
 	}
 
-	err = acs.repo.CreateApiKey(userID, key)
+	err = acs.repo.CreateAPIKey(userID, key)
 	if err != nil {
-		log.Print("usecase:", err)
 		return "", err
 	}
 
 	return key, nil
 }
 
-func (acs *ApiKeyService) DeleteApiKey(keyID int, userID int) error {
-	return acs.repo.DeleteApiKey(keyID, userID)
+// DeleteAPIKey удаляет API ключ.
+func (acs *APIKeyService) DeleteAPIKey(keyID int, userID int) error {
+	return acs.repo.DeleteAPIKey(keyID, userID)
 }
 
-func (acs *ApiKeyService) GetApiKeys(userID int) ([]internal.ApiKey, error) {
-	return acs.repo.GetApiKeys(userID)
+// GetAPIKeys возвращает все API ключи пользователя.
+func (acs *APIKeyService) GetAPIKeys(userID int) ([]internal.APIKey, error) {
+	return acs.repo.GetAPIKeys(userID)
 }
 
 // generateAPIKey генерирует API-ключ формата Base64.
-// TODO - сменить формат (этот не парсится с юрла)
 func generateAPIKey() (string, error) {
-	key := make([]byte, keyLenght)
+	key := make([]byte, keyLength)
 
 	if _, err := rand.Read(key); err != nil {
-		return "", err
+		return "", fmt.Errorf("usecase: failed to generate API key: %w", err)
 	}
 
-	apiKey := base64.StdEncoding.EncodeToString(key)
+	apiKey := base64.URLEncoding.EncodeToString(key)
 	apiKey = strings.TrimRight(apiKey, "=")
 	return apiKey, nil
 }
 
-func (acs *ApiKeyService) CheckAPIKey(key string) error {
+// CheckAPIKey валидирует API ключ.
+func (acs *APIKeyService) CheckAPIKey(key string) error {
 	return acs.repo.CheckAPIKey(key)
 }

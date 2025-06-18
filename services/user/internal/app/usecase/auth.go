@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"crypto/sha1"
-	"errors"
 	"fmt"
 	"time"
 
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/child6yo/rago/services/user/internal/app/repository"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 var (
@@ -28,20 +28,25 @@ type AuthorizationService struct {
 	repo repository.Authorization
 }
 
+// NewAuthorizationService создает новый экземпляр AuthorizationService.
 func NewAuthorizationService(repo repository.Authorization) *AuthorizationService {
 	return &AuthorizationService{repo: repo}
 }
 
-func (as *AuthorizationService) Register(user internal.User) error {
-	user.Password = generatePasswordHash(user.Password)
-	err := as.repo.CreateUser(user)
-	if err != nil {
-		return err
-	}
+// Register регистрирует нового пользователя с его личной коллекцией (UUID).
+// Возвращает коллекцию пользователя.
+func (as *AuthorizationService) Register(user internal.User) (string, error) {
+	// имя коллекции - UUID
+	collectionName := uuid.New().String()
 
-	return nil
+	user.Password = generatePasswordHash(user.Password)
+	err := as.repo.CreateUser(collectionName, user)
+
+	return collectionName, err
 }
 
+// Login проверяет наличие пользователя и корректность введенных данных.
+// Возвращает авторизационный токен.
 func (as *AuthorizationService) Login(login, password string) (string, error) {
 	user, err := as.repo.GetUser(login, generatePasswordHash(password))
 	if err != nil {
@@ -61,10 +66,12 @@ func (as *AuthorizationService) Login(login, password string) (string, error) {
 	return token.SignedString([]byte(signingKey))
 }
 
+// Auth валидирует авторизационный токен пользователя.
+// Возвращает айди пользователя.
 func (as *AuthorizationService) Auth(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New("invalid signing method")
+			return nil, fmt.Errorf("usecase (Auth): invalid signing method")
 		}
 
 		return []byte(signingKey), nil
@@ -75,7 +82,7 @@ func (as *AuthorizationService) Auth(accessToken string) (int, error) {
 
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return 0, errors.New("token claims are not of type *tokenClaims")
+		return 0, fmt.Errorf("usecase (Auth): token claims are not of type *tokenClaims")
 	}
 
 	return claims.UserID, nil

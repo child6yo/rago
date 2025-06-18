@@ -12,6 +12,7 @@ import (
 const (
 	userTable = "users"
 	apiKeyTable = "api_keys"
+	collectionTable = "collections"
 )
 
 // NewPostgresDB создает новое подключение к базе данных postgres.

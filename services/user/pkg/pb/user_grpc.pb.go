@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.30.2
-// source: proto/user/user.proto
+// source: user/user.proto
 
 package pb
 
@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -28,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Empty, error)
+	Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Collection, error)
 	Login(ctx context.Context, in *User, opts ...grpc.CallOption) (*Token, error)
 	Auth(ctx context.Context, in *Token, opts ...grpc.CallOption) (*UserID, error)
 }
@@ -41,9 +42,9 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Empty, error) {
+func (c *authServiceClient) Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Collection, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(Collection)
 	err := c.cc.Invoke(ctx, AuthService_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -75,7 +76,7 @@ func (c *authServiceClient) Auth(ctx context.Context, in *Token, opts ...grpc.Ca
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	Register(context.Context, *User) (*Empty, error)
+	Register(context.Context, *User) (*Collection, error)
 	Login(context.Context, *User) (*Token, error)
 	Auth(context.Context, *Token) (*UserID, error)
 	mustEmbedUnimplementedAuthServiceServer()
@@ -88,7 +89,7 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) Register(context.Context, *User) (*Empty, error) {
+func (UnimplementedAuthServiceServer) Register(context.Context, *User) (*Collection, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedAuthServiceServer) Login(context.Context, *User) (*Token, error) {
@@ -193,7 +194,7 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/user/user.proto",
+	Metadata: "user/user.proto",
 }
 
 const (
@@ -208,9 +209,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type APIKeyServiceClient interface {
 	CreateAPIKey(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*APIKey, error)
-	DeleteAPIKey(ctx context.Context, in *DeleteAPIKeyRequest, opts ...grpc.CallOption) (*Empty, error)
+	DeleteAPIKey(ctx context.Context, in *DeleteAPIKeyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetAPIKeys(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*APIKeyArray, error)
-	CheckAPIKey(ctx context.Context, in *APIKey, opts ...grpc.CallOption) (*Empty, error)
+	CheckAPIKey(ctx context.Context, in *APIKey, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type aPIKeyServiceClient struct {
@@ -231,9 +232,9 @@ func (c *aPIKeyServiceClient) CreateAPIKey(ctx context.Context, in *UserID, opts
 	return out, nil
 }
 
-func (c *aPIKeyServiceClient) DeleteAPIKey(ctx context.Context, in *DeleteAPIKeyRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *aPIKeyServiceClient) DeleteAPIKey(ctx context.Context, in *DeleteAPIKeyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, APIKeyService_DeleteAPIKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -251,9 +252,9 @@ func (c *aPIKeyServiceClient) GetAPIKeys(ctx context.Context, in *UserID, opts .
 	return out, nil
 }
 
-func (c *aPIKeyServiceClient) CheckAPIKey(ctx context.Context, in *APIKey, opts ...grpc.CallOption) (*Empty, error) {
+func (c *aPIKeyServiceClient) CheckAPIKey(ctx context.Context, in *APIKey, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, APIKeyService_CheckAPIKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -266,9 +267,9 @@ func (c *aPIKeyServiceClient) CheckAPIKey(ctx context.Context, in *APIKey, opts 
 // for forward compatibility.
 type APIKeyServiceServer interface {
 	CreateAPIKey(context.Context, *UserID) (*APIKey, error)
-	DeleteAPIKey(context.Context, *DeleteAPIKeyRequest) (*Empty, error)
+	DeleteAPIKey(context.Context, *DeleteAPIKeyRequest) (*emptypb.Empty, error)
 	GetAPIKeys(context.Context, *UserID) (*APIKeyArray, error)
-	CheckAPIKey(context.Context, *APIKey) (*Empty, error)
+	CheckAPIKey(context.Context, *APIKey) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAPIKeyServiceServer()
 }
 
@@ -282,13 +283,13 @@ type UnimplementedAPIKeyServiceServer struct{}
 func (UnimplementedAPIKeyServiceServer) CreateAPIKey(context.Context, *UserID) (*APIKey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAPIKey not implemented")
 }
-func (UnimplementedAPIKeyServiceServer) DeleteAPIKey(context.Context, *DeleteAPIKeyRequest) (*Empty, error) {
+func (UnimplementedAPIKeyServiceServer) DeleteAPIKey(context.Context, *DeleteAPIKeyRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAPIKey not implemented")
 }
 func (UnimplementedAPIKeyServiceServer) GetAPIKeys(context.Context, *UserID) (*APIKeyArray, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAPIKeys not implemented")
 }
-func (UnimplementedAPIKeyServiceServer) CheckAPIKey(context.Context, *APIKey) (*Empty, error) {
+func (UnimplementedAPIKeyServiceServer) CheckAPIKey(context.Context, *APIKey) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAPIKey not implemented")
 }
 func (UnimplementedAPIKeyServiceServer) mustEmbedUnimplementedAPIKeyServiceServer() {}
@@ -409,5 +410,107 @@ var APIKeyService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/user/user.proto",
+	Metadata: "user/user.proto",
+}
+
+const (
+	CollectionService_GetCollection_FullMethodName = "/pb.CollectionService/GetCollection"
+)
+
+// CollectionServiceClient is the client API for CollectionService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CollectionServiceClient interface {
+	GetCollection(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*Collection, error)
+}
+
+type collectionServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCollectionServiceClient(cc grpc.ClientConnInterface) CollectionServiceClient {
+	return &collectionServiceClient{cc}
+}
+
+func (c *collectionServiceClient) GetCollection(ctx context.Context, in *UserID, opts ...grpc.CallOption) (*Collection, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Collection)
+	err := c.cc.Invoke(ctx, CollectionService_GetCollection_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CollectionServiceServer is the server API for CollectionService service.
+// All implementations must embed UnimplementedCollectionServiceServer
+// for forward compatibility.
+type CollectionServiceServer interface {
+	GetCollection(context.Context, *UserID) (*Collection, error)
+	mustEmbedUnimplementedCollectionServiceServer()
+}
+
+// UnimplementedCollectionServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedCollectionServiceServer struct{}
+
+func (UnimplementedCollectionServiceServer) GetCollection(context.Context, *UserID) (*Collection, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCollection not implemented")
+}
+func (UnimplementedCollectionServiceServer) mustEmbedUnimplementedCollectionServiceServer() {}
+func (UnimplementedCollectionServiceServer) testEmbeddedByValue()                           {}
+
+// UnsafeCollectionServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CollectionServiceServer will
+// result in compilation errors.
+type UnsafeCollectionServiceServer interface {
+	mustEmbedUnimplementedCollectionServiceServer()
+}
+
+func RegisterCollectionServiceServer(s grpc.ServiceRegistrar, srv CollectionServiceServer) {
+	// If the following call pancis, it indicates UnimplementedCollectionServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&CollectionService_ServiceDesc, srv)
+}
+
+func _CollectionService_GetCollection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserID)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CollectionServiceServer).GetCollection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CollectionService_GetCollection_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CollectionServiceServer).GetCollection(ctx, req.(*UserID))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CollectionService_ServiceDesc is the grpc.ServiceDesc for CollectionService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CollectionService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.CollectionService",
+	HandlerType: (*CollectionServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetCollection",
+			Handler:    _CollectionService_GetCollection_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "user/user.proto",
 }

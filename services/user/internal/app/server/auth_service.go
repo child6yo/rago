@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"log"
 
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/child6yo/rago/services/user/internal/app/usecase"
@@ -11,17 +12,14 @@ import (
 // AuthServiceServer определяет интерфейс gRPC сервера сервиса авторизации.
 type AuthServiceServer interface {
 	// Register принимает на вход схему пользователя,
-	// при успехе возвращает соответствующий статус.
-	// В обратном случае возвращает ошибку.
-	Register(ctx context.Context, user *pb.User) (*pb.Empty, error)
+	// возвращает коллекцию, принадлежающую пользователю.
+	Register(ctx context.Context, user *pb.User) (*pb.Collection, error)
 
 	// Login принимает на вход схему пользователя,
 	// при успехе возвращает авторизационный токен.
-	// В обратном случае возвращает ошибку.
 	Login(ctx context.Context, user *pb.User) (*pb.Token, error)
 
 	// Auth принимает на вход токен, при успехе возвращает соответсвующий статус.
-	// В обратном случае возвращает ошибку.
 	Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error)
 
 	mustEmbedUnimplementedAuthServiceServer()
@@ -34,29 +32,40 @@ type AuthService struct {
 }
 
 // Register принимает на вход схему пользователя,
-// Возвращает ошибку, если возникла.
-func (a *AuthService) Register(ctx context.Context, user *pb.User) (*pb.Empty, error) {
-	err := a.service.Register(internal.User{
+// возвращает коллекцию, принадлежающую пользователю.
+func (as *AuthService) Register(ctx context.Context, user *pb.User) (*pb.Collection, error) {
+	collection, err := as.service.Register(internal.User{
 		Login:    user.Login,
 		Password: user.Password,
 	})
 
-	return nil, err
+	if err != nil {
+		log.Printf("user service error: %v", err)
+		return nil, err
+	}
+
+	return &pb.Collection{Collection: collection}, nil
 }
 
 // Login принимает на вход схему пользователя,
-// при успехе возвращает авторизационный токен.
-// В обратном случае возвращает ошибку.
-func (a *AuthService) Login(ctx context.Context, user *pb.User) (*pb.Token, error) {
-	token, err := a.service.Login(user.Login, user.Password)
+// возвращает авторизационный токен.
+func (as *AuthService) Login(ctx context.Context, user *pb.User) (*pb.Token, error) {
+	token, err := as.service.Login(user.Login, user.Password)
+	if err != nil {
+		log.Printf("user service error: %v", err)
+		return nil, err
+	}
 
-	return &pb.Token{Token: token}, err
+	return &pb.Token{Token: token}, nil
 }
 
-// Auth принимает на вход токен, при успехе возвращает айди пользователя.
-// В обратном случае возвращает ошибку.
-func (a *AuthService) Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error) {
-	userID, err := a.service.Auth(token.Token)
+// Auth принимает на вход токен, возвращает айди пользователя.
+func (as *AuthService) Auth(ctx context.Context, token *pb.Token) (*pb.UserID, error) {
+	userID, err := as.service.Auth(token.Token)
+	if err != nil {
+		log.Printf("user service error: %v", err)
+		return nil, err
+	}
 
-	return &pb.UserID{Id: int32(userID)}, err
+	return &pb.UserID{Id: int32(userID)}, nil
 }

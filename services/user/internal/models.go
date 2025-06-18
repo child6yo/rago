@@ -9,8 +9,8 @@ type User struct {
 	Collection string
 }
 
-// ApiKey определяет модель ключа API.
-type ApiKey struct {
+// APIKey определяет модель ключа API.
+type APIKey struct {
 	ID  int    `db:"id"`
 	Key string `db:"key"`
 }
