@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/child6yo/rago/api-gateway/internal"
 	"github.com/gin-gonic/gin"
@@ -83,9 +82,9 @@ func (h *Handler) deleteAPIKey(c *gin.Context) {
 		return
 	}
 
-	keyID, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorResponse(c, "failed to get api key id query", 400, err)
+	keyID := c.Query("id")
+	if keyID == "" {
+		errorResponse(c, "failed to get api key id query", 400, nil)
 		return
 	}
 

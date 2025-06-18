@@ -35,6 +35,7 @@ func (uc *User) startUserClient() {
 
 	uc.auth = pb.NewAuthServiceClient(conn)
 	uc.apiKey = pb.NewAPIKeyServiceClient(conn)
+	uc.collection = pb.NewCollectionServiceClient(conn)
 	uc.conn = conn
 }
 
@@ -46,17 +47,15 @@ func (uc *User) stopUserClient() {
 }
 
 // Register вызывает удалённый метод регистрации пользователя через gRPC.
-func (uc *User) Register(ctx context.Context, input internal.User) (_ string, err error) {
-	defer func() {
-		if err != nil {
-			err = fmt.Errorf("user client error (Register): %v", err)
-		}
-	}()
-
+func (uc *User) Register(ctx context.Context, input internal.User) (string, error) {
 	collection, err := uc.auth.Register(ctx, &pb.User{
 		Login:    input.Login,
 		Password: input.Password,
 	})
+
+	if err != nil {
+		return "", fmt.Errorf("user client error (Register): %v", err)
+	}
 
 	return collection.Collection, err
 }
@@ -76,16 +75,14 @@ func (uc *User) Login(ctx context.Context, input internal.User) (string, error) 
 
 // Auth вызывает удалённый метод авторизации пользователя через gRPC.
 // Возвращает айди пользователя и ошибку.
-func (uc *User) Auth(ctx context.Context, token string) (_ int, err error) {
-	defer func() {
-		if err != nil {
-			err = fmt.Errorf("user client error (Auth): %v", err)
-		}
-	}()
-
+func (uc *User) Auth(ctx context.Context, token string) (int, error) {
 	id, err := uc.auth.Auth(ctx, &pb.Token{
 		Token: token,
 	})
+
+	if err != nil {
+		return 0, fmt.Errorf("user client error (Auth): %v", err)
+	}
 
 	return int(id.Id), err
 }
@@ -101,7 +98,7 @@ func (uc *User) CreateAPIKey(ctx context.Context, userID int) (string, error) {
 }
 
 // DeleteAPIKey вызывает удалённый метод удаления API ключа.
-func (uc *User) DeleteAPIKey(ctx context.Context, keyID, userID int) (err error) {
+func (uc *User) DeleteAPIKey(ctx context.Context, keyID string, userID int) (err error) {
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("user client error (DeleteAPIKey): %v", err)
@@ -109,7 +106,7 @@ func (uc *User) DeleteAPIKey(ctx context.Context, keyID, userID int) (err error)
 	}()
 
 	_, err = uc.apiKey.DeleteAPIKey(ctx, &pb.DeleteAPIKeyRequest{
-		ApiKeyId: int32(keyID),
+		ApiKeyId: keyID,
 		UserId:   &pb.UserID{Id: int32(userID)},
 	})
 
@@ -126,6 +123,7 @@ func (uc *User) GetAPIKeys(ctx context.Context, userID int) ([]internal.APIKey, 
 	internalKeys := make([]internal.APIKey, len(keys.Keys))
 	for i, k := range keys.Keys {
 		internalKeys[i] = internal.APIKey{
+			ID:  k.Id,
 			Key: k.Key,
 		}
 	}
@@ -147,13 +145,11 @@ func (uc *User) CheckAPIKey(ctx context.Context, key string) (err error) {
 }
 
 // GetCollection вызывает удаленный метод возврата коллекции пользователя.
-func (uc *User) GetCollection(ctx context.Context, userID int) (_ string, err error) {
-	defer func() {
-		if err != nil {
-			err = fmt.Errorf("user client error (GetCollection): %v", err)
-		}
-	}()
-
+func (uc *User) GetCollection(ctx context.Context, userID int) (string, error) {
 	collection, err := uc.collection.GetCollection(ctx, &pb.UserID{Id: int32(userID)})
+	if err != nil {
+		return "", fmt.Errorf("user client error (GetCollection): %v", err)
+	}
+
 	return collection.Collection, err
 }

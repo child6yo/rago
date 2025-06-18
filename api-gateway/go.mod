@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/IBM/sarama v1.45.2
-	github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c
+	github.com/child6yo/rago/proto v0.0.0-20250618181147-67149c610446
 	github.com/gin-gonic/gin v1.10.1
 	github.com/prometheus/client_golang v1.22.0
 	google.golang.org/grpc v1.73.0

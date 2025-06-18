@@ -11,7 +11,7 @@ type User struct {
 
 // APIKey определяет модель ключа API.
 type APIKey struct {
-	ID  int    `json:"id"`
+	ID  string    `json:"id"`
 	Key string `json:"key"`
 }
 

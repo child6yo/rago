@@ -8,8 +8,8 @@ github.com/bytedance/sonic/loader v0.1.1 h1:c+e5Pt1k/cy5wMveRDyk2X4B9hF4g7an8N3z
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c h1:dnuCQsdQbrZv5Ln5hSdEYo25i2yak4+eDjIkK0kA8VE=
-github.com/child6yo/rago/proto v0.0.0-20250618172902-323fb8f1c32c/go.mod h1:erQdnNvE7KfaSmUGROvlmX3vb/bmbci6RlrJCWfDjdA=
+github.com/child6yo/rago/proto v0.0.0-20250618181147-67149c610446 h1:sO0mib5uZcLUBchLJ7BKaUhIOk0YN68FuY/oDNIbLNQ=
+github.com/child6yo/rago/proto v0.0.0-20250618181147-67149c610446/go.mod h1:C/u5R5xE/lMmnM3JFK+O558YloWQxY33Cx08AljinaY=
 github.com/cloudwego/base64x v0.1.4 h1:jwCgWpFanWmN8xoIUHa2rtzmkd5J2plF/dnLS6Xd/0Y=
 github.com/cloudwego/base64x v0.1.4/go.mod h1:0zlkT4Wn5C6NdauXdJRhSKRlJvmclQ1hhJgA0rcu/8w=
 github.com/cloudwego/iasm v0.2.0 h1:1KNIy1I1H9hNNFEEH3DVnI4UujN+1zjpuk6gwHLTssg=

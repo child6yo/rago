@@ -19,13 +19,13 @@ type Authorization interface {
 	Auth(accessToken string) (int, error)
 }
 
-// APIKey определяет интерфейс сервиса ключей API. 
+// APIKey определяет интерфейс сервиса ключей API.
 type APIKey interface {
 	// CreateAPIKey создает новый API ключ для пользователя.
-	CreateAPIKey(userID int) (string, error)
+	CreateAPIKey(userID int) (internal.APIKey, error)
 
 	// DeleteAPIKey удаляет API ключ.
-	DeleteAPIKey(keyID int, userID int) error
+	DeleteAPIKey(keyID string, userID int) error
 
 	// GetAPIKeys возвращает все API ключи пользователя.
 	GetAPIKeys(userID int) ([]internal.APIKey, error)

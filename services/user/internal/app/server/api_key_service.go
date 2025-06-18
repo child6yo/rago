@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/child6yo/rago/services/user/internal/app/usecase"
 	pb "github.com/child6yo/rago/proto/user"
+	"github.com/child6yo/rago/services/user/internal/app/usecase"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -42,13 +42,13 @@ func (aks *APIKeyService) CreateAPIKey(ctx context.Context, userID *pb.UserID) (
 		return nil, err
 	}
 
-	return &pb.APIKey{Key: key}, nil
+	return &pb.APIKey{Id: key.ID, Key: key.Key}, nil
 }
 
 // DeleteAPIKey принимает запрос в виде айди пользователя и айди API ключа,
 // отправляет запрос на удаление API ключа.
 func (aks *APIKeyService) DeleteAPIKey(ctx context.Context, request *pb.DeleteAPIKeyRequest) (*emptypb.Empty, error) {
-	err := aks.service.DeleteAPIKey(int(request.ApiKeyId), int(request.UserId.Id))
+	err := aks.service.DeleteAPIKey(request.ApiKeyId, int(request.UserId.Id))
 	if err != nil {
 		log.Printf("user service error: %v", err)
 		return nil, err
@@ -68,6 +68,7 @@ func (aks *APIKeyService) GetAPIKeys(ctx context.Context, userID *pb.UserID) (*p
 	keys := make([]*pb.APIKey, len(internalKeys))
 	for i, k := range internalKeys {
 		keys[i] = &pb.APIKey{
+			Id:  k.ID,
 			Key: k.Key,
 		}
 	}

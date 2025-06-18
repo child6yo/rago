@@ -37,7 +37,7 @@ func InitConfig() Config {
 	cfg.UserGRPCPort = getEnv("GRPC_PORT", "5001")
 
 	cfg.StorageGRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.StorageGRPCPort = getEnv("GRPC_PORT", "5000")
+	cfg.StorageGRPCPort = getEnv("GRPC_PORT", "5002")
 
 	cfg.GeneratorGRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.GeneratorGRPCPort = getEnv("GRPC_PORT", "5003")

@@ -17,7 +17,7 @@ type Response struct {
 }
 
 func getUserID(c *gin.Context) (int, error) {
-	id, ok := c.Get("userId")
+	id, ok := c.Get("userID")
 	if !ok {
 		return 0, errors.New("unknown jwt")
 	}

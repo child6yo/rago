@@ -8,6 +8,7 @@ import (
 
 	"github.com/child6yo/rago/services/user/internal"
 	"github.com/child6yo/rago/services/user/internal/app/repository"
+	"github.com/google/uuid"
 )
 
 const (
@@ -25,22 +26,27 @@ func NewAPIKeyService(repo repository.APIKey) *APIKeyService {
 }
 
 // CreateAPIKey создает новый API ключ для пользователя.
-func (acs *APIKeyService) CreateAPIKey(userID int) (string, error) {
+func (acs *APIKeyService) CreateAPIKey(userID int) (internal.APIKey, error) {
 	key, err := generateAPIKey()
 	if err != nil {
-		return "", err
+		return internal.APIKey{}, err
 	}
 
-	err = acs.repo.CreateAPIKey(userID, key)
+	id := uuid.New().String()
+
+	err = acs.repo.CreateAPIKey(id, userID, key)
 	if err != nil {
-		return "", err
+		return internal.APIKey{}, err
 	}
 
-	return key, nil
+	return internal.APIKey{
+		ID:  id,
+		Key: key,
+	}, nil
 }
 
 // DeleteAPIKey удаляет API ключ.
-func (acs *APIKeyService) DeleteAPIKey(keyID int, userID int) error {
+func (acs *APIKeyService) DeleteAPIKey(keyID string, userID int) error {
 	return acs.repo.DeleteAPIKey(keyID, userID)
 }
 

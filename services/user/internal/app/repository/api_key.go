@@ -20,21 +20,21 @@ func NewAPIKeyRepository(db *sqlx.DB) *APIKeyRepository {
 
 // CreateAPIKey регистрирует новый апи ключ для конкретного пользователя.
 // На вход принимает айди пользователя и ключ.
-func (akr *APIKeyRepository) CreateAPIKey(userID int, key string) (err error) {
+func (akr *APIKeyRepository) CreateAPIKey(id string, userID int, key string) (err error) {
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("repository (CreateAPIKey): %w", err)
 		}
 	}()
-	query := fmt.Sprintf("INSERT INTO %s (user_id, key) values ($1, $2)", apiKeyTable)
-	_, err = akr.db.Exec(query, userID, key)
+	query := fmt.Sprintf("INSERT INTO %s (id, user_id, key) values ($1, $2, $3)", apiKeyTable)
+	_, err = akr.db.Exec(query, id, userID, key)
 
 	return err
 }
 
 // DeleteAPIKey удаляет из базы данных апи ключ по айди для конкретного пользователя.
 // На вход принимает айди ключа и айди пользователя.
-func (akr *APIKeyRepository) DeleteAPIKey(keyID int, userID int) (err error) {
+func (akr *APIKeyRepository) DeleteAPIKey(keyID string, userID int) (err error) {
 	defer func() {
 		if err != nil {
 			err = fmt.Errorf("repository (DeleteAPIKey): %w", err)

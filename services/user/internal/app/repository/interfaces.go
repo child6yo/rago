@@ -19,11 +19,11 @@ type Authorization interface {
 type APIKey interface {
 	// CreateAPIKey создает в базе данных новый апи ключ для конкретного пользователя.
 	// На вход принимает айди пользователя и ключ.
-	CreateAPIKey(userID int, key string) error
+	CreateAPIKey(id string, userID int, key string) error
 
 	// DeleteAPIKey удаляет из базы данных апи ключ по айди для конкретного пользователя.
 	// На вход принимает айди ключа и айди пользователя.
-	DeleteAPIKey(keyID int, userID int) error
+	DeleteAPIKey(keyID string, userID int) error
 
 	// GetAPIKeys возвращает из базы данных все апи ключи пользователя.
 	// На вход принимает айди пользователя.
