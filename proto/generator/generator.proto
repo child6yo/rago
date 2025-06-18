@@ -4,6 +4,7 @@ option go_package = "github.com/child6yo/rago/services/generator/pkg/pb";
 
 message Query {
     string query = 1;
+    string collectionName = 2;
 }
 
 message ResponseChunk {

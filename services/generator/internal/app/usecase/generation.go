@@ -32,8 +32,8 @@ func NewGenerationService(storage client.Storage, model string, ollamaAddress st
 // Generate генерирует ответ за запрос. Самостоятельно идет в сервис хранения данных.
 // Ответ генерирует порционно. Возвращает канал, в который будет стримить поток ответа.
 // Возвращает ошибку в случае неполадок.
-func (gs *GenerationService) Generate(ctx context.Context, query string) (<-chan string, error) {
-	docs, err := gs.storage.Search(context.Background(), query, 1)
+func (gs *GenerationService) Generate(ctx context.Context, query string, collection string) (<-chan string, error) {
+	docs, err := gs.storage.Search(ctx, query, 2, collection)
 	if err != nil {
 		return nil, err
 	}

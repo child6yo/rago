@@ -22,10 +22,11 @@ const (
 )
 
 type Query struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Query          string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	CollectionName string                 `protobuf:"bytes,2,opt,name=collectionName,proto3" json:"collectionName,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *Query) Reset() {
@@ -61,6 +62,13 @@ func (*Query) Descriptor() ([]byte, []int) {
 func (x *Query) GetQuery() string {
 	if x != nil {
 		return x.Query
+	}
+	return ""
+}
+
+func (x *Query) GetCollectionName() string {
+	if x != nil {
+		return x.CollectionName
 	}
 	return ""
 }
@@ -113,9 +121,10 @@ var File_generator_generator_proto protoreflect.FileDescriptor
 
 const file_generator_generator_proto_rawDesc = "" +
 	"\n" +
-	"\x19generator/generator.proto\x12\tgenerator\"\x1d\n" +
+	"\x19generator/generator.proto\x12\tgenerator\"E\n" +
 	"\x05Query\x12\x14\n" +
-	"\x05query\x18\x01 \x01(\tR\x05query\"%\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\x12&\n" +
+	"\x0ecollectionName\x18\x02 \x01(\tR\x0ecollectionName\"%\n" +
 	"\rResponseChunk\x12\x14\n" +
 	"\x05chunk\x18\x01 \x01(\tR\x05chunk2L\n" +
 	"\x10GeneratorService\x128\n" +

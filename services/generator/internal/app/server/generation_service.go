@@ -27,7 +27,7 @@ type GenerationService struct {
 // токенов ответа.
 func (gs *GenerationService) Generate(query *pb.Query, stream grpc.ServerStreamingServer[pb.ResponseChunk]) error {
 	ctx := stream.Context()
-	chunks, err := gs.service.Generate(ctx, query.Query)
+	chunks, err := gs.service.Generate(ctx, query.Query, query.CollectionName)
 	if err != nil {
 		return fmt.Errorf("generation service: failed to generate answer: %v", err)
 	}

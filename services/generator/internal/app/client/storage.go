@@ -43,8 +43,12 @@ func (s *Storage) stopStorageClient() {
 }
 
 // Search вызывает удаленную функцию векторного поиска по хранилищу.
-func (s *Storage) Search(ctx context.Context, query string, limit int) ([]internal.Document, error) {
-	resp, err := s.client.Search(ctx, &pb.QueryRequest{Query: query, Limit: int32(limit)})
+func (s *Storage) Search(ctx context.Context, query string, limit int, collection string) ([]internal.Document, error) {
+	resp, err := s.client.Search(ctx, &pb.QueryRequest{
+		Query:          query,
+		Limit:          int32(limit),
+		CollectionName: collection,
+	})
 	if err != nil {
 		return []internal.Document{}, fmt.Errorf("storage client: failed to search: %v", err)
 	}
