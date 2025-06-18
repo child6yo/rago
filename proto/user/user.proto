@@ -2,6 +2,8 @@ syntax = "proto3";
 package pb; 
 option go_package = "github.com/child6yo/rago/services/user/pkg/pb";
 
+import "google/protobuf/empty.proto"; 
+
 message User {
     string login = 1;
     string password = 2;
@@ -15,10 +17,14 @@ message Token {
     string token = 1;
 }
 
+message Collection {
+    string collection = 1;
+}
+
 message Empty {}
 
 service AuthService {
-    rpc Register (User) returns (Empty);
+    rpc Register (User) returns (Collection);
     rpc Login (User) returns (Token);
     rpc Auth (Token) returns (UserID);
 }
@@ -38,7 +44,11 @@ message APIKeyArray {
 
 service APIKeyService {
     rpc CreateAPIKey (UserID) returns (APIKey);
-    rpc DeleteAPIKey (DeleteAPIKeyRequest) returns (Empty);
+    rpc DeleteAPIKey (DeleteAPIKeyRequest) returns (google.protobuf.Empty);
     rpc GetAPIKeys (UserID) returns (APIKeyArray);
-    rpc CheckAPIKey (APIKey) returns (Empty);
+    rpc CheckAPIKey (APIKey) returns (google.protobuf.Empty);
+}
+
+service CollectionService {
+    rpc GetCollection (UserID) returns (Collection);
 }
