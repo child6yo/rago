@@ -39,7 +39,7 @@ func (g *GRPCServer) StartGRPCServer() error {
 
 	pb.RegisterAuthServiceServer(g.server, &AuthService{service: g.usecase.Authorization})
 	pb.RegisterAPIKeyServiceServer(g.server, &APIKeyService{service: g.usecase.APIKey})
-	pb.RegisterCollectionServiceServer(g.server, &CollectionService{})
+	pb.RegisterCollectionServiceServer(g.server, &CollectionService{service: g.usecase.Collection})
 
 	if err := g.server.Serve(lis); err != nil {
 		return err

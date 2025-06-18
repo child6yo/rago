@@ -1,3 +1,3 @@
-DROP TABLE collections;
-DROP TABLE users;
-DROP TABLE api_keys;
+DROP TABLE collections CASCADE;
+DROP TABLE users CASCADE;
+DROP TABLE api_keys CASCADE;

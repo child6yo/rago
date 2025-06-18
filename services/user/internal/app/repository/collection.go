@@ -24,7 +24,7 @@ func (cr *ColletionRepository) GetCollection(userID int) (_ string, err error) {
 		}
 	}()
 
-	query := fmt.Sprintf(`SELECT collection.name FROM %s
+	query := fmt.Sprintf(`SELECT collections.name FROM %s
 						INNER JOIN %s 
 						ON users.collection_id = collections.id
 						WHERE users.id = $1`, userTable, collectionTable)

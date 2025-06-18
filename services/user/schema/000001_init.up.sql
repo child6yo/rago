@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE api_keys (
-    id        serial primary key,
+    id        varchar(255) not null unique primary key,
     user_id   int not null references users(id) on delete cascade,
     key       text not null unique
 );
