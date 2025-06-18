@@ -12,12 +12,21 @@ import (
 	"github.com/tmc/langchaingo/llms/ollama"
 )
 
+// GenerationService имплементирует интерфейс Generation.
 type GenerationService struct {
-	storage client.Storage
+	storage       client.Storage
+	model         string
+	ollamaAddress string
 }
 
-func NewGenerationService(storage client.Storage) *GenerationService {
-	return &GenerationService{storage: storage}
+// NewGenerationService создает новый экземпляр GenerationService.
+//
+// Параметры:
+//   - storage - gRPC клиент векторного хранилища
+//   - model - генеративная модель (LLM)
+//   - ollamaAddress - ollama URL
+func NewGenerationService(storage client.Storage, model string, ollamaAddress string) *GenerationService {
+	return &GenerationService{storage: storage, model: model, ollamaAddress: ollamaAddress}
 }
 
 // Generate генерирует ответ за запрос. Самостоятельно идет в сервис хранения данных.
@@ -29,7 +38,7 @@ func (gs *GenerationService) Generate(ctx context.Context, query string) (<-chan
 		return nil, err
 	}
 
-	contextJson, err := prepareContext(docs)
+	contextJSON, err := prepareContext(docs)
 	if err != nil {
 		return nil, err
 	}
@@ -37,42 +46,48 @@ func (gs *GenerationService) Generate(ctx context.Context, query string) (<-chan
 	out := make(chan string)
 
 	go func() {
-		gs.initGenerating(ctx, out, query, contextJson)
+		gs.initGenerating(ctx, out, query, contextJSON)
 	}()
 
 	return out, nil
 }
 
-func (gs *GenerationService) initGenerating(ctx context.Context, out chan<- string, query string, contextJson string) {
-	llm, err := ollama.New(ollama.WithModel("gemma3:1b"), ollama.WithServerURL("http://localhost:11434"))
+func (gs *GenerationService) initGenerating(ctx context.Context, out chan<- string, query string, contextJSON string) {
+	llm, err := ollama.New(ollama.WithModel(gs.model), ollama.WithServerURL(gs.ollamaAddress))
 	if err != nil {
-		log.Println(err)
+		log.Printf("generation failed: %v", err)
 	}
 	_, err = llms.GenerateFromSinglePrompt(
 		ctx,
 		llm,
-		fmt.Sprintf(defaultPrompt, query, contextJson),
-		llms.WithTemperature(0.2),
+		fmt.Sprintf(defaultPrompt, query, contextJSON),
+		llms.WithTemperature(0.8),
 		llms.WithStreamingFunc(func(ctx context.Context, chunk []byte) error {
-			streamingFunc(out, ctx, chunk)
+			streamingFunc(ctx, out, chunk)
 			return nil
 		}),
 	)
 	if err != nil {
-		log.Println(err)
+		log.Printf("generation failed: %v", err)
 	}
 
 	defer close(out)
 }
 
-func streamingFunc(out chan<- string, ctx context.Context, chunk []byte) {
+func streamingFunc(ctx context.Context, out chan<- string, chunk []byte) {
 	if ctx.Err() != nil {
 		return
 	}
 	out <- string(chunk)
 }
 
-func prepareContext(contextDocs []internal.Document) (string, error) {
+func prepareContext(contextDocs []internal.Document) (_ string, err error) {
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("generation error: failed to prepare context: %v", err)
+		}
+	}()
+
 	res, err := json.Marshal(contextDocs)
 
 	return string(res), err

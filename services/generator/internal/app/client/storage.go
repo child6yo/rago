@@ -6,11 +6,12 @@ import (
 	"log"
 
 	"github.com/child6yo/rago/services/generator/internal"
-	"github.com/child6yo/rago/services/generator/pkg/pb"
+	"github.com/child6yo/rago/services/storage/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// Storage определяет структуру клиента для gRPC сервера вектоного хранилища.
 type Storage struct {
 	client pb.StorageServiceClient
 	conn   *grpc.ClientConn
@@ -41,10 +42,11 @@ func (s *Storage) stopStorageClient() {
 	s.conn.Close()
 }
 
+// Search вызывает удаленную функцию векторного поиска по хранилищу.
 func (s *Storage) Search(ctx context.Context, query string, limit int) ([]internal.Document, error) {
 	resp, err := s.client.Search(ctx, &pb.QueryRequest{Query: query, Limit: int32(limit)})
 	if err != nil {
-		return []internal.Document{}, err
+		return []internal.Document{}, fmt.Errorf("storage client: failed to search: %v", err)
 	}
 
 	docsPb := resp.Document

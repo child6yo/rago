@@ -19,7 +19,7 @@ func (c *GRPClient) StartGRPCClient() {
 	c.Storage.startStorageClient()
 }
 
-// StartGRPCClient разрывает соединение со всеми содержащимися сервисами.
+// StopGRPCClient разрывает соединение со всеми содержащимися сервисами.
 func (c *GRPClient) StopGRPCClient() {
 	c.Storage.stopStorageClient()
 }

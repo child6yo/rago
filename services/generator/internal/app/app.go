@@ -12,6 +12,8 @@ import (
 // Application - структура приложения splitter.
 type Application struct {
 	config.Config // конфигурация
+
+	server *server.GRPCServer
 }
 
 // CreateApplication создает новый экземпляр приложения.
@@ -24,17 +26,17 @@ func (a *Application) StartApplication() {
 	client := client.NewGRPCClient(a.Config)
 	client.StartGRPCClient()
 
-	usecase := usecase.NewGenerationService(client.Storage)
+	usecase := usecase.NewGenerationService(client.Storage, a.LLM, a.OllamaURL)
 
-	server := server.NewGRPCServer(usecase, a.GRPCHost, a.GRPCPort)
-	err := server.StartGRPCServer()
-	if err != nil {
-		log.Print(err)
-		// обработка
-	}
+	a.server = server.NewGRPCServer(usecase, a.GRPCHost, a.GRPCPort)
+	go func() {
+		if err := a.server.StartGRPCServer(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 }
 
-// TODO
+// StopApplication завершает работу приложения.
 func (a *Application) StopApplication() {
-
+	a.server.ShutdownGRPCServer()
 }

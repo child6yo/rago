@@ -12,6 +12,9 @@ type Config struct {
 
 	StorageGRPCHost string
 	StorageGRPCPort string
+
+	LLM       string
+	OllamaURL string
 }
 
 // InitConfig инициализирует конфигурацию приложения,
@@ -24,6 +27,9 @@ func InitConfig() Config {
 
 	cfg.StorageGRPCHost = getEnv("STORAGE_GRPC_HOST", "localhost")
 	cfg.StorageGRPCPort = getEnv("STORAGE_GRPC_PORT", "5002")
+
+	cfg.LLM = getEnv("LLM", "qwen3:1.7b")
+	cfg.OllamaURL = getEnv("OLLAMA_URL", "http://localhost:11434")
 
 	return cfg
 }
