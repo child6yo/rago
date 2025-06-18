@@ -35,7 +35,7 @@ func NewKafkaProducer(brokers []string, docTopic string) *KafkaProducer {
 	}
 }
 
-// SendMessage отправляет сообщение в определенный топик брокера.
+// StartProducer запускает работу продюсера.
 func (p *KafkaProducer) StartProducer() error {
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
