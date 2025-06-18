@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"log"
+	"fmt"
 	"strconv"
 
 	"github.com/child6yo/rago/api-gateway/internal"
@@ -12,113 +12,126 @@ func (h *Handler) signUp(c *gin.Context) {
 	var input internal.User
 
 	if err := c.BindJSON(&input); err != nil {
-		// TODO
-		c.JSON(500, err)
+		errorResponse(c, "internal server error", 500, err)
 		return
 	}
 
-	if err := h.grpclient.User.Register(input); err != nil {
-		// TODO
-		c.JSON(500, err)
+	collection, err := h.grpclient.User.Register(c.Request.Context(), input)
+	if err != nil {
+		errorResponse(c, "failed to register", 500, err)
 		return
 	}
 
-	c.JSON(200, Response{Status: "OK"})
+	err = h.grpclient.CreateCollection(c.Request.Context(), collection)
+	if err != nil {
+		errorResponse(c, fmt.Sprintf("failed to create collection: %s", collection), 500, err)
+		return
+	}
+
+	successResponse(c, fmt.Sprintf("new user successfully created with collection %s", collection), nil)
 }
 
 func (h *Handler) signIn(c *gin.Context) {
 	var input internal.User
 
 	if err := c.BindJSON(&input); err != nil {
-		// TODO
-		c.JSON(500, err)
+		errorResponse(c, "internal server error", 500, err)
 		return
 	}
 
-	token, err := h.grpclient.Login(input)
+	token, err := h.grpclient.Login(c.Request.Context(), input)
 	if err != nil {
-		// TODO
-		c.JSON(500, err)
+		errorResponse(c, "failed to login", 500, err)
 		return
 	}
 
-	Data := struct {
+	data := struct {
 		Token string `json:"token"`
 	}{
 		Token: token,
 	}
 
-	c.JSON(200, Response{Status: "OK", Data: Data})
+	successResponse(c, "successfull user sign in", data)
 }
 
 func (h *Handler) createAPIKey(c *gin.Context) {
-	id, err := getUserId(c)
+	id, err := getUserID(c)
 	if err != nil {
-		// TODO
-		c.JSON(500, err)
+		errorResponse(c, "failed to get auth token", 401, err)
 		return
 	}
 
-	key, err := h.grpclient.User.CreateAPIKey(id)
+	key, err := h.grpclient.User.CreateAPIKey(c.Request.Context(), id)
 	if err != nil {
-		// TODO
-		c.JSON(500, err)
+		errorResponse(c, "failed to create API key", 500, err)
 		return
 	}
 
-	Data := struct {
+	data := struct {
 		APIKey string `json:"key"`
 	}{
 		APIKey: key,
 	}
 
-	c.JSON(200, Response{Status: "OK", Data: Data})
+	successResponse(c, "new api key created successfully", data)
 }
 
 func (h *Handler) deleteAPIKey(c *gin.Context) {
-	userID, err := getUserId(c)
+	userID, err := getUserID(c)
 	if err != nil {
-		// TODO
-		log.Print(err)
-		c.JSON(500, err)
+		errorResponse(c, "failed to get auth token", 401, err)
 		return
 	}
 
 	keyID, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
-		// TODO
-		log.Print(err)
-		c.JSON(500, err)
+		errorResponse(c, "failed to get api key id query", 400, err)
 		return
 	}
 
-	err = h.grpclient.User.DeleteAPIKey(keyID, userID)
+	err = h.grpclient.User.DeleteAPIKey(c.Request.Context(), keyID, userID)
 	if err != nil {
-		// TODO
-		log.Print(err)
-		c.JSON(500, err)
+		errorResponse(c, "failed to delete api key", 500, err)
 		return
 	}
-	
-	c.JSON(200, nil)
+
+	successResponse(c, "api key successfully deleted", nil)
 }
 
 func (h *Handler) getAPIKeys(c *gin.Context) {
-	userID, err := getUserId(c)
+	userID, err := getUserID(c)
 	if err != nil {
-		// TODO
-		log.Print(err)
-		c.JSON(500, err)
+		errorResponse(c, "failed to get auth token", 401, err)
 		return
 	}
 
-	keys, err := h.grpclient.User.GetAPIKeys(userID)
-		if err != nil {
-		// TODO
-		log.Print(err)
-		c.JSON(500, err)
+	keys, err := h.grpclient.User.GetAPIKeys(c.Request.Context(), userID)
+	if err != nil {
+		errorResponse(c, "failed to get api keys", 500, err)
 		return
 	}
 
-	c.JSON(200, keys)
+	successResponse(c, "api keys successfully got", keys)
+}
+
+func (h *Handler) getCollection(c *gin.Context) {
+	userID, err := getUserID(c)
+	if err != nil {
+		errorResponse(c, "failed to get auth token", 401, err)
+		return
+	}
+
+	collection, err := h.grpclient.GetCollection(c.Request.Context(), userID)
+	if err != nil {
+		errorResponse(c, "failed to get user collection", 500, err)
+		return
+	}
+
+	data := struct {
+		Collection string `json:"collection"`
+	}{
+		Collection: collection,
+	}
+
+	successResponse(c, "collection successfully got", data)
 }

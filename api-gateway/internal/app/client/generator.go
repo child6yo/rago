@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/child6yo/rago/api-gateway/pkg/pb"
+	"github.com/child6yo/rago/services/generator/pkg/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// Generator определяет клиент сервиса генерации, доступного по gRPC.
 type Generator struct {
 	generator pb.GeneratorServiceClient
 	conn      *grpc.ClientConn
@@ -40,19 +41,21 @@ func (g *Generator) stopGeneratoClient() {
 	g.conn.Close()
 }
 
+// Generate вызывает удаленный метод генерации ответа по запросу, который открывает поток.
+// Возвращает канал, через который транслирует поток.
 func (g *Generator) Generate(ctx context.Context, query string) (<-chan string, error) {
 	out := make(chan string)
 	go func() {
 		stream, err := g.generator.Generate(ctx, &pb.Query{Query: query})
 		if err != nil {
-			log.Print(err)
+			log.Printf("geteration client stream error: %v", err)
 		}
 
 		defer close(out)
 		for {
 			msg, err := stream.Recv()
 			if err != nil {
-				log.Print("stream err: ", err)
+				log.Printf("geteration client stream error: %v", err)
 				break
 			}
 			out <- msg.Chunk

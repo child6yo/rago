@@ -1,17 +1,18 @@
 package internal
 
+// User определяет модель пользователя.
 type User struct {
-	Id         int
+	ID         int
 	Login      string `json:"login"`
 	Password   string `json:"password"`
 	Active     bool
 	Collection string
 }
 
-// ApiKey определяет модель ключа API.
-type ApiKey struct {
-	ID  int
-	Key string
+// APIKey определяет модель ключа API.
+type APIKey struct {
+	ID  int    `json:"id"`
+	Key string `json:"key"`
 }
 
 // Metadata - структура метаданных документа.

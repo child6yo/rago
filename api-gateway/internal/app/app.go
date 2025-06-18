@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"log"
 
 	"github.com/child6yo/rago/api-gateway/internal/app/client"
@@ -14,8 +15,9 @@ import (
 type Application struct {
 	config.Config // конфигурация
 
-	client   *client.GRPClient
-	producer *producer.KafkaProducer
+	client     *client.GRPClient
+	producer   *producer.KafkaProducer
+	httpServer *server.Server
 }
 
 // CreateApplication создает новый экземпляр приложения.
@@ -39,12 +41,15 @@ func (a *Application) StartApplication() {
 
 	handler := handler.NewHandler(a.client, a.producer)
 
-	srv := server.Server{}
-	srv.Run(a.SrvPort, handler.InitRoutes())
+	a.httpServer = &server.Server{}
+	go func() {
+		a.httpServer.Run(a.SrvPort, handler.InitRoutes())
+	}()
 }
 
-// TODO
+// StopApplication останавливает работу приложения.
 func (a *Application) StopApplication() {
 	a.client.StopGRPCClient()
 	a.producer.StopProducer()
+	a.httpServer.Shutdown(context.Background())
 }

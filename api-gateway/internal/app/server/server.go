@@ -5,10 +5,12 @@ import (
 	"net/http"
 )
 
+// Server определяет структуру HTTP сервера.
 type Server struct {
 	httpServer *http.Server
 }
 
+// Run запускает HTTP сервер.
 func (s *Server) Run(port string, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           ":" + port,
@@ -21,6 +23,7 @@ func (s *Server) Run(port string, handler http.Handler) error {
 	return s.httpServer.ListenAndServe()
 }
 
+// Shutdown останавливает HTTP сервер.
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.httpServer.Shutdown(ctx)
 }

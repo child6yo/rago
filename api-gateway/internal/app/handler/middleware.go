@@ -1,56 +1,48 @@
 package handler
 
 import (
-	"log"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-// TODO
 func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader("Authorization")
 	if header == "" {
-		log.Print("empty authorization header")
-		c.AbortWithStatusJSON(500, nil)
+		errorResponse(c, "empty authorization header", 401, nil)
 		return
 	}
 
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		log.Print("invalid authorizaton header")
-		c.AbortWithStatusJSON(500, nil)
+		errorResponse(c, "invalid authorizaton header", 401, nil)
 		return
 	}
 
 	if len(headerParts[1]) == 0 {
-		log.Print("token is empty")
-		c.JSON(500, nil)
+		errorResponse(c, "empty authorization token", 401, nil)
 		return
 	}
 
-	userId, err := h.grpclient.User.Auth(headerParts[1])
+	userID, err := h.grpclient.User.Auth(c.Request.Context(), headerParts[1])
 	if err != nil {
-		log.Print("invalid token")
-		c.AbortWithStatusJSON(500, nil)
+		errorResponse(c, "invalid authorization token", 401, nil)
 		return
 	}
 
-	c.Set("userId", userId)
+	c.Set("userID", userID)
 }
 
 func (h *Handler) checkAPIKey(c *gin.Context) {
 	key := c.Query("api-key")
 	if key == "" {
-		log.Print("empty api key")
-		c.AbortWithStatusJSON(500, nil)
+		errorResponse(c, "empty api key", 401, nil)
 		return
 	}
 
-	err := h.grpclient.User.CheckAPIKey(key)
+	err := h.grpclient.User.CheckAPIKey(c.Request.Context(), key)
 	if err != nil {
-		log.Print("invalid api key: ", err)
-		c.AbortWithStatusJSON(500, nil)
+		errorResponse(c, "invalid api key", 401, err)
 		return
 	}
 }

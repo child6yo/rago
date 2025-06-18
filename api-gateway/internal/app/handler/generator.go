@@ -13,7 +13,7 @@ func (h *Handler) generateAnswer(c *gin.Context) {
 
 	query := c.Query("query")
 
-	// Получаем поток данных
+	// получение потока токенов
 	stream, err := h.grpclient.Generator.Generate(c, query)
 	if err != nil {
 		log.Printf("Generation error: %v", err)
@@ -22,23 +22,21 @@ func (h *Handler) generateAnswer(c *gin.Context) {
 		return
 	}
 
-	// Используем встроенный метод Gin для потоковой передачи
+	// потоковая передача
 	c.Stream(func(w io.Writer) bool {
 		select {
 		case <-c.Writer.CloseNotify():
-			// Клиент отключился
 			log.Println("Client disconnected")
 			return false
 
 		case chunk, ok := <-stream:
 			if !ok {
-				// Поток завершен
 				c.SSEvent("end", "[DONE]")
 				log.Println("Stream finished")
 				return false
 			}
 
-			// Отправляем чанк данных
+			// отправление чанка данных
 
 			chunkWithNbsp := strings.TrimLeftFunc(chunk, func(r rune) bool { return r == ' ' })
 			leadingSpaces := len(chunk) - len(chunkWithNbsp)

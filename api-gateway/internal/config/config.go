@@ -16,13 +16,14 @@ type Config struct {
 	UserGRPCHost string
 	UserGRPCPort string
 
-	SplitterGRPCHost string
-	SplitterGRPCPort string
+	StorageGRPCHost string
+	StorageGRPCPort string
 
 	GeneratorGRPCHost string
 	GeneratorGRPCPort string
 }
 
+// InitConfig инициализирует конфиг (.env).
 func InitConfig() Config {
 	cfg := Config{}
 
@@ -35,8 +36,8 @@ func InitConfig() Config {
 	cfg.UserGRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.UserGRPCPort = getEnv("GRPC_PORT", "5001")
 
-	cfg.SplitterGRPCHost = getEnv("GRPC_HOST", "localhost")
-	cfg.SplitterGRPCPort = getEnv("GRPC_PORT", "5000")
+	cfg.StorageGRPCHost = getEnv("GRPC_HOST", "localhost")
+	cfg.StorageGRPCPort = getEnv("GRPC_PORT", "5000")
 
 	cfg.GeneratorGRPCHost = getEnv("GRPC_HOST", "localhost")
 	cfg.GeneratorGRPCPort = getEnv("GRPC_PORT", "5003")

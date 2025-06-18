@@ -7,15 +7,18 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// Handler структура хендлера, содержащая необходимые хендлеру компоненты.
 type Handler struct {
 	grpclient     *client.GRPClient
 	kafkaProducer producer.Producer
 }
 
+// NewHandler создает новый экземпляр Handler.
 func NewHandler(grpclient *client.GRPClient, kafkaProducer producer.Producer) *Handler {
 	return &Handler{grpclient: grpclient, kafkaProducer: kafkaProducer}
 }
 
+// InitRoutes использует gin, инициализирует все роуты.
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
@@ -38,11 +41,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				apiKeys.GET("/", h.getAPIKeys)
 				apiKeys.DELETE("/", h.deleteAPIKey)
 			}
+
+			collection := user.Group("/collection", h.userIdentity)
+			{
+				collection.GET("/", h.getCollection)
+			}
 		}
 
 		storage := api.Group("/storage", h.checkAPIKey)
 		{
 			storage.POST("/:collection", h.loadDocuments)
+			storage.GET("/:collection/:id", h.getDocument)
+			storage.GET("/:collection", h.getAllDocuments)
+			storage.DELETE("/:collection/:id", h.deleteDocument)
 		}
 
 		api.GET("/generation", h.ssEventMiddleware(), h.generateAnswer)
