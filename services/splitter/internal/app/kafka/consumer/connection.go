@@ -64,7 +64,7 @@ func (c *Connection) RunConsumers() error {
 	go func() {
 		defer c.wg.Done()
 		for {
-			if err := consumerGroup.Consume(ctx, c.topics, ConsumerGroupHandler{c.handler}); err != nil {
+			if err := consumerGroup.Consume(ctx, c.topics, GroupHandler{c.handler}); err != nil {
 				log.Printf("splitter run consumers: error from consumer: %v", err)
 			}
 			if ctx.Err() != nil {

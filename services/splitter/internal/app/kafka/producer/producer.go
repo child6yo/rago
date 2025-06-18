@@ -74,6 +74,7 @@ func (p *KafkaProducer) StopProducer() {
 	}
 }
 
+// SendMessage отправляет сообщение в брокер.
 func (p *KafkaProducer) SendMessage(event internal.Document) {
 	jsonBytes, err := json.Marshal(event)
 	if err != nil {

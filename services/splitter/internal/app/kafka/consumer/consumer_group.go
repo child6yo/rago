@@ -7,25 +7,25 @@ import (
 	"github.com/child6yo/rago/services/splitter/internal/app/usecase"
 )
 
-// ConsumerGroupHandler имплементирует интерфейс sarama.ConsumerGroupHandler.
-type ConsumerGroupHandler struct {
+// GroupHandler имплементирует интерфейс sarama.ConsumerGroupHandler.
+type GroupHandler struct {
 	handler usecase.Splitter
 }
 
 // Setup выполняется перед началом получения сообщений,
 // может содержать любой функционал предподготовки консьюмера.
-func (c ConsumerGroupHandler) Setup(session sarama.ConsumerGroupSession) error {
+func (c GroupHandler) Setup(session sarama.ConsumerGroupSession) error {
 	return nil
 }
 
 // Cleanup выполняется перед завершением работы консьюмера,
 // может содержать любой функционал.
-func (c ConsumerGroupHandler) Cleanup(session sarama.ConsumerGroupSession) error {
+func (c GroupHandler) Cleanup(session sarama.ConsumerGroupSession) error {
 	return nil
 }
 
 // ConsumeClaim занимается получением сообщений и передачей в обработчики.
-func (c ConsumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
+func (c GroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
 		log.Printf("splitter consumer: message recieved from partition %d, offset %d", msg.Partition, msg.Offset)
 		err := c.handler.SplitDocuments(msg.Value)
