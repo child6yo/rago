@@ -57,7 +57,7 @@ func (uc *User) Register(ctx context.Context, input internal.User) (string, erro
 		return "", fmt.Errorf("user client error (Register): %v", err)
 	}
 
-	return collection.Collection, err
+	return collection.Collection, nil
 }
 
 // Login вызывает удалённый метод логина пользователя через gRPC.
@@ -84,7 +84,7 @@ func (uc *User) Auth(ctx context.Context, token string) (int, error) {
 		return 0, fmt.Errorf("user client error (Auth): %v", err)
 	}
 
-	return int(id.Id), err
+	return int(id.Id), nil
 }
 
 // CreateAPIKey вызывает удалённый метод создания API ключа.
@@ -151,5 +151,5 @@ func (uc *User) GetCollection(ctx context.Context, userID int) (string, error) {
 		return "", fmt.Errorf("user client error (GetCollection): %v", err)
 	}
 
-	return collection.Collection, err
+	return collection.Collection, nil
 }
