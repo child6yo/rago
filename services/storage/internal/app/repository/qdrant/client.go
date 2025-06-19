@@ -28,6 +28,13 @@ func NewQdrantClient(host string, port int) (*Client, error) {
 		_, err = client.HealthCheck(context.Background())
 
 		if err == nil {
+			client.CreateCollection(context.Background(), &qdrant.CreateCollection{
+				CollectionName: "dev_coll",
+				VectorsConfig: qdrant.NewVectorsConfig(&qdrant.VectorParams{
+					Size:     768,
+					Distance: qdrant.Distance_Cosine,
+				}),
+			})
 			return &Client{client: client}, nil
 		}
 

@@ -60,7 +60,7 @@ func (gs *GenerationService) initGenerating(ctx context.Context, out chan<- stri
 	_, err = llms.GenerateFromSinglePrompt(
 		ctx,
 		llm,
-		fmt.Sprintf(defaultPrompt, query, contextJSON),
+		fmt.Sprintf(defaultPrompt, contextJSON, query),
 		llms.WithTemperature(0.8),
 		llms.WithStreamingFunc(func(ctx context.Context, chunk []byte) error {
 			streamingFunc(ctx, out, chunk)
