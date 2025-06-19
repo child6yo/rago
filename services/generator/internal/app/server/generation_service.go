@@ -35,7 +35,6 @@ func (gs *GenerationService) Generate(query *pb.Query, stream grpc.ServerStreami
 	log.Printf("INFO: generator service new query: %s, starting stream...", query)
 
 	for c := range chunks {
-		log.Print(c)
 		err := stream.Send(&pb.ResponseChunk{Chunk: c})
 		if err != nil {
 			return fmt.Errorf("generation service: error sending message to stream: %v", err)

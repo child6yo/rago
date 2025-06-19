@@ -109,6 +109,9 @@ func (s *StorageService) GetAllDocuments(ctx context.Context, req *pb.Collection
 // Search реализует удаленный метод векторного поиска по коллекции.
 func (s *StorageService) Search(ctx context.Context, req *pb.QueryRequest) (*pb.QueryResponse, error) {
 	docs, err := s.service.Search(ctx, req.CollectionName, req.Query, int(req.Limit))
+	if err != nil {
+		log.Printf("storage service error (search): %v", err)
+	}
 
 	documents := make([]*pb.Document, len(docs))
 	for i, doc := range docs {

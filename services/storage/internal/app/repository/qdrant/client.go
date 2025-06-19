@@ -1,7 +1,9 @@
 package qdrantrepo
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"time"
 
 	"github.com/qdrant/go-client/qdrant"
 )
@@ -14,13 +16,22 @@ type Client struct {
 // NewQdrantClient создает новый экземпляр Client.
 // На вход принимает хост и порт qdrant сервиса.
 func NewQdrantClient(host string, port int) (*Client, error) {
-	client, err := qdrant.NewClient(&qdrant.Config{
-		Host: host,
-		Port: port,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("repository; failed to connect to qdrant: %w", err)
-	}
+	for {
+		client, err := qdrant.NewClient(&qdrant.Config{
+			Host: host,
+			Port: port,
+		})
+		if err != nil {
+			log.Printf("repository: failed to connect to qdrant: %v", err)
+		}
 
-	return &Client{client: client}, nil
+		_, err = client.HealthCheck(context.Background())
+
+		if err == nil {
+			return &Client{client: client}, nil
+		}
+
+		log.Print("repository: waiting for qdrant")
+		time.Sleep(4 * time.Second)
+	}
 }

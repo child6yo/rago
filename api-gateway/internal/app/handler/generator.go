@@ -44,7 +44,6 @@ func (h *Handler) generateAnswer(c *gin.Context) {
 			spaces := strings.Repeat("&nbsp;", leadingSpaces)
 			finalChunk := spaces + chunkWithNbsp
 
-			log.Printf("Sending chunk: %s", finalChunk)
 			c.SSEvent("message", finalChunk)
 			return true
 		}

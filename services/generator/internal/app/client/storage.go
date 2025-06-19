@@ -50,7 +50,7 @@ func (s *Storage) Search(ctx context.Context, query string, limit int, collectio
 		CollectionName: collection,
 	})
 	if err != nil {
-		return []internal.Document{}, fmt.Errorf("storage client: failed to search: %v", err)
+		return []internal.Document{}, fmt.Errorf("storage client (generator): failed to search: %v", err)
 	}
 
 	docsPb := resp.Document

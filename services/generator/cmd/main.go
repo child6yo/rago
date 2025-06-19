@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,6 +19,7 @@ func main() {
 
 	// запуск приложения
 	app.StartApplication()
+	log.Printf("generator service successfully started")
 
 	// получение сигнала на остановку приложения
 	quit := make(chan os.Signal, 1)
