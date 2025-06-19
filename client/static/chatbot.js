@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     try {
       // Создаем EventSource для SSE соединения
-      eventSource = new EventSource(`http://localhost:8000/api/v1/generation?query=${encodeURIComponent(query)}`);
+      eventSource = new EventSource(`http://localhost:8080/api/v1/generation/dev-coll?query=${encodeURIComponent(query)}`);
       
       // Обработка входящих сообщений
       eventSource.addEventListener('message', (event) => {

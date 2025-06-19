@@ -269,6 +269,17 @@ services:
     networks:
       - dev-network
 
+  frontend:
+    build: ./client
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    restart: always
+    networks:
+      - dev-network
+
 volumes:
   grafanadata:
   prometheusdata:
