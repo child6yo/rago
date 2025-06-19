@@ -28,9 +28,9 @@
 | **CPU**      | x86-64 (AVX)      |
 
 ## 📖 Table of Contents
-- [🚀 **Quick Start**](#quick-start)
-- [🎮 **Usage Example**](#usage-example)
-- [🏗 **Architecture**](#architecture)
+- [🚀 **Quick Start**](#-quick-start)
+- [🎮 **Usage Example**](#-usage-example)
+- [🏗 **Architecture**](#-architecture)
 - [📚 **API Documentation**](api-gateway/docs/openapi.yaml) (WIP)
 
 ---
