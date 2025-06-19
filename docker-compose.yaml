@@ -1,27 +1,283 @@
 services:
-  ollama:  # New service for running the Dockerfile in /ollama
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: always
+    ports:
+      - "9080:9080"
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./utils/grafana/promtail-config.yaml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: always
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./utils/grafana/loki-config.yaml:/etc/loki/local-config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./utils/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheusdata:/prometheus
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./utils/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - grafanadata:/var/lib/grafana
+
+  ollama:
     image: ollama/ollama:latest
     pull_policy: always
     container_name: ollama
-    ports: ["11434:11434"] # will be accessible in http://localhost:11435
+    ports: 
+      - "11434:11434"
     volumes:
       - ./ollama/ollama:/root/.ollama
       - ./scripts:/scripts
     tty: true
     entrypoint: ["/bin/sh", "/scripts/run_ollama.sh"]
     networks:
-      - ollama-docker
-  
-  generator:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+      - dev-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: always
+    container_name: qdrant
     ports:
-      - 8081:8081
+      - "6333:6333"
+      - "6334:6334"
+    expose:
+      - 6333
+      - 6334
+      - 6335
+    configs:
+      - source: qdrant_config
+        target: /qdrant/config/production.yaml
+    volumes:
+      - ./qdrant_data:/qdrant/storage
     networks:
-      - ollama-docker
+      - dev-network
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    ports:
+      - "5432:5432"
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
+    environment:
+      - TZ
+
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    networks:
+      - dev-network
+
+  migrate:
+    image: migrate/migrate:v4.18.0
+    command: ["-path=/migrations", "-database", "postgres://postgres:Qwerty@postgres:5432/postgres?sslmode=disable", "up"]
+    volumes:
+      - ./services/user/schema:/migrations
+    depends_on:
+      - postgres
+    networks:
+      - dev-network
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:19091
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:19091
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=1
+    volumes:
+      - ./scripts:/scripts
+    command: |
+        /opt/bitnami/scripts/kafka/run.sh &
+        sleep 15
+        /scripts/init_kafka.sh
+    networks:
+      - dev-network
+
+  user-service:
+    build: ./services/user
+    container_name: user-service
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PG_HOST=${US_PG_HOST}
+      - PG_PORT=${US_PG_PORT}
+      - PG_USERNAME=${US_PG_USERNAME}
+      - PG_DATABSE=${US_PG_DATABASE}
+      - PG_PASSWORD=${US_PG_PASSWORD}
+      - PG_SSLMODE=${US_PG_SSLMODE}
+
+      - GRPC_HOST=${US_HOST}
+      - GRPC_PORT=${US_PORT}
+    depends_on: 
+      - postgres
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    networks:
+      - dev-network
+  
+  storage-service:
+    build: ./services/storage
+    container_name: storage-service
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - GRPC_HOST=${SS_HOST}
+      - GRPC_PORT=${SS_PORT}
+
+      - VECTORDB_HOST=${SS_VECTORDB_HOST}
+      - VECTORDB_GRPC_PORT=${SS_VECTORDB_PORT}
+
+      - OLLAMA_MODEL=${SS_OLLAMA_EMBEDDING_MODEL}
+      - OLLAMA_ADDRES=${SS_OLLAMA_URL}
+
+      - KAFKA_BROKER=${SS_KAFKA_BROKER}
+      - KAFKA_GROUP_ID=${SS_KAFKA_GROUP_ID}
+      - KAFKA_DOC_TOPIC=${SS_KAFKA_DOC_TOPIC}
+      - KAFKA_PARTITIONS=${SS_KAFKA_PARTITIONS}
+    depends_on: 
+      - ollama
+      - kafka
+      - qdrant
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    networks:
+      - dev-network
+  
+  generator-service:
+    build: ./services/generator
+    container_name: generator-service
+    restart: always
+    ports:
+      - "5002:5002"
+    environment:
+      - GRPC_HOST=${GS_HOST}
+      - GRPC_PORT=${GS_PORT}
+
+      - STORAGE_GRPC_HOST=${GS_SS_GRPC_HOST}
+      - STORAGE_GRPC_PORT=${GS_SS_GRPC_PORT}
+
+      - LLM=${GS_LLM}
+      - OLLAMA_URL=${GS_OLLAMA_URL}
+    depends_on: 
+     - ollama
+     - storage-service
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    networks:
+      - dev-network
+
+  splitter-service:
+    build: ./services/splitter
+    container_name: splitter-service
+    restart: always
+    ports:
+      - "5010:5010"
+    environment:
+      - KAFKA_BROKER=${SPS_KAFKA_BROKER}
+      - KAFKA_RAW_DOC_TOPIC=${SPS_KAFKA_RAW_DOC_TOPIC}
+      - KAFKA_RAW_DOC_PARTITIONS=${SPS_KAFKA_RAW_DOC_PARTITIONS}
+      - KAFKA_DOC_TOPIC=${SPS_KAFKA_DOC_TOPIC}
+
+      - SPLITTER_WORKERS=${SPS_WORKERS}
+    depends_on:
+      - kafka
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    networks:
+      - dev-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - splitter-service
+      - storage-service
+      - generator-service
+      - kafka
+    environment:
+      - SERVER_HOST=${AG_SERVER_HOST}
+      - SERVER_PORT=${AG_SERVER_PORT}
+
+      - KAFKA_BROKER=${AG_KAFKA_BROKER}
+      - KAFKA_RAW_DOC_TOPIC=${AG_KAFKA_RAW_DOC_TOPIC}
+
+      - US_GRPC_HOST=${AG_US_GRPC_HOST}
+      - US_GRPC_PORT=${AG_US_GRPC_PORT}
+
+      - SS_GRPC_HOST=${AG_SS_GRPC_HOST}
+      - SS_GRPC_PORT=${AG_SS_GRPC_PORT}
+
+      - GS_GRPC_HOST=${AG_GS_GRPC_HOST}
+      - GS_GRPC_PORT=${AG_GS_GRPC_PORT}
+    logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    networks:
+      - dev-network
+
+volumes:
+  grafanadata:
+  prometheusdata:
 
 networks:
-  ollama-docker:
-    external: false
-  
+  dev-network:
+    driver: bridge
+
+configs:
+  qdrant_config:
+    content: |
+      log_level: INFO

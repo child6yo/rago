@@ -1,2 +1,6 @@
 *.env
 *ollama
+*qdrant
+*qdrant_data
+*volumes
+*kafka-data
