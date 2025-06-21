@@ -27,7 +27,13 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, fmt.Sprintf("new user successfully created with collection %s", collection), nil)
+	data := struct {
+		Collection string `json:"collection"`
+	}{
+		Collection: collection,
+	}
+
+	successResponse(c, fmt.Sprintf("new user successfully created with collection %s", data), nil)
 }
 
 func (h *Handler) signIn(c *gin.Context) {
