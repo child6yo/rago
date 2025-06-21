@@ -31,7 +31,7 @@
 - [🚀 **Quick Start**](#-quick-start)
 - [🎮 **Usage Example**](#-usage-example)
 - [🏗 **Architecture**](#-architecture)
-- [📚 **API Documentation**](api-gateway\docs\API_REF.md)
+- [📚 **API Documentation**](api-gateway/docs/API_REF.md)
 
 ---
 
