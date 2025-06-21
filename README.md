@@ -32,7 +32,7 @@
 - [🚀 **Быстрый старт**](https://github.com/child6yo/rago/edit/main/README.md#-%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9-%D1%81%D1%82%D0%B0%D1%80%D1%82)
 - [🎮 **Пример работы**](#-пример-работы)
 - [🏗 **Архитектура**](#-архитектура)
-- [📚 **API Документация**](api-gateway/docs/openapi.yaml) (WIP)
+- [📚 **API Документация**](api-gateway\docs\API_REF.md)
 
 
 ## 🚀 Быстрый старт 
