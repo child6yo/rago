@@ -53,7 +53,7 @@ docker-compose up -d --build
 
 Once the application is running, it may take some time to initialize individual services (from 3 to 10 minutes), primarily due to Ollama downloading language models.
 
-The Web API will then be available at **localhost:8080**. [**API Reference (WIP)**](api-gateway/docs/openapi.yaml).
+The Web API will then be available at **localhost:8080**. [**API Reference**](api-gateway/docs/API_REF.md).
 
 To perform a basic functionality test:
 - Register an account
