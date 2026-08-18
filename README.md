@@ -1,3 +1,5 @@
+
+
 <div align="center">
   <img src="etc/assets/gopher.png" width="180" />
 </div>
@@ -59,6 +61,8 @@ docker-compose up -d --build
  - имея API-ключ загрузить данные через [скрипт](examples/load_data/load_data.py)
 
 Тестовый пользовательский UI для генерации на основе документов доступен по адресу **localhost:80**.
+
+Интерфейс Grafana будет доступен по адресу **localhost:3000** (по умолчанию пользователь `admin`, пароль `admin`).
 
 ## 🎮 Пример работы
 
