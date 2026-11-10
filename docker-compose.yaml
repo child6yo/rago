@@ -10,6 +10,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./utils/grafana/promtail-config.yaml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
+    networks:
+      - dev-network
 
   loki:
     image: grafana/loki:latest
@@ -19,6 +21,8 @@ services:
       - "3100:3100"
     volumes:
       - ./utils/grafana/loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - dev-network
 
   prometheus:
     image: prom/prometheus:latest
@@ -29,6 +33,8 @@ services:
     volumes:
       - ./utils/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
       - prometheusdata:/prometheus
+    networks:
+      - dev-network
 
   grafana:
     image: grafana/grafana:latest
@@ -42,6 +48,8 @@ services:
     volumes:
       - ./utils/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
       - grafanadata:/var/lib/grafana
+    networks:
+      - dev-network
 
   ollama:
     image: ollama/ollama:latest
@@ -96,16 +104,22 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - dev-network
 
   migrate:
     image: migrate/migrate:v4.18.0
-    command: ["-path=/migrations", "-database", "postgres://postgres:Qwerty@postgres:5432/postgres?sslmode=disable", "up"]
+    command: ["-path=/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable", "up"]
     volumes:
       - ./services/user/schema:/migrations
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - dev-network
 
@@ -133,7 +147,9 @@ services:
       - dev-network
 
   user-service:
-    build: ./services/user
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.user
     container_name: user-service
     restart: always
     ports:
@@ -158,7 +174,9 @@ services:
       - dev-network
   
   storage-service:
-    build: ./services/storage
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.storage
     container_name: storage-service
     restart: always
     ports:
@@ -189,7 +207,9 @@ services:
       - dev-network
   
   generator-service:
-    build: ./services/generator
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.generator
     container_name: generator-service
     restart: always
     ports:
@@ -214,7 +234,9 @@ services:
       - dev-network
 
   splitter-service:
-    build: ./services/splitter
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.splitter
     container_name: splitter-service
     restart: always
     ports:
@@ -236,7 +258,9 @@ services:
       - dev-network
 
   api-gateway:
-    build: ./api-gateway
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api-gateway
     container_name: api-gateway
     restart: always
     ports:
@@ -270,7 +294,9 @@ services:
       - dev-network
 
   frontend:
-    build: ./client
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.client
     container_name: nginx
     ports:
       - "80:80"

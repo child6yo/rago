@@ -1,0 +1,6 @@
+FROM nginx:alpine
+
+COPY client/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY client/static/ /usr/share/nginx/html
+
+EXPOSE 80

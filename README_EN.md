@@ -1,168 +1,113 @@
-<div style="display: flex; align-items: center; gap: 20px;">
-  <img src="etc/assets/gopher.png" width="180" style="flex-shrink: 0;">
-  <div>
-    <h1 style="margin: 0;">🧠 RAGO — Distributed RAG Platform in Go</h1>
-    <p style="margin: 5px 0 0 0; color: #666;"><em> Designed for high performance and scalability. Uses Apache Kafka for processing large volumes of documents, Ollama for fast local LLM interaction, Qdrant for flexible vector storage scaling, and Prometheus + Grafana for metrics and visualization.</em></p>
-  </div>
-</div>
+# RAGO — Distributed RAG Platform in Go
 
----
+RAGO is a distributed Retrieval-Augmented Generation platform. User documents go through an asynchronous ingestion pipeline (Apache Kafka, Qdrant), while answer generation runs on a local LLM (Ollama) with token-by-token streaming over SSE. Observability is provided by Prometheus, Grafana, Loki, and Promtail.
 
-> **🚀 Key Features**  
-> - Upload and index documents into a vector store  
-> - Generate answers using LLM (Ollama)  
-> - Personal collections for each user  
-> - Monitoring with Prometheus + Grafana  
-> - Process large volumes via Apache Kafka  
+> This is an educational project and is not production-ready.
 
----
+## Features
 
-### ⚠️ NOTE:  This is currently mostly an educational project and is not production-ready. This may be improved in the future.
+- Document upload and indexing into a vector store (Qdrant)
+- Answer generation with an LLM (Ollama) using token-by-token streaming
+- Personal document collections, JWT authentication, API key authorization
+- Asynchronous processing of large document volumes via Apache Kafka
+- Metrics monitoring (Prometheus + Grafana) and centralized log collection (Loki + Promtail)
 
-## ⚙️ Minimum Requirements
+## Repository Layout
 
-| Resource     | Requirement       |
-|--------------|-------------------|
-| **RAM**      | 8 GB              |
-| **Disk**     | 4 GB              |
-| **CPU**      | x86-64 (AVX)      |
+The repository is organized as a Go monorepo with a single root module `github.com/child6yo/rago`.
 
-## 📖 Table of Contents
-- [🚀 **Quick Start**](#-quick-start)
-- [🎮 **Usage Example**](#-usage-example)
-- [🏗 **Architecture**](#-architecture)
-- [📚 **API Documentation**](api-gateway/docs/API_REF.md)
-
----
-
-## 🚀 Quick Start
-
-### Running the Application
-
-#### Using Makefile:
-```bash
-make build
-make run
 ```
-#### Using Docker Compose
-```
-docker-compose up -d --build
+.
+├── api-gateway/          # Single entry point: REST API, SSE, gRPC clients, Kafka producer
+├── services/
+│   ├── user/             # Users, JWT, API keys, collections (PostgreSQL)
+│   ├── splitter/         # Document array splitting (Kafka, worker pool)
+│   ├── storage/          # Embeddings and vector storage (Qdrant, Kafka, Ollama)
+│   └── generator/        # Context-aware generation (Ollama, langchaingo)
+├── proto/                # gRPC contracts: user, storage, generator
+├── client/               # Static web client (nginx)
+├── deploy/               # Dockerfiles for all services
+├── utils/                # Prometheus, Grafana, Loki, Promtail configurations
+├── scripts/              # Kafka and Ollama initialization scripts
+├── examples/             # Data upload example (Python)
+├── docker-compose.yaml   # Full project infrastructure
+├── go.mod                # Root Go module
+└── Makefile
 ```
 
-### After Launch
+## Quick Start
 
-Once the application is running, it may take some time to initialize individual services (from 3 to 10 minutes), primarily due to Ollama downloading language models.
+1. Copy `.env.example` to `.env` and adjust the variables if needed.
+2. Start the stack:
 
-The Web API will then be available at **localhost:8080**. [**API Reference**](api-gateway/docs/API_REF.md).
+   ```
+   make up
+   ```
 
-To perform a basic functionality test:
-- Register an account
-- Create an API key
-- Use the API key to upload data via the provided [script](examples/load_data/load_data.py)
+   or directly:
 
-A simple web UI for document-based generation is available at **localhost:80**.
+   ```
+   docker compose up -d --build
+   ```
 
----
+3. Wait for the services to initialize (3–10 minutes). Most of the time is spent downloading Ollama language models on first start.
 
-## 🎮 Usage Example
+Once running:
 
-### Token-by-Token Generation
+- The Web API is available at `localhost:8080` — [API Reference](api-gateway/docs/API_REF.md)
+- A basic web UI for generation is available at `localhost:80`
+- Grafana is available at `localhost:3000` (admin/admin)
 
-Generation works token by token, just like on standard LLM clients.
+To verify basic functionality:
 
-![alt text](etc/assets/example.png)
+1. Register a user.
+2. Create an API key.
+3. Upload documents with the [script](examples/load_data/load_data.py) using the API key.
 
----
-
-## 🏗 Architecture
-
-### Core Components
-
-#### API Gateway
-- **Purpose**: Single entry point for all external requests
-- **Technologies**: Gin, Prometheus (for HTTP request metrics)
-- **Features**:
-  - RESTful request routing
-  - **Monitoring**: Collection of HTTP connection metrics
-
-#### User Service
-- **Purpose**: Manage users and access
-- **Features**:
-  - Registration/authentication (JWT)
-  - API key management
-  - Organization of document collections
-
-#### Generator Service
-- **Purpose**: Context-aware generation
-- **Integrations**:
-  - LLM (Ollama with custom models)
-  - Planned: Prometheus for generation metrics
-
-#### Splitter Service
-- **Purpose**: Processing document arrays
-- **Features**:
-  - Goroutine pool for parallel processing
-
-#### Storage Service
-- **Purpose**: Work with vector data
-- **Integrations**:
-  - Qdrant (vector database)
-  - Ollama (embedding generation)
-  - Planned: Prometheus for query metrics
-
----
-
-### Service Interaction Diagram
+## Architecture
 
 <img src="etc/assets/common.png" width="400">
 
----
+### Components
 
-### Data Ingestion Pipeline
+| Component         | Purpose                                                                | Technologies                |
+|-------------------|------------------------------------------------------------------------|-----------------------------|
+| API Gateway       | Single entry point, REST routing, SSE relay of the generation stream   | Gin, gRPC, Kafka, Prometheus |
+| User Service      | Registration and authentication (JWT), API key and collection management | gRPC, PostgreSQL           |
+| Splitter Service  | Splitting document arrays into individual records                      | Kafka, goroutine pool       |
+| Storage Service   | Embedding generation, indexing and search in the vector store          | Qdrant, Ollama, Kafka       |
+| Generator Service | Prompt construction from retrieved context and streaming generation    | Ollama, langchaingo, gRPC   |
 
-1. **Receiving Data**:
+Services communicate over gRPC (synchronous calls and streams) and Kafka (asynchronous document processing). Inter-service contracts are defined in the `proto/` directory.
 
-        Client → API Gateway (REST)
-        Validation and buffering in Kafka (raw-docs)
-
-2. **Document Splitting**:
-
-        Splitter Service:
-         - Consumes from raw-docs
-         - Parallel processing (worker pool), splits array into individual documents
-         - Sends to document-topic (will be renamed to processed-docs)
-
-3. **Indexing**:
-
-        Storage Service:
-          - Generates embeddings
-          - Stores in Qdrant
-
-### Document Upload Pipeline Diagram
+### Document Ingestion Pipeline
 
 <img src="etc/assets/data_load.png" width="500">
 
----
+1. The client sends a document array to the API Gateway over REST.
+2. The API Gateway validates the request and buffers the data in the `raw-docs` topic.
+3. The Splitter Service consumes from `raw-docs`; a goroutine pool splits the array into individual documents in parallel and publishes them to `document-topic`.
+4. The Storage Service generates embeddings (Ollama) and stores the vectors in Qdrant in the user's collection.
 
 ### Generation Pipeline
 
-1. **Receiving Query**:
-
-        Client → API Gateway (REST)
-
-2. **Initialization**:
-
-        Generation Service:
-         - Sends request to Storage Service for vector search based on user data
-         - Opens gRPC stream to API Gateway upon success
-
-3. **Generation**:
-
-        - Uses data from the vector store as context to form a prompt
-        - Sends request to Ollama via langchaingo, starts token generation
-        - Streams tokens via gRPC to API Gateway
-        - API Gateway relays the stream to the client via SSE
-
-### Generation Pipeline Diagram
-
 <img src="etc/assets/generation.png" width="500">
+
+1. The client sends a request to the API Gateway over REST.
+2. The Generator Service performs a vector search over the user's collection via the Storage Service.
+3. The Generator Service builds a prompt from the retrieved context and starts generation in Ollama (via langchaingo).
+4. Tokens are streamed over gRPC to the API Gateway, which relays them to the client via SSE.
+
+## Monitoring
+
+- Prometheus (`localhost:9090`) scrapes API Gateway metrics (`/metrics`).
+- Grafana (`localhost:3000`) is used for visualization; the data source is provisioned automatically.
+- Promtail collects container logs and ships them to Loki.
+
+## Documentation
+
+- [API Reference](api-gateway/docs/API_REF.md)
+
+## License
+
+The project is licensed under the terms described in [LICENSE.md](LICENSE.md).

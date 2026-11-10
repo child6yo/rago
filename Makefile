@@ -1,20 +1,20 @@
 build:
-	docker-compose build rago
+	docker compose build
 
-run:
-	docker-compose up rago
+up:
+	docker compose up -d --build
 
-test-api-gateway:
-	cd api-gateway && go test -v -race -vet=off ./...
+down:
+	docker compose down
 
-test-generator:
-	cd services/generator && go test -v -race -vet=off ./...
+logs:
+	docker compose logs -f
 
-test-splitter:
-	cd services/splitter && go test -v -race -vet=off ./...
+test:
+	go test -race ./...
 
-test-storage:
-	cd services/storage && go test -v -race -vet=off ./...
+vet:
+	go vet ./...
 
-test-user:
-	cd services/user && go test -v -race -vet=off ./...
+tidy:
+	go mod tidy
